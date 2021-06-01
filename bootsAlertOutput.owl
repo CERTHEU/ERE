@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:ing="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#BootsAlert_88d58a78-95d3-4b9c-b0a4-aab2e2ed73d5">
+	<rdf:type rdf:resource="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#BootsAlert"/>
+	<ing:hasAlertId>88d58a78-95d3-4b9c-b0a4-aab2e2ed73d5</ing:hasAlertId>
+	<ing:showsEvent>FR immobilized</ing:showsEvent>
+	<ing:madeByEquipment>BT-177</ing:madeByEquipment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#Equipment_BT-177">
+	<ing:makesMeasurement rdf:resource="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#BootsAlert_88d58a78-95d3-4b9c-b0a4-aab2e2ed73d5"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#FR_TA34763">
+	<ing:isTargetOfAlert rdf:resource="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#BootsAlert_88d58a78-95d3-4b9c-b0a4-aab2e2ed73d5"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#BootsAlert_88d58a78-95d3-4b9c-b0a4-aab2e2ed73d5">
+	<ing:hasSource rdf:resource="http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#FR_TA34763"/>
+</rdf:Description>
+
+</rdf:RDF>

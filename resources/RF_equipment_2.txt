@@ -1,0 +1,39 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <http://www.semanticweb.org/akoufakis/ontologies/2020/8/ingenious#>
+
+
+INSERT DATA{
+ :FR_XO34221 rdf:type :FR.
+ :FR_XO34221 rdf:type owl:NamedIndividual.
+ :FR_XO34221 :memberOfOrganization "Police".   
+ :FR_XO34221 :hasIngId "AH23345".
+ :FR_XO34221 :hasStatus "Available".
+ :FR_XO34221 rdfs:label "First Responder".
+ 
+ :HR_XO34221 rdf:type :VitalSign.
+ :HR_XO34221 rdf:type :HeartRate.
+ :HR_XO34221 rdf:type owl:NamedIndividual.
+ :HR_XO34221 rdfs:label "Heart Rate".
+ :HR_XO34221 :hasVitalSign :HR_AH23345.
+ 
+ :BT_XO34221 rdf:type :VitalSign.
+ :BT_XO34221 rdf:type :BodyTemperature.
+ :BT_XO34221 rdf:type owl:NamedIndividual.
+ :BT_XO34221 rdfs:label "Body Temperature".
+ :FR_XO34221 :hasVitalSign :BT_XO34221.
+    
+ :BO_XO34221 rdf:type :VitalSign. 
+ :BO_XO34221 rdf:type :BloodOxygen.
+ :BO_XO34221 rdf:type owl:NamedIndividual.
+ :BO_XO34221 rdfs:label "Blood Oxygen Level".
+ :FR_XO34221 :hasVitalSign :BO_XO34221.
+    
+ 
+ :Equipment_HM-179 rdf:type :PersonalEquipment.
+ :Equipment_HM-179 rdf:type owl:NamedIndividual.
+ :Equipment_HM-179 rdf:type :SmartUniform.
+ :Equipment_HM-179 :hasIngId "HM-179".
+ :FR_XO34221 :wearsEquipment :Equipment_HM-179.
+}

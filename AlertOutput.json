@@ -1,0 +1,27 @@
+
+{
+    "identifier":"cb563b98-eb36-46c0-b7db-9a8ffb4cb908",
+    "sender":"ERE",
+    "sent":"2021-05-27T16:16:31+03:00",
+    "status":"Actual",
+    "msgType":"Alert",
+    "source":"TA34763",
+    "scope":"Public",
+    "code":[
+    ],
+    "info":[
+        {
+            "category":"FR Health Status",
+            "event":"FR Health Status",
+            "urgency":"Immediate",
+            "severity":"Extreme",
+            "certainty":"Likely",
+            "description":"description",
+            "area":[
+                {
+                    "areaDesc":"areaDesc"
+                }
+            ]
+        }
+    ]
+}

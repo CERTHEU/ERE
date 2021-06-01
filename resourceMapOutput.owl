@@ -1,0 +1,375 @@
+@prefix ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#> .
+
+ing:Resource a ing:Resource;
+  ing:hasResourceId "8543db3c-ee03-4798-95b0-a39f2dfc54b3";
+  ing:hasTimestamp "2021-03-12T14:54:21+02:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+ing:Vehicle_PL-1882 a ing:Vehicle;
+  ing:hasVehicleId "PL-1882";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:Vehicle_AM-2911 a ing:Vehicle;
+  ing:hasVehicleId "AM-2911";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:Vehicle_FB-2219 a ing:Vehicle;
+  ing:hasVehicleId "FB-2219";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:Vehicle_FB-1228 a ing:Vehicle;
+  ing:hasVehicleId "FB-1228";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:Vehicle_PL-1332 a ing:Vehicle;
+  ing:hasVehicleId "PL-1332";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:Vehicle_AM-2981 a ing:Vehicle;
+  ing:hasVehicleId "AM-2981";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "UNAV" .
+
+ing:Vehicle_FB-2315 a ing:Vehicle;
+  ing:hasVehicleId "FB-2315";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:Vehicle_FB-3287 a ing:Vehicle;
+  ing:hasVehicleId "FB-3287";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "UNAV" .
+
+ing:Vehicle_PL-2217 a ing:Vehicle;
+  ing:hasVehicleId "PL-2217";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:Vehicle_PL-128 a ing:Vehicle;
+  ing:hasVehicleId "PL-128";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "UNAV" .
+
+ing:Vehicle_AM-3271 a ing:Vehicle;
+  ing:hasVehicleId "AM-3271";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "VEHICLE";
+  ing:hasStatus "AVAILB" .
+
+ing:HR_ER94872 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_ER94872 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_ER94872 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_ER94872 a ing:FR;
+  ing:hasVitalSign ing:HR_ER94872, ing:BT_ER94872, ing:BO_ER94872;
+  ing:hasFrId "ER94872";
+  ing:isNamed "Selena Roberson";
+  ing:hasAge "22";
+  ing:hasGender "Female";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB" .
+
+ing:HR_EF32985 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_EF32985 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_EF32985 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_EF32985 a ing:FR;
+  ing:hasVitalSign ing:HR_EF32985, ing:BT_EF32985, ing:BO_EF32985;
+  ing:hasFrId "EF32985";
+  ing:isNamed "Tina Reding";
+  ing:hasAge "38";
+  ing:hasGender "Female";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:roleInTeam "MEMBER";
+  ing:wearsEquipment ing:Equipment_UN-99, ing:Equipment_BT-189 .
+
+ing:Equipment_UN-99 a ing:PersonalEquipment;
+  ing:hasEquipmentId "UN-99";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "UNIFORM";
+  ing:isAttachedTo ing:FR_EF32985 .
+
+ing:Equipment_BT-189 a ing:PersonalEquipment;
+  ing:hasEquipmentId "BT-189";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "BOOTS";
+  ing:isAttachedTo ing:FR_EF32985 .
+
+ing:HR_DX94857 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_DX94857 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_DX94857 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_DX94857 a ing:FR;
+  ing:hasVitalSign ing:HR_DX94857, ing:BT_DX94857, ing:BO_DX94857;
+  ing:hasFrId "DX94857";
+  ing:isNamed "Jack Nikolson";
+  ing:hasAge "33";
+  ing:hasGender "Male";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:roleInTeam "LEADER";
+  ing:wearsEquipment ing:Equipment_BT-271 .
+
+ing:Equipment_BT-271 a ing:PersonalEquipment;
+  ing:hasEquipmentId "BT-271";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "BOOTS";
+  ing:isAttachedTo ing:FR_DX94857 .
+
+ing:HR_SS84756 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_SS84756 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_SS84756 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_SS84756 a ing:FR;
+  ing:hasVitalSign ing:HR_SS84756, ing:BT_SS84756, ing:BO_SS84756;
+  ing:hasFrId "SS84756";
+  ing:isNamed "Nick Edwards";
+  ing:hasAge "29";
+  ing:hasGender "Male";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:wearsEquipment ing:Equipment_UN-123, ing:Equipment_HM-163 .
+
+ing:Equipment_UN-123 a ing:PersonalEquipment;
+  ing:hasEquipmentId "UN-123";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "UNIFORM";
+  ing:isAttachedTo ing:FR_SS84756 .
+
+ing:Equipment_HM-163 a ing:PersonalEquipment;
+  ing:hasEquipmentId "HM-163";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "HELMET";
+  ing:isAttachedTo ing:FR_SS84756 .
+
+ing:K9-322 a ing:K9;
+  ing:hasK9Id "K9-322";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "K9";
+  ing:hasStatus "AVAILB";
+  ing:hasWeight "50";
+  ing:hasHeight "92";
+  ing:wearsEquipment ing:Equipment_KV-119 .
+
+ing:Equipment_KV-119 a ing:PersonalEquipment;
+  ing:hasEquipmentId "KV-119";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "K9 VEST";
+  ing:isAttachedTo ing:K9-322 .
+
+ing:HR_CI32918 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_CI32918 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_CI32918 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_CI32918 a ing:FR;
+  ing:hasVitalSign ing:HR_CI32918, ing:BT_CI32918, ing:BO_CI32918;
+  ing:hasFrId "CI32918";
+  ing:isNamed "Jack Gomez";
+  ing:hasAge "38";
+  ing:hasGender "Male";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:roleInTeam "MEMBER" .
+
+ing:HR_AO338221 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_AO338221 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_AO338221 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_AO338221 a ing:FR;
+  ing:hasVitalSign ing:HR_AO338221, ing:BT_AO338221, ing:BO_AO338221;
+  ing:hasFrId "AO338221";
+  ing:isNamed "Serena Williams";
+  ing:hasAge "45";
+  ing:hasGender "Female";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:roleInTeam "MEMBER" .
+
+ing:Equipment_UN-128 a ing:PersonalEquipment;
+  ing:hasEquipmentId "UN-128";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "UNIFORM";
+  ing:isAttachedTo ing:FR_TA34763 .
+
+ing:HR_IA85764 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_IA85764 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_IA85764 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_IA85764 a ing:FR;
+  ing:hasVitalSign ing:HR_IA85764, ing:BT_IA85764, ing:BO_IA85764;
+  ing:hasFrId "IA85764";
+  ing:isNamed "Emily Careera";
+  ing:hasAge "41";
+  ing:hasGender "Female";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB" .
+
+ing:K9-155 a ing:K9;
+  ing:hasK9Id "K9-155";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "K9";
+  ing:hasStatus "AVAILB";
+  ing:hasWeight "47";
+  ing:hasHeight "85";
+  ing:wearsEquipment ing:Equipment_KV-089;
+  ing:isAttachedTo ing:FR_EA85746 .
+
+ing:Equipment_KV-089 a ing:PersonalEquipment;
+  ing:hasEquipmentId "KV-089";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "K9 VEST";
+  ing:isAttachedTo ing:K9-155 .
+
+ing:HR_EA85746 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_EA85746 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_EA85746 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_EA85746 a ing:FR;
+  ing:hasVitalSign ing:HR_EA85746, ing:BT_EA85746, ing:BO_EA85746;
+  ing:hasFrId "EA85746";
+  ing:isNamed "Chin Hapton";
+  ing:hasAge "30";
+  ing:hasGender "Male";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:hasWeight "80";
+  ing:hasHeight "187";
+  ing:handlesK9 ing:K9-155;
+  ing:wearsEquipment ing:Equipment_BT-215, ing:Equipment_HM-118, ing:Equipment_UN-201 .
+
+ing:Equipment_BT-215 a ing:PersonalEquipment;
+  ing:hasEquipmentId "BT-215";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "BOOTS";
+  ing:isAttachedTo ing:FR_EA85746 .
+
+ing:Equipment_HM-118 a ing:PersonalEquipment;
+  ing:hasEquipmentId "HM-118";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "HELMET";
+  ing:isAttachedTo ing:FR_EA85746 .
+
+ing:Equipment_UN-201 a ing:PersonalEquipment;
+  ing:hasEquipmentId "UN-201";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "UNIFORM";
+  ing:isAttachedTo ing:FR_EA85746 .
+
+ing:HR_GE58732 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_GE58732 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_GE58732 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_GE58732 a ing:FR;
+  ing:hasVitalSign ing:HR_GE58732, ing:BT_GE58732, ing:BO_GE58732;
+  ing:hasFrId "GE58732";
+  ing:isNamed "George Robin";
+  ing:hasAge "26";
+  ing:hasGender "Male";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:hasWeight "78";
+  ing:hasHeight "180" .
+
+ing:HR_TA34763 a ing:VitalSign, ing:HeartRate .
+
+ing:BO_TA34763 a ing:VitalSign, ing:BloodOxygen .
+
+ing:BT_TA34763 a ing:VitalSign, ing:BodyTemperature .
+
+ing:FR_TA34763 a ing:FR;
+  ing:hasVitalSign ing:HR_TA34763, ing:BT_TA34763, ing:BO_TA34763;
+  ing:hasFrId "TA34763";
+  ing:isNamed "Scot Jeferson";
+  ing:hasAge "35";
+  ing:hasGender "Male";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "FR";
+  ing:hasStatus "AVAILB";
+  ing:belongsToTeam "MT-4AB";
+  ing:roleInTeam "LEADER";
+  ing:hasWeight "86";
+  ing:hasHeight "192";
+  ing:wearsEquipment ing:Equipment_UN-128, ing:Equipment_BT-177 .
+
+ing:Equipment_HM-149 a ing:PersonalEquipment;
+  ing:hasEquipmentId "HM-149";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "HELMET" .
+
+ing:Equipment_HM-131 a ing:PersonalEquipment;
+  ing:hasEquipmentId "HM-131";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "HELMET" .
+
+ing:Equipment_BT-177 a ing:PersonalEquipment;
+  ing:hasEquipmentId "BT-177";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "BOOTS";
+  ing:isAttachedTo ing:FR_TA34763 .
+
+ing:Equipment_UN-120 a ing:PersonalEquipment;
+  ing:hasEquipmentId "UN-120";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "UNIFORM" .
+
+ing:Equipment_HM-129 a ing:PersonalEquipment;
+  ing:hasEquipmentId "HM-129";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "HELMET" .
+
+ing:Equipment_BT-155 a ing:PersonalEquipment;
+  ing:hasEquipmentId "BT-155";
+  ing:belongsToOrganization "FIRE BRIGADE";
+  ing:hasType "BOOTS" .
+
+ing:Equipment_UN-147 a ing:PersonalEquipment;
+  ing:hasEquipmentId "UN-147";
+  ing:belongsToOrganization "EMS";
+  ing:hasType "UNIFORM" .
+
+ing:Equipment_KV-171 a ing:PersonalEquipment;
+  ing:hasEquipmentId "KV-171";
+  ing:belongsToOrganization "POLICE";
+  ing:hasType "K9 VEST" .

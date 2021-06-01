@@ -1,0 +1,26 @@
+{
+  "identifier": "88d58a78-95d3-4b9c-b0a4-aab2e2ed73d5",
+  "sender": "BOOTS",
+  "sent": "2020-09-28T15:22:18+02:00",
+  "status": "Actual",
+  "msgType": "Alert",
+  "source": "TA34763",
+  "scope": "Public",
+  "code": ["BT-177"],
+  "info": [
+    {
+      "category": "FR Activity",
+      "event": "FR immobilized",
+      "urgency": "Immediate",
+      "severity": "Severe",
+      "certainty": "Observed",
+      "description": "Prolonged exertion and high body temperature",
+      "area": [
+        {
+          "areaDesc": "Inside the burning building",
+          "circle": "43.54877770,12.26737030 0.0"
+        }
+      ]
+    }
+  ]
+}
