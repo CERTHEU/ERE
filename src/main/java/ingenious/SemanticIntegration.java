@@ -63,8 +63,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
+import ingenious.utils.ConfigsLoader;
+
+
 
 public class SemanticIntegration {
+	
+	static ConfigsLoader configInstance;
+	
+	static {
+		configInstance = ConfigsLoader.getInstance();
+		configInstance.loadProperties();
+	}
 	
 	public static int durationOfFiveMinutes = 5;
 	public static int durationOfOneMinute = 1;
@@ -98,7 +108,7 @@ public class SemanticIntegration {
 	//Method to load the Resource Information from File, locally
 	public void loadResourceMapFromFile() throws IOException, URISyntaxException 
 	{
-		JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\ResourceMap.json"));
+		JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath() + "ResourceMap.json"));
 		reader.setLenient(true);
 		JsonElement element = new JsonParser().parse(reader);
 		//System.out.println(element.toString());
@@ -262,7 +272,7 @@ public class SemanticIntegration {
 		}		
 		Model model = builder.build();
 		
-		File outputFile = new File("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\resourceMapOutput.owl");
+		File outputFile = new File(configInstance.getFilepath() + "resourceMapOutput.owl");
 		FileOutputStream out = new FileOutputStream(outputFile);
 		try
 		{
@@ -445,7 +455,7 @@ public class SemanticIntegration {
 		}		
 		Model model = builder.build();
 		
-		File outputFile = new File("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\resourceMapOutput.owl");
+		File outputFile = new File(configInstance.getFilepath() + "resourceMapOutput.owl");
 		FileOutputStream out = new FileOutputStream(outputFile);
 		try
 		{
@@ -463,7 +473,7 @@ public class SemanticIntegration {
 	//Method to load Measurements from File, locally
 	public void loadMeasurementsFromFile() throws IOException, URISyntaxException 
 		{
-			JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\Measurements.json"));
+			JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath() + "Measurements.json"));
 			//System.out.println(reader.toString());
 			
 			reader.setLenient(true);
@@ -600,7 +610,7 @@ public class SemanticIntegration {
 			
 			Model model = builder.build();
 			
-			File outputFile = new File("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\measurementOutput.owl");
+			File outputFile = new File(configInstance.getFilepath() + "measurementOutput.owl");
 			FileOutputStream out = new FileOutputStream(outputFile);
 			try
 			{
@@ -758,7 +768,7 @@ public class SemanticIntegration {
 		
 		Model model = builder.build();
 		
-		File outputFile = new File("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\measurementOutput.owl");
+		File outputFile = new File(configInstance.getFilepath() + "measurementOutput.owl");
 		FileOutputStream out = new FileOutputStream(outputFile);
 		try
 		{
@@ -776,7 +786,7 @@ public class SemanticIntegration {
 	//Method to load Boots alerts from File, locally
 	public void loadBootsAlertFromFile() throws IOException, URISyntaxException 
 	{
-		JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\BootsAlert.json"));
+		JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath() + "BootsAlert.json"));
 		reader.setLenient(true);
 		JsonElement element = new JsonParser().parse(reader);
 		//System.out.println(element.toString());
@@ -837,7 +847,7 @@ public class SemanticIntegration {
 				}
 		Model model = builder.build();
 		
-		File outputFile = new File("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\bootsAlertOutput.owl");
+		File outputFile = new File(configInstance.getFilepath() + "bootsAlertOutput.owl");
 		FileOutputStream out = new FileOutputStream(outputFile);
 		try
 		{
@@ -855,7 +865,7 @@ public class SemanticIntegration {
 	//Method to load Measurements from Kafka stream (String)
 	public void loadBootsAlertFromStream(String stream) throws IOException, URISyntaxException 
 	{
-		JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\BootsAlert.json"));
+		JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath() + "BootsAlert.json"));
 		reader.setLenient(true);
 		JsonElement element = new JsonParser().parse(stream);
 		//System.out.println(element.toString());
@@ -916,7 +926,7 @@ public class SemanticIntegration {
 				}
 		Model model = builder.build();
 		
-		File outputFile = new File("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\bootsAlertOutput.owl");
+		File outputFile = new File(configInstance.getFilepath() + "bootsAlertOutput.owl");
 		FileOutputStream out = new FileOutputStream(outputFile);
 		try
 		{
@@ -1679,7 +1689,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 			Object simpleObj = null;
 	 
 			try {
-				writer = new FileWriter("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\AlertOutput.json"); // Modify path as per your need
+				writer = new FileWriter(configInstance.getFilepath() + "AlertOutput.json"); // Modify path as per your need
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -1723,7 +1733,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 	         .writeEnd();
 			generator.close();
 			
-			JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\AlertOutput.json"));
+			JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath()+ "AlertOutput.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
 			System.out.println(element.toString());
@@ -1734,7 +1744,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
 		
-		HTTPRepository rep = new HTTPRepository("http://192.168.100.2:7200/repositories/2");
+		HTTPRepository rep = new HTTPRepository(configInstance.getGraphdb() + "repositories/2");
 	
 		try (RepositoryConnection con = rep.getConnection()) 
 		{
