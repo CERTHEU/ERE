@@ -21,7 +21,8 @@
   	
 	<dependency>
 		<groupId>com.fasterxml.jackson.core</groupId
-		<artifactId>jackson-databind</artifactId>				<version>2.9.8</version>
+		<artifactId>jackson-databind</artifactId
+		<version>2.9.8</version>
     </dependency>
     
 	<dependency>
@@ -58,7 +59,8 @@
 	
 	<dependency>
 		<groupId>org.mongodb</groupId>
-		<artifactId>mongo-java-driver</artifactId>				<version>3.12.7</version>
+		<artifactId>mongo-java-driver</artifactId
+		<version>3.12.7</version>
 	</dependency>
 	<dependency>	
 		<groupId>org.mongodb</groupId>
@@ -70,7 +72,8 @@
 <build>
 	<plugins>
 		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>				<artifactId>maven-compiler-plugin</artifactId>
+			<groupId>org.apache.maven.plugins</groupId
+			<artifactId>maven-compiler-plugin</artifactId>
 			<version>3.5.1</version>
 			<configuration>
 				<source>1.8</source>
