@@ -1785,27 +1785,31 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 				long t1= System.currentTimeMillis();
 				long end1 = t1+600000;
 				int run1 = 0;
-				while (System.currentTimeMillis() < end1) {
+			//	while (System.currentTimeMillis() < end1) {
 					System.out.println("run no" + run1);
 					example.loadResourceMapFromFile();
 					example.loadMeasurementsFromFile();
 					example.loadBootsAlertFromFile();
-					
+					con.commit();
 					//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 					//con.commit();
 					example.calculateRollingAverage("HeartRate", durationOfOneMinute);
 					example.getandInsertComplexRule(20, durationOfOneMinute);
-				//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);			
-				//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
-				//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-				//con.commit();
-				//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-				//con.commit();
+					//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);			
+					//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
+					//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+					//con.commit();
+					//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+					//con.commit();
 					
-					Thread.sleep(18000);
-					run1=run1+1;
+					Thread.sleep(50000);
+					example.loadMeasurementsFromFile();
+					//con.commit();
+					example.calculateRollingAverage("HeartRate", durationOfOneMinute);
+					
+			   // 	run1=run1+1;
 				
-				}
+				//}
 				
 				//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
 				
