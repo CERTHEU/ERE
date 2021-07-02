@@ -32,6 +32,8 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
+import ingenious.utils.ConfigsLoader;
+
 //Kafka Producer class. O Producer, kanei get kapoio .json (me ta get methods) kai me to antistoixo send method stelnei 
 //to .json sto topic pou theloume, px ProducerRecord<String, String> record = new ProducerRecord<String, String>("resource_map", getResourceMap()); stelnei sto "resource_map"
 
@@ -41,6 +43,8 @@ public class Producer {
 		sendResourceMap();
 		sendMeasurements();
 	}
+	
+	static ConfigsLoader configInstance;
 	
 	static void sendResourceMap() {
 		
@@ -173,7 +177,7 @@ static void sendOutputAlert() {
 		
 		JsonReader reader;
 		try {
-			reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\ResourceMap.json"));
+			reader = new JsonReader(new FileReader(configInstance.getFilepath() +  "ResourceMap.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
 			return element.toString();
@@ -195,7 +199,7 @@ static void sendOutputAlert() {
 		
 		JsonReader reader;
 		try {
-			reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\Measurements.json"));
+			reader = new JsonReader(new FileReader("configInstance.getFilepath() + Measurements.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
 			return element.toString();
@@ -217,7 +221,7 @@ static void sendOutputAlert() {
 		
 		JsonReader reader;
 		try {
-			reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\BootsAlert.json"));
+			reader = new JsonReader(new FileReader(configInstance.getFilepath() + "BootsAlert.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
 			return element.toString();
@@ -237,7 +241,7 @@ static void sendOutputAlert() {
 		
 		JsonReader reader;
 		try {
-			reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\AlertOutput.json"));
+			reader = new JsonReader(new FileReader(configInstance.getFilepath() +  "AlertOutput.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
 			return element.toString();

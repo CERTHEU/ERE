@@ -9,7 +9,7 @@ public class AlertsManager {
 	
 	public void validate() {
 		//check all kind of rules
-		new CheckComplexRule().start();
+		new CheckComplexRule().detectChanges();
 	}
 
 }

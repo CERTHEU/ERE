@@ -531,17 +531,17 @@ public class SemanticIntegration {
 								if (object2.get("observedProperty").getAsString().equals("heart beat"))
 								{
 									String modification=(
-											"PREFIX ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>"
-											+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+											"PREFIX ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+											+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
 												
-											+"INSERT{"
-											    +"?measurementIRI ing:isMeasurementOf ?measured_property."
-											+"}"
-											+"WHERE{"
-											    +"?FR ing:wearsEquipment ?equipmentIRI."
-											    +"?FR ing:hasVitalSign ?measured_property."	
-											    +"?measured_property rdf:type ?propClass."
-											+"}"
+											+"INSERT {\r\n"
+											    +"?measurementIRI ing:isMeasurementOf ?measured_property.\r\n"
+											+"}\r\n"
+											+"WHERE{\r\n"
+											    +"?FR ing:wearsEquipment ?equipmentIRI.\r\n"
+											    +"?FR ing:hasVitalSign ?measured_property.\r\n"	
+											    +"?measured_property rdf:type ?propClass.\r\n"
+											+"}\r\n"
 											   );
 									
 									IRI prop_class = factory.createIRI(Input.NAMESPACE,"HeartRate");
@@ -559,16 +559,16 @@ public class SemanticIntegration {
 									
 									
 									String modification=(
-											"PREFIX ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>"
-											+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+											"PREFIX ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+											+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
 												
 											+"INSERT{"
-											    +"$measurementIRI ing:isMeasurementOf ?measured_property."
+											    +"$measurementIRI ing:isMeasurementOf ?measured_property.\r\n"
 											+"}"
 											+"WHERE{"
-											    +"?FR ing:wearsEquipment ?equipmentIRI."
-											    +"?FR ing:hasVitalSign ?measured_property."	
-											    +"?measured_property rdf:type ?propClass."
+											    +"?FR ing:wearsEquipment ?equipmentIRI.\r\n"
+											    +"?FR ing:hasVitalSign ?measured_property.\r\n"	
+											    +"?measured_property rdf:type ?propClass.\r\n"
 											+"}"
 											   );
 									IRI prop_class = factory.createIRI(Input.NAMESPACE,"BodyTemperature");
@@ -580,17 +580,17 @@ public class SemanticIntegration {
 									
 								
 									String modification=(
-											"PREFIX ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>"
-											+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+											"PREFIX ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+											+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
 												
-											+"INSERT{"
-											    +"$measurementIRI ing:isMeasurementOf ?measured_property."
-											+"}"
-											+"WHERE{"
-											    +"?FR ing:wearsEquipment ?equipmentIRI."
-											    +"?FR ing:hasVitalSign ?measured_property."	
-											    +"?measured_property rdf:type ?propClass."
-											+"}"
+											+"INSERT {"
+											    +"$measurementIRI ing:isMeasurementOf ?measured_property.\r\n"
+											+"}\r\n"
+											+"WHERE{\r\n"
+											    +"?FR ing:wearsEquipment ?equipmentIRI.\r\n"
+											    +"?FR ing:hasVitalSign ?measured_property.\r\n"	
+											    +"?measured_property rdf:type ?propClass.\r\n"
+											+"}\r\n"
 											   );
 									IRI prop_class = factory.createIRI(Input.NAMESPACE,"BloodOxygen");
 									executeUpdate(connection, modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
@@ -740,7 +740,6 @@ public class SemanticIntegration {
 								String modification=(
 										"PREFIX ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>"
 										+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-											
 										+"INSERT{"
 										    +"$measurementIRI ing:isMeasurementOf ?measured_property."
 										+"}"
@@ -992,7 +991,7 @@ public class SemanticIntegration {
 	public TupleQueryResult getValues(String propertyType, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
         
         ValueFactory factory = SimpleValueFactory.getInstance();
-        IRI prop_class = factory.createIRI(Input.NAMESPACE,propertyType);
+        IRI prop_class = factory.createIRI(Input.NAMESPACE, propertyType);
         
         long timestamp = getCurrentDateTimeToEpochSeconds() - periodOfAverage*60;
         String str = getDateTimeFromEpochSeconds(timestamp).toString();
@@ -1000,8 +999,10 @@ public class SemanticIntegration {
 
         Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
        
-        System.out.println(timeLimit.toString());
+        System.out.println("timeLimit: " + timeLimit.toString());
         //System.out.println(timeLimit.getDatatype());
+        
+        
         
         TupleQueryResult result = evaluateSelectQuery2(connection,
         		
@@ -1043,7 +1044,7 @@ public class SemanticIntegration {
 	
 	//Calculate Rolling Average for a certain property type and average period
 	public void calculateRollingAverage(String propertyType, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
-        
+        System.out.println("calculateRollingAverage");
         TupleQueryResult result = getValues(propertyType, periodOfAverage);
         int add=0;
         float what=0;
@@ -1101,15 +1102,16 @@ public class SemanticIntegration {
         }
         //Gia na treksoume locally, PREPEI na afairoume tis grammes 1085 kai 1092 kai 1093
         //To +60 mpainei gia na yparxei kapoio normalization stous xronous tou Rolling Average. Poly pithanon na thelei allagh. To periodOfAverage genika thelei optimization.
-        //if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
+      //  if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
         	System.out.println(min);
-        if (minDate !=null) {
-        	updateRollingAverage(property, mean, minDate.toString(), maxDate.toString(), periodOfAverage);
-        }
-        else System.out.println("No rolling average was produced, therefore reasoning cannot proceed.");
+        	if (minDate != null)
+        		updateRollingAverage(property, mean, minDate.toString(), maxDate.toString(), periodOfAverage);
+        	else
+        		System.out.println("No rolling average was produced, therefore reasoning cannot proceed.");
            
-        //}
-        //else System.out.println("Waiting for more data.");
+      //  }
+      //  else 
+       // 	System.out.println("Waiting for more data.");
         result.close();
     }
 	
@@ -1244,7 +1246,7 @@ public void getAndInsertOxygen(float oxygenLimit, int periodOfAverage) throws Re
           		+ "        $heatstroke_iri a ing:Heatstroke.\r\n"
           		+ "        $heatstroke_iri a ing:PhysiologicalCondition.\r\n"
           		
-          		+ "        $fr_iri ing:hasPhysiologicalCondition $heatstroke_iri. \r\n"
+          		+ "        $fr_iri ing:hasPhysiologicalCondition $heatstroke_iri.\r\n"
           		+ "    }\r\n"
           		+ "    WHERE{\r\n"
           		+ "    OPTIONAL{\r\n"
@@ -1780,20 +1782,28 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 				//If we want to run locally, we load the resources like below, once and from file. If we want to run using Kafka, we load the resource
 				//map from stream, like above. Then, we proceed to the while loop, which loads the measurements and boots alerts multiple times.
 				
-				example.loadResourceMapFromFile();
-				example.loadMeasurementsFromFile();
-				example.loadBootsAlertFromFile();
-				con.commit();
-				example.calculateRollingAverage("HeartRate", durationOfOneMinute);
-				example.getandInsertComplexRule(20, durationOfOneMinute);
+				long t1= System.currentTimeMillis();
+				long end1 = t1+600000;
+				int run1 = 0;
+				//while (System.currentTimeMillis() < end1) {
+					System.out.println("run no" + run1);
+					example.loadResourceMapFromFile();
+					example.loadMeasurementsFromFile();
+					example.loadBootsAlertFromFile();
+					//con.commit();
+					example.calculateRollingAverage("HeartRate", durationOfOneMinute);
+					example.getandInsertComplexRule(20, durationOfOneMinute);
 				//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);			
 				//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
 				//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
 				//con.commit();
 				//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 				//con.commit();
+					
+					Thread.sleep(18000);
+					run1=run1+1;
 				
-				
+			//	}
 				
 				//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
 				
