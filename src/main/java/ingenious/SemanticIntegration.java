@@ -64,6 +64,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import ingenious.utils.ConfigsLoader;
+import ingenious.utils.QueryUtils;
 
 
 
@@ -1004,7 +1005,7 @@ public class SemanticIntegration {
         
         
         
-        TupleQueryResult result = evaluateSelectQuery2(connection,
+        TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
         		
         		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
         			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1167,7 +1168,7 @@ public void getAndInsertOxygen(float oxygenLimit, int periodOfAverage) throws Re
         Literal oxyLimit = factory.createLiteral(oxygenLimit);
       
         
-        TupleQueryResult result = evaluateSelectQuery2(connection,
+        TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
         		
         		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
         			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1283,7 +1284,7 @@ public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAv
     
   
     
-    TupleQueryResult result = evaluateSelectQuery2(connection,
+    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
     		
     		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
     			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1412,7 +1413,7 @@ public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws 
     Literal heatstrokeLimit = factory.createLiteral(tempLimit);
   
     
-    TupleQueryResult result = evaluateSelectQuery2(connection,
+    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
     		
     		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
     			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1538,7 +1539,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
     
   
     
-    TupleQueryResult result = evaluateSelectQuery2(connection,
+    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
     		
     		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
     			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1655,35 +1656,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 	
 	
 	
-	 public static TupleQueryResult evaluateSelectQuery(RepositoryConnection connection, String query,
-             Binding... bindings)
-            		 throws MalformedQueryException, RepositoryException, QueryEvaluationException {
-		 // Preparing a new query
-		 TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
 
-		 // Setting any potential bindings (query parameters)
-		 for (Binding b : bindings) {
-			 tupleQuery.setBinding(b.getName(), b.getValue());
-		 }
-
-		 // Sending the query to GraphDB, evaluating it and returning the result
-		 return tupleQuery.evaluate();
-	 }
-	 
-	 public static TupleQueryResult evaluateSelectQuery2(RepositoryConnection connection, String query,
-             Binding... bindings)
-            		 throws MalformedQueryException, RepositoryException, QueryEvaluationException {
-		 // Preparing a new query
-		 TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
-
-		 // Setting any potential bindings (query parameters)
-		 for (Binding b : bindings) {
-			 tupleQuery.setBinding(b.getName(), b.getValue());
-		 }
-		
-		 TupleQueryResult result = new MutableTupleQueryResult(tupleQuery.evaluate());
-		 return result;
-	 }
 	 
 	 public void AlertGenerator(String identifier, String event, String description, String areaDesc, String urgency, String severity, String source) throws IOException {
 		    FileWriter writer = null;
