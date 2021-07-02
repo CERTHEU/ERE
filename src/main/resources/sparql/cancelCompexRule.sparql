@@ -1,0 +1,24 @@
+select distinct ?alert ?fr  ?device_hr ?frid ?hr_val  ?hr_time  ?device_hr_id  ?analysis_time 
+where {
+		?fr a ing:FR.
+		?fr ing:hasFrId ?frid.
+		?fr ing:hasVitalSign ?hr.
+		?fr ing:isTargetOfAlert ?alert.
+		?alert ing:showsEvent "FR immobilized"	.
+		?hr a ing:HeartRate.
+		?hr ing:hasRollingAverage ?hr_avg.
+		?hr_avg ing:hasWindowEnd ?hr_time. 
+		?hr_avg ing:hasWindowDuration ?hr_duration.
+		?hr_avg ing:hasValue ?hr_val.
+		?device_hr ing:makesMeasurement ?m_hr.
+		?m_hr ing:isMeasurementOf ?hr.
+		?device_hr ing:hasEquipmentId ?device_hr_id. 
+       
+		?analysis a ing:Analysis. 
+		?analysis ing:detects ?complex.
+		?complex a ing:Complex. 
+ 		?fr ing:hasPhysiologicalCondition ?complex.
+		?analysis ing:hasTimeStamp ?analysis_time. 
+        
+		FILTER(?hr_val > ?hr_limit)
+}

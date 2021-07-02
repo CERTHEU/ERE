@@ -1785,11 +1785,13 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 				long t1= System.currentTimeMillis();
 				long end1 = t1+600000;
 				int run1 = 0;
-				//while (System.currentTimeMillis() < end1) {
+				while (System.currentTimeMillis() < end1) {
 					System.out.println("run no" + run1);
 					example.loadResourceMapFromFile();
 					example.loadMeasurementsFromFile();
 					example.loadBootsAlertFromFile();
+					
+					//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 					//con.commit();
 					example.calculateRollingAverage("HeartRate", durationOfOneMinute);
 					example.getandInsertComplexRule(20, durationOfOneMinute);
@@ -1803,7 +1805,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 					Thread.sleep(18000);
 					run1=run1+1;
 				
-			//	}
+				}
 				
 				//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
 				
