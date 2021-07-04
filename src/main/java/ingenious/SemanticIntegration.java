@@ -1390,7 +1390,7 @@ public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAv
         System.out.println("Time of Analysis: " + str);
 
         Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-        AlertGenerator(dehydrationIRI.getLocalName(),"event","description","In the damaged block of buildings","urgency", "severity", fr.getLocalName());
+        AlertGenerator("Alert", dehydrationIRI.getLocalName(),"event","description","In the damaged block of buildings","urgency", "severity", fr.getLocalName());
 		executeUpdate(connection, modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
 		
       
@@ -1508,10 +1508,10 @@ public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws 
         
         
         if (tempLimit>=41) {
-        	AlertGenerator(heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Expected", "Severe", fr.getLocalName());
+        	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Expected", "Severe", fr.getLocalName());
         }
         else {
-        	AlertGenerator(heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
+        	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
         }
         
 		executeUpdate(connection, modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
@@ -1637,7 +1637,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
         //float bodytemp = Float.parseFloat(hr_measurement.stringValue());
         IRI alert_iri = factory.createIRI(Input.NAMESPACE, uuidAsString);
 
-        AlertGenerator(alert_iri.getLocalName(),"FR Health Status","description","areaDesc","Immediate", "Extreme", split[1]);
+        AlertGenerator("Alert", alert_iri.getLocalName(),"FR Health Status","description","areaDesc","Immediate", "Extreme", split[1]);
        
         
         
@@ -1658,7 +1658,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 	
 
 	 
-	 public void AlertGenerator(String identifier, String event, String description, String areaDesc, String urgency, String severity, String source) throws IOException {
+	 public void AlertGenerator(String msgType, String identifier, String event, String description, String areaDesc, String urgency, String severity, String source) throws IOException {
 		    FileWriter writer = null;
 			JSONParser parser = new JSONParser();
 			Object simpleObj = null;
@@ -1684,7 +1684,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 	         .write("sender", "ERE")
 	         .write("sent", str)
 	         .write("status", "Actual")
-	         .write("msgType", "Alert")
+	         .write("msgType", msgType)
 	         .write("source", source)
 	         .write("scope", "Public")
 	         .writeStartArray("code")
