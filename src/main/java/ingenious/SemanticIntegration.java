@@ -87,7 +87,12 @@ public class SemanticIntegration {
 	
 	JsonArray storage;
 	private RepositoryConnection connection;
-	// Connection Constructor
+	
+	public SemanticIntegration()
+	{
+	}
+	
+	// Connection Constructor	
 	public SemanticIntegration(RepositoryConnection connection)
 	{
 		this.connection = connection;
@@ -1614,6 +1619,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
       		+ "            $analysis_iri ing:detects $complex_iri. \r\n"
       		+ "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
       		+ "			   $analysis_iri ing:hasDataSource ?alert.\r\n"
+      		+ "            $analysis_iri  ing:triggers $alert_iri. \r\n"
       		+ "        \r\n"
       		+ "            $complex_iri a ing:Complex.\r\n"
       		+ "            $complex_iri a ing:PhysiologicalCondition.\r\n"
@@ -1641,7 +1647,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
        
         
         
-		executeUpdate(connection, modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit));
+		executeUpdate(connection, modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit),  new SimpleBinding("alert_iri", factory.createLiteral(uuidAsString)));
       
     }
     

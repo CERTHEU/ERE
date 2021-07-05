@@ -1,4 +1,4 @@
-select distinct ?alert ?fr  ?device_hr ?frid ?hr_val  ?hr_time  ?device_hr_id  ?analysis_time 
+select distinct ?alert ?fr  ?device_hr ?frid ?hr_val  ?hr_time  ?device_hr_id  ?analysis_time ?alert_id
 where {
 		?fr a ing:FR.
 		?fr ing:hasFrId ?frid.
@@ -19,6 +19,7 @@ where {
 		?complex a ing:Complex. 
  		?fr ing:hasPhysiologicalCondition ?complex.
 		?analysis ing:hasTimeStamp ?analysis_time. 
+		?analysis ing:triggers ?alert_id
         
 		FILTER(?hr_val > ?hr_limit)
 }
