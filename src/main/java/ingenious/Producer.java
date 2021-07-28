@@ -199,7 +199,7 @@ static void sendOutputAlert() {
 		
 		JsonReader reader;
 		try {
-			reader = new JsonReader(new FileReader("configInstance.getFilepath() + Measurements.json"));
+			reader = new JsonReader(new FileReader(configInstance.getFilepath() + "Measurements.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
 			return element.toString();
