@@ -13,11 +13,11 @@ import ingenious.utils.ConfigsLoader;
 
 public class KB {
 	
-	 public static final String REPOSITORY = "2";
+	public static final String REPOSITORY = "2";
 	 
-	  public RepositoryConnection connection;
-	  public ValueFactory factory;
-	  private RepositoryManager manager;
+	public RepositoryConnection connection;
+	public ValueFactory factory;
+	private RepositoryManager manager;
 	 
 	 public KB(String serverUrl) {
 			manager = new RemoteRepositoryManager(serverUrl);
@@ -66,6 +66,17 @@ public class KB {
 
 		public ValueFactory getFactory() {
 			return factory;
+		}
+		
+		public void shutDown() {
+			System.out.println("closing GraphDb manager [ {}]\n");
+			if (manager != null) {
+				try {
+					manager.shutDown();
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+			}
 		}
 
 }

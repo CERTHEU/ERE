@@ -63,8 +63,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
+import ingenious.rules.ExhaustionRule;
 import ingenious.utils.ConfigsLoader;
 import ingenious.utils.QueryUtils;
+import kb.KB;
 
 
 
@@ -77,37 +79,43 @@ public class SemanticIntegration {
 		configInstance.loadProperties();
 	}
 	
-	public static int durationOfFiveMinutes = 5;
-	public static int durationOfOneMinute = 1;
-	
-	public static float heatStrokeLimitBT = 40;
-	
-	public static float dehydrationLimitHR = 140;
-	public static float dehydrationLimitBT = 38;
-	
 	JsonArray storage;
-	private RepositoryConnection connection;
+	//private RepositoryConnection connection;
+	KB kb;
+	
 	
 	public SemanticIntegration()
 	{
 	}
 	
 	// Connection Constructor	
-	public SemanticIntegration(RepositoryConnection connection)
+/*	public SemanticIntegration(RepositoryConnection connection)
 	{
 		this.connection = connection;
+	}*/
+	
+	public SemanticIntegration(KB kb){
+		this.kb = kb;
+	}
+	
+	public KB getKB() {
+		return this.kb;
+	}
+	
+	public void setKB(KB kb) {
+		this.kb = kb;
 	}
 	
 	//Method to load ontology
 	public void loadOntology() throws RDFParseException, RepositoryException, IOException
 	{
-		connection.add(SemanticIntegration.class.getResourceAsStream("/exampleProject.owl"), "urn:base", RDFFormat.TURTLE);
+		kb.getConnection().add(SemanticIntegration.class.getResourceAsStream("/exampleProject.owl"), "urn:base", RDFFormat.TURTLE);
 	}
 	
 	//Method to clear the KB and load ontology
 	public void clearKBAndLoadOntology() throws RDFParseException, RepositoryException, IOException
 	{
-		connection.clear();
+		kb.getConnection().clear();
 		//loadOntology();`
 	}
 	
@@ -163,7 +171,7 @@ public class SemanticIntegration {
 				builder.subject(frIRI).add(Input.FRID, factory.createLiteral(ID));
 				
 				builder.subject(frIRI).add(Input.NAME, factory.createLiteral(object.get("NAME").getAsString()));
-				builder.subject(frIRI).add(Input.AGE, factory.createLiteral(object.get("AGE").getAsString()));
+				builder.subject(frIRI).add(Input.AGE, factory.createLiteral(object.get("AGE").getAsString(), XSD.INT));
 				builder.subject(frIRI).add(Input.GENDER, factory.createLiteral(object.get("GENDER").getAsString()));
 				builder.subject(frIRI).add(Input.ORGANIZATION, factory.createLiteral(object.get("ORGANIZATION").getAsString()));
 				builder.subject(frIRI).add(Input.TYPE, factory.createLiteral(object.get("TYPE").getAsString()));
@@ -177,11 +185,7 @@ public class SemanticIntegration {
 					builder.subject(frIRI).add(Input.WEIGHT, factory.createLiteral(object.get("WEIGHT").getAsString()));}
 				if (object.get("HEIGHT")!=null) {
 					builder.subject(frIRI).add(Input.HEIGHT, factory.createLiteral(object.get("HEIGHT").getAsString()));}
-				
-				
-				
-				
-				
+								
 			}
 			
 			else if (object.get("TYPE").getAsString().equals("K9"))
@@ -289,7 +293,7 @@ public class SemanticIntegration {
 			out.close();
 		}
 		
-		connection.add(model);
+		kb.getConnection().add(model);
 		
 	}
 	
@@ -347,7 +351,7 @@ public class SemanticIntegration {
 				builder.subject(frIRI).add(Input.FRID, factory.createLiteral(ID));
 				
 				builder.subject(frIRI).add(Input.NAME, factory.createLiteral(object.get("NAME").getAsString()));
-				builder.subject(frIRI).add(Input.AGE, factory.createLiteral(object.get("AGE").getAsString()));
+				builder.subject(frIRI).add(Input.AGE, factory.createLiteral(object.get("AGE").getAsInt()));
 				builder.subject(frIRI).add(Input.GENDER, factory.createLiteral(object.get("GENDER").getAsString()));
 				builder.subject(frIRI).add(Input.ORGANIZATION, factory.createLiteral(object.get("ORGANIZATION").getAsString()));
 				builder.subject(frIRI).add(Input.TYPE, factory.createLiteral(object.get("TYPE").getAsString()));
@@ -472,7 +476,7 @@ public class SemanticIntegration {
 			out.close();
 		}
 		
-		connection.add(model);
+		kb.getConnection().add(model);
 		
 	}
 	
@@ -557,7 +561,7 @@ public class SemanticIntegration {
 		
 									
 	//								
-									executeUpdate(connection, modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
+									executeUpdate(kb.getConnection(), modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
 								}
 								else if (object2.get("observedProperty").getAsString().equals("temperature"))
 								{
@@ -578,7 +582,7 @@ public class SemanticIntegration {
 											+"}"
 											   );
 									IRI prop_class = factory.createIRI(Input.NAMESPACE,"BodyTemperature");
-									executeUpdate(connection, modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
+									executeUpdate(kb.getConnection(), modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
 								}
 								else if (object2.get("observedProperty").getAsString().equals("oxygen levels"))
 								{
@@ -599,7 +603,7 @@ public class SemanticIntegration {
 											+"}\r\n"
 											   );
 									IRI prop_class = factory.createIRI(Input.NAMESPACE,"BloodOxygen");
-									executeUpdate(connection, modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
+									executeUpdate(kb.getConnection(), modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
 								}
 							}
 				} 
@@ -627,7 +631,7 @@ public class SemanticIntegration {
 				out.close();
 			}
 			
-			connection.add(model);
+			kb.getConnection().add(model);
 			
 		}
 	
@@ -715,7 +719,7 @@ public class SemanticIntegration {
 	
 								
 //								
-								executeUpdate(connection, modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
+								executeUpdate(kb.getConnection(), modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
 							}
 							else if (object2.get("observedProperty").getAsString().equals("temperature"))
 							{
@@ -736,7 +740,7 @@ public class SemanticIntegration {
 										+"}"
 										   );
 								IRI prop_class = factory.createIRI(Input.NAMESPACE,"BodyTemperature");
-								executeUpdate(connection, modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
+								executeUpdate(kb.getConnection(), modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
 							}
 							else if (object2.get("observedProperty").getAsString().equals("oxygen levels"))
 							{
@@ -756,7 +760,7 @@ public class SemanticIntegration {
 										+"}"
 										   );
 								IRI prop_class = factory.createIRI(Input.NAMESPACE,"BloodOxygen");
-								executeUpdate(connection, modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
+								executeUpdate(kb.getConnection(), modification, new SimpleBinding("measurementIRI", measurementIRI),  new SimpleBinding("equipmentIRI", equipmentIRI), new SimpleBinding("propClass", prop_class));
 							}
 						}
 			} 
@@ -784,7 +788,7 @@ public class SemanticIntegration {
 			out.close();
 		}
 		
-		connection.add(model);
+		kb.getConnection().add(model);
 		
 	}
 	
@@ -863,7 +867,7 @@ public class SemanticIntegration {
 			out.close();
 		}
 		
-		connection.add(model);}
+		kb.getConnection().add(model);}
 		
 	//}
 	
@@ -942,7 +946,7 @@ public class SemanticIntegration {
 			out.close();
 		}
 		
-		connection.add(model);}
+		kb.getConnection().add(model);}
 		
 	//}
 
@@ -1010,7 +1014,7 @@ public class SemanticIntegration {
         
         
         
-        TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
+        TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
         		
         		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
         			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1158,7 +1162,7 @@ public class SemanticIntegration {
 				+"}\n"   
 				   );
 		
-		executeUpdate(connection, modification, new SimpleBinding("period", period), new SimpleBinding("avg_iri", avg_iri), new SimpleBinding("new_val", RA),  new SimpleBinding("start_time", start), new SimpleBinding("end_time", end), new SimpleBinding("measured_property", property));
+		executeUpdate(kb.getConnection(), modification, new SimpleBinding("period", period), new SimpleBinding("avg_iri", avg_iri), new SimpleBinding("new_val", RA),  new SimpleBinding("start_time", start), new SimpleBinding("end_time", end), new SimpleBinding("measured_property", property));
 	}
 	
 //Dummy Reasoning Rule, not used in any demonstration whatsoever	
@@ -1173,7 +1177,7 @@ public void getAndInsertOxygen(float oxygenLimit, int periodOfAverage) throws Re
         Literal oxyLimit = factory.createLiteral(oxygenLimit);
       
         
-        TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
+        TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
         		
         		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
         			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1265,7 +1269,7 @@ public void getAndInsertOxygen(float oxygenLimit, int periodOfAverage) throws Re
             System.out.println(str);
 
             Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-  		executeUpdate(connection, modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
+  		executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
           
         }
         
@@ -1289,7 +1293,7 @@ public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAv
     
   
     
-    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
+    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
     		
     		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
     			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1396,7 +1400,7 @@ public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAv
 
         Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
         AlertGenerator("Alert", dehydrationIRI.getLocalName(),"event","description","In the damaged block of buildings","urgency", "severity", fr.getLocalName());
-		executeUpdate(connection, modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
+		executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
 		
       
     }
@@ -1418,7 +1422,7 @@ public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws 
     Literal heatstrokeLimit = factory.createLiteral(tempLimit);
   
     
-    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
+    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
     		
     		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
     			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1519,7 +1523,7 @@ public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws 
         	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
         }
         
-		executeUpdate(connection, modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
+		executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
 		
       
     }
@@ -1544,7 +1548,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
     
   
     
-    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(connection,
+    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
     		
     		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
     			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -1619,7 +1623,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
       		+ "            $analysis_iri ing:detects $complex_iri. \r\n"
       		+ "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
       		+ "			   $analysis_iri ing:hasDataSource ?alert.\r\n"
-      		+ "            $analysis_iri  ing:triggers $alert_iri. \r\n"
+      		+ "            $analysis_iri ing:triggers $alert_iri. \r\n"
       		+ "        \r\n"
       		+ "            $complex_iri a ing:Complex.\r\n"
       		+ "            $complex_iri a ing:PhysiologicalCondition.\r\n"
@@ -1647,7 +1651,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
        
         
         
-		executeUpdate(connection, modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit),  new SimpleBinding("alert_iri", factory.createLiteral(uuidAsString)));
+		executeUpdate(kb.getConnection(), modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit),  new SimpleBinding("alert_iri", factory.createLiteral(uuidAsString)));
       
     }
     
@@ -1725,107 +1729,118 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
 		
-		HTTPRepository rep = new HTTPRepository(configInstance.getGraphdb() + "repositories/2");
-	
-		try (RepositoryConnection con = rep.getConnection()) 
-		{
-			//con.clear();
-			con.begin();
-			SemanticIntegration example = new SemanticIntegration(con);
+		//HTTPRepository rep = new HTTPRepository(configInstance.getGraphdb() + "repositories/2");
+		SemanticIntegration example = new SemanticIntegration();
+		try {
+			KB kb = new KB(configInstance.getGraphdb());
+			example.setKB(kb);
 			
-			try
-			{
-				Consumer consumerMeas = new Consumer();
-				Consumer consumerRM = new Consumer();
-				Consumer consumerBA = new Consumer();
-				//example.loadOntology();
-				example.clearKBAndLoadOntology();
-				
-				//An theloume na to treksoume locally, trabame apo File (load from File methods)
-				//An theloume na to treksoume plhrws mesw Kafka, kanoume ola ta loads mesw stream kai kanena Produce. 
-				//An theloume na treksoume mesw kafka monoi mas, xwris synennohsh me EXUS klp, mporoume na kanoume produce monoi mas (px Producer.sendResourceMap())
-				//kai meta antistoixa loadResourceMapFromStream klp. Gia na to kanoume auto, prepei na eimaste syndedemenoi sto VPN. Akoma ki etsi, mporei na exei thema o Server
-				//h/kai o Kafka opote mporei na mhn treksei. Kalo einai na mhn asxoloumaste poly me auto to run, mia sto toso mono.
-				
-				
-				
-				//Producer.sendResourceMap();
-				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
-				//Producer.sendResourceMap();
-				//Producer.sendMeasurements();
-				//Producer.sendBootsAlert();
-				
-				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+			example.getKB().connection.clear();
+			
+			
+			Consumer consumerMeas = new Consumer();
+			Consumer consumerRM = new Consumer();
+			Consumer consumerBA = new Consumer();
+			//example.loadOntology();
+			example.clearKBAndLoadOntology();
+			
+			//An theloume na to treksoume locally, trabame apo File (load from File methods)
+			//An theloume na to treksoume plhrws mesw Kafka, kanoume ola ta loads mesw stream kai kanena Produce. 
+			//An theloume na treksoume mesw kafka monoi mas, xwris synennohsh me EXUS klp, mporoume na kanoume produce monoi mas (px Producer.sendResourceMap())
+			//kai meta antistoixa loadResourceMapFromStream klp. Gia na to kanoume auto, prepei na eimaste syndedemenoi sto VPN. Akoma ki etsi, mporei na exei thema o Server
+			//h/kai o Kafka opote mporei na mhn treksei. Kalo einai na mhn asxoloumaste poly me auto to run, mia sto toso mono.
+			
+			
+			
+			//Producer.sendResourceMap();
+			//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+			//Producer.sendResourceMap();
+			//Producer.sendMeasurements();
+			//Producer.sendBootsAlert();
+			
+			//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+			//con.commit();
+			
+			//If we want to run locally, we load the resources like below, once and from file. If we want to run using Kafka, we load the resource
+			//map from stream, like above. Then, we proceed to the while loop, which loads the measurements and boots alerts multiple times.
+			
+			long t1= System.currentTimeMillis();
+			long end1 = t1+600000;
+			int run1 = 0;
+		//	while (System.currentTimeMillis() < end1) {
+				System.out.println("run no" + run1);
+				example.loadResourceMapFromFile();
+				example.loadMeasurementsFromFile();
+				example.loadBootsAlertFromFile();
+				//kb.connection.commit();
+				//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
+				//con.commit();
+				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+				//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);			
+				//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
+				//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+				//con.commit();
+				//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 				//con.commit();
 				
-				//If we want to run locally, we load the resources like below, once and from file. If we want to run using Kafka, we load the resource
-				//map from stream, like above. Then, we proceed to the while loop, which loads the measurements and boots alerts multiple times.
+				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFourMinutes);
+				ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+				exhaustionRule.checkRule();
 				
-				long t1= System.currentTimeMillis();
-				long end1 = t1+600000;
-				int run1 = 0;
-			//	while (System.currentTimeMillis() < end1) {
-					System.out.println("run no" + run1);
-					example.loadResourceMapFromFile();
-					example.loadMeasurementsFromFile();
-					example.loadBootsAlertFromFile();
-					con.commit();
-					//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
-					//con.commit();
-					example.calculateRollingAverage("HeartRate", durationOfOneMinute);
-					example.getandInsertComplexRule(20, durationOfOneMinute);
-					//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);			
-					//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
-					//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-					//con.commit();
-					//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-					//con.commit();
-					
-					Thread.sleep(50000);
-					example.loadMeasurementsFromFile();
-					//con.commit();
-					example.calculateRollingAverage("HeartRate", durationOfOneMinute);
-					
-			   // 	run1=run1+1;
+				Thread.sleep(50000);
+				example.loadMeasurementsFromFile();
+				//con.commit();
+				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				
-				//}
-				
-				//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
-				
-				//example.calculateRollingAverage("BloodOxygen", durationOfFiveMinutes);
-				//example.getAndInsertOxygen(95, durationOfFiveMinutes);
-				long t= System.currentTimeMillis();
-				long end = t+600000;
-				int run=0;
-				
-				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
-				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
-				rolling averages and check if any rule we would like to check is realized.*/
-				
-//				while(System.currentTimeMillis() < end) {
-//					System.out.println("run no" + run);
-//					//example.loadResourceMapFromFile();
-//					//example.loadMeasurementsFromFile();
-//					
-//					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-//					example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-//					
-//					//KB Population ends, Reasoning Rules begin
-//					
-//					//con.commit();
-//					
-//					//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);
-//					//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
-//					//example.calculateRollingAverage("BodyTemperature", durationOfFiveMinutes);
-//					//example.calculateRollingAverage("HeartRate", durationOfFiveMinutes);
-//					//example.getAndInsertDehydration(dehydrationLimitBT, dehydrationLimitHR, durationOfFiveMinutes, durationOfFiveMinutes);
-//					example.calculateRollingAverage("HeartRate", durationOfOneMinute);
-//					example.getandInsertComplexRule(20, durationOfOneMinute);
-//					Thread.sleep(18000);
-//					run=run+1;
-//				}
-			}
-			finally
-			{
-				con.close();
-			}}}}
+		   // 	run1=run1+1;
+			
+			//}
+			
+			//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
+			
+			//example.calculateRollingAverage("BloodOxygen", durationOfFiveMinutes);
+			//example.getAndInsertOxygen(95, durationOfFiveMinutes);
+			long t= System.currentTimeMillis();
+			long end = t+600000;
+			int run=0;
+			
+			/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
+			produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
+			rolling averages and check if any rule we would like to check is realized.*/
+			
+//			while(System.currentTimeMillis() < end) {
+//				System.out.println("run no" + run);
+//				//example.loadResourceMapFromFile();
+//				//example.loadMeasurementsFromFile();
+//				
+//				example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+//				example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+//				
+//				//KB Population ends, Reasoning Rules begin
+//				
+//				//con.commit();
+//				
+//				//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);
+//				//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
+//				//example.calculateRollingAverage("BodyTemperature", durationOfFiveMinutes);
+//				//example.calculateRollingAverage("HeartRate", durationOfFiveMinutes);
+//				//example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfFiveMinutes, IngeniousConsts.durationOfFiveMinutes);
+//				example.calculateRollingAverage("HeartRate", durationOfOneMinute);
+//				example.getandInsertComplexRule(20, durationOfOneMinute);
+//				Thread.sleep(18000);
+//				run=run+1;
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			example.getKB().shutDown();
+		}
+	}
+		
+	
+		
+			
+
+
+}

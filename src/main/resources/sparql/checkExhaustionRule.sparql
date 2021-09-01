@@ -1,0 +1,31 @@
+SELECT DISTINCT ?value ?frid ?fr ?device_id ?device ?time ?analysis_time
+where {
+		?avg a ing:RollingAverage.
+		?avg ing:hasWindowEnd ?time.
+		?avg ing:hasWindowDuration ?time_limit.
+		?property ing:hasRollingAverage ?avg.
+		?property a ing:HeartRate.
+ 		?device ing:makesMeasurement ?m.
+		?m ing:isMeasurementOf ?property.
+		?device ing:hasEquipmentId ?device_id.
+		?fr ing:hasVitalSign ?property.
+		?fr ing:hasFrId ?frid.
+		?fr ing:hasAge ?age.
+  		?avg ing:hasValue ?value.
+		OPTIONAL{
+			?analysis a ing:Analysis.
+			?analysis ing:detects ?complex.
+			?complex a ing:Complex.
+			?fr ing:hasPhysiologicalCondition ?complex.
+			?analysis ing:hasTimeStamp ?analysis_time.
+		}
+		
+		{
+			FILTER (?value >= ?youngerHRLimit)
+			FILTER (?age <= ?youngerAgeLimit)
+		} UNION {
+			FILTER (?value >= ?olderHRLimit)
+			FILTER (?age >= ?olderAgeLimit)
+		}	
+		
+}
