@@ -14,9 +14,9 @@ where {
   		?avg ing:hasValue ?value.
 		OPTIONAL{
 			?analysis a ing:Analysis.
-			?analysis ing:detects ?complex.
-			?complex a ing:Complex.
-			?fr ing:hasPhysiologicalCondition ?complex.
+			?analysis ing:detects ?exhaustion.
+			?exhaustion a ing:Exhaustion.
+			?fr ing:hasPhysiologicalCondition ?exhaustion.
 			?analysis ing:hasTimeStamp ?analysis_time.
 		}
 		
