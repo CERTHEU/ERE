@@ -4,9 +4,17 @@ import java.io.IOException;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.UpdateExecutionException;
 import org.eclipse.rdf4j.query.impl.SimpleBinding;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import ingenious.Input;
 import ingenious.SemanticIntegration;
@@ -49,7 +57,16 @@ public class CheckComplexRule {
 			Value alert_id = bindingSet.getBinding("alert_id").getValue();
 			//Cancel the alert, we should save the alert iri in semantic integration
 			new SemanticIntegration().AlertGenerator("Cancel", alert_id.stringValue(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
+			//Delete data from Cancel Complex Rule in graphdb
+			String sparql2 = MyUtils.fileToString("sparql/deleteDataFromCancelCompexRule.sparql");
+			String query2 = Input.PREFIXES + sparql2;
+			System.out.println("Delete data from Complex rule... ");
+			SemanticIntegration.executeUpdate(kb.getConnection(), query2, new SimpleBinding("hr_limit", kb.factory.createLiteral(20)));
+	    	System.out.println("Done!"); 
 		}
+		
 
 	}
+
+	
 }
