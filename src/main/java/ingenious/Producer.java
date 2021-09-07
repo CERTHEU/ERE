@@ -46,6 +46,11 @@ public class Producer {
 	
 	static ConfigsLoader configInstance;
 	
+	static {
+		configInstance = ConfigsLoader.getInstance();
+		configInstance.loadProperties();
+	}
+	
 	static void sendResourceMap() {
 		
 		String bootstrapServers = "192.168.30.202:14200";

@@ -1,13 +1,7 @@
 {
-  "header": 
-  {
-    "version": "1.0.0",
-    "sent": "2020-12-21T11:29:47+00:00",
-    "source": "UN-0000",
-    "headerCRC": "00112233",
-    "payloadCRC": "AABBCCDD"
-  },
-  "payload": [
+  "timestamp": "2020-09-28T15:22:35+00:00",
+  "source": "EF32985",
+  "observations": [
     {
       "observationId": "9bb325ae-b8c3-4dfa-974d-e7ac69096062",
       "sensorId": "UN-128",
