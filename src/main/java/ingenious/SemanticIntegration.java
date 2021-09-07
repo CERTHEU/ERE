@@ -951,7 +951,7 @@ public class SemanticIntegration {
 	//}
 
 	//Execute update of KB
-	public void executeUpdate(RepositoryConnection repositoryConnection, String update, Binding... bindings)
+	public static void executeUpdate(RepositoryConnection repositoryConnection, String update, Binding... bindings)
             throws MalformedQueryException, RepositoryException, UpdateExecutionException {
         Update preparedUpdate = repositoryConnection.prepareUpdate(QueryLanguage.SPARQL, update);
         // Setting any potential bindings (query parameters)
@@ -1342,7 +1342,7 @@ public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAv
     
     while (result.hasNext()) {
     	
-        
+    	
         BindingSet bindingSet = result.next();
         //IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
         Value bt_measurement = bindingSet.getBinding("bt_val").getValue();
@@ -1399,7 +1399,7 @@ public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAv
         System.out.println("Time of Analysis: " + str);
 
         Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-        AlertGenerator("Alert", dehydrationIRI.getLocalName(),"event","description","In the damaged block of buildings","urgency", "severity", fr.getLocalName());
+        AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", fr.getLocalName());
 		executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
 		
       
@@ -1517,7 +1517,7 @@ public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws 
         
         
         if (tempLimit>=41) {
-        	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Expected", "Severe", fr.getLocalName());
+        	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", fr.getLocalName());
         }
         else {
         	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
@@ -1647,7 +1647,7 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
         //float bodytemp = Float.parseFloat(hr_measurement.stringValue());
         IRI alert_iri = factory.createIRI(Input.NAMESPACE, uuidAsString);
 
-        AlertGenerator("Alert", alert_iri.getLocalName(),"FR Health Status","description","areaDesc","Immediate", "Extreme", split[1]);
+        AlertGenerator("Alert", alert_iri.getLocalName(),"FR is in serious danger, his situation is extreme and he needs immediate attention","description","areaDesc","Immediate", "Extreme", split[1]);
        
         
         
@@ -1776,17 +1776,24 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 				//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 				//con.commit();
 				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				//Enable Complex Rule and read Measurements from Measurements.json file
 				example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
-				//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);			
-				//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
+				example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+				//Enable Heatstroke Rule and read Measurements from MeasurementsDehydration.json file
+				//example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);
 				//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
 				//con.commit();
 				//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 				//con.commit();
 				
 				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFourMinutes);
-				ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
-				exhaustionRule.checkRule();
+				//Enable Exhaustion Rule and read Measurements from MeasurementsExhaustion.json file
+				//ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+				//exhaustionRule.checkRule();
+				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFiveMinutes);
+				example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfFiveMinutes);
+				//Enable Dehydration Rule and read Measurements from MeasurementsDehydration.json file
+				//example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfFiveMinutes, IngeniousConsts.durationOfFiveMinutes); 
 				
 				Thread.sleep(50000);
 				example.loadMeasurementsFromFile();

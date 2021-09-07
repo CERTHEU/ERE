@@ -13,7 +13,7 @@
       "sensorId": "UN-128",
       "observedProperty": "heart beat",
       "time": "2021-09-30T11:29:47+00:00",
-      "result": 25,
+      "result": 175,
       "location": "POINT (9.558408266609923 8.321844244298909)",
       "parameters": []
     },
@@ -40,7 +40,7 @@
       "sensorId": "UN-128",
       "observedProperty": "heart beat",
       "time": "2021-09-30T11:29:49+00:00",
-      "result": 14,
+      "result": 180,
       "location": "POINT (9.558408266609923 8.321844244298909)",
       "parameters": []
     },
@@ -68,7 +68,7 @@
       "sensorId": "UN-128",
       "observedProperty": "heart beat",
       "time": "2021-09-30T11:29:51+00:00",
-      "result": 17,
+      "result": 172,
       "location": "POINT (9.558408266609923 8.321844244298909)",
       "parameters": []
     },
@@ -104,7 +104,7 @@
       "sensorId": "UN-128",
       "observedProperty": "temperature",
       "time": "2021-09-30T12:25:51+00:00",
-      "result": 36.6,
+      "result": 39,
       "location": "POINT (9.558408266609923 8.321844244298909)",
       "parameters": []
     },
@@ -113,8 +113,8 @@
       "sensorId": "UN-128",
       "observedProperty": "temperature",
       "time": "2021-09-30T12:30:51+00:00",
-      "result": 36.6,
-      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "result": 39.6,
+      "location": "POINT (9.558407266609923 8.321844244298909)",
       "parameters": []
     },
 	{
@@ -122,8 +122,8 @@
       "sensorId": "UN-128",
       "observedProperty": "temperature",
       "time": "2021-09-30T12:35:51+00:00",
-      "result": 36.6,
-      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "result": 39.6,
+      "location": "POINT (9.558407266609923 8.321844244298909)",
       "parameters": []
     }
 ]
