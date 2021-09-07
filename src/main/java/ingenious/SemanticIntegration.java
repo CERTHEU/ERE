@@ -657,11 +657,11 @@ public class SemanticIntegration {
 		//object = object.getAsJsonObject("RESOURCE");
 		
 		IRI headerIRI = factory.createIRI(Input.NAMESPACE, "header");
-		object=object.getAsJsonObject("header");
+		//object=object.getAsJsonObject("header");
 		//System.out.println(object.get("version").getAsString());
-		builder.subject(headerIRI).add(RDF.TYPE, "ing:header");
-		builder.subject(headerIRI).add(Input.VERSION, factory.createLiteral(object.get("version").getAsString()));
-		builder.subject(headerIRI).add(Input.SENT, factory.createLiteral(object.get("sent").getAsString()));
+	//	builder.subject(headerIRI).add(RDF.TYPE, "ing:header");
+	//	builder.subject(headerIRI).add(Input.VERSION, factory.createLiteral(object.get("version").getAsString()));
+		builder.subject(headerIRI).add(Input.TIMESTAMP, factory.createLiteral(object.get("timestamp").getAsString()));
 		//builder.subject(headerIRI).add(RDF.TYPE, "ing:header").add(Input.SOURCE, factory.createLiteral(object.get("source").getAsString()));
 		for (int i=0;i< storage.size(); i++)
 		{
@@ -672,10 +672,10 @@ public class SemanticIntegration {
 						builder.subject(headerIRI).add(Input.SOURCE, equipmentIRI);
 					}
 		}
-		builder.subject(headerIRI).add(Input.HEADERCRC, factory.createLiteral(object.get("headerCRC").getAsString()));
-		builder.subject(headerIRI).add(Input.PAYLOADCRC, factory.createLiteral(object.get("payloadCRC").getAsString()));
+		//builder.subject(headerIRI).add(Input.HEADERCRC, factory.createLiteral(object.get("headerCRC").getAsString()));
+		//builder.subject(headerIRI).add(Input.PAYLOADCRC, factory.createLiteral(object.get("payloadCRC").getAsString()));
 		//object=object.getAsJsonObject("payload");
-		JsonArray arrayOfMeasurements = object2.getAsJsonArray("payload");
+		JsonArray arrayOfMeasurements = object2.getAsJsonArray("observations");
 		//System.out.println("test "+ arrayOfResources.size());
 		
 		for (int i=0;i< arrayOfMeasurements.size(); i++)
