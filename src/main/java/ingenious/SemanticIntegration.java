@@ -1751,16 +1751,28 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 			//kai meta antistoixa loadResourceMapFromStream klp. Gia na to kanoume auto, prepei na eimaste syndedemenoi sto VPN. Akoma ki etsi, mporei na exei thema o Server
 			//h/kai o Kafka opote mporei na mhn treksei. Kalo einai na mhn asxoloumaste poly me auto to run, mia sto toso mono.
 			
+			//KAFKA SIMULATION
+			/*long t2= System.currentTimeMillis();
+			long end2 = t2+600000;
+			int run2 = 0;
+			while (System.currentTimeMillis() < end2) {
+				
+				System.out.println("run no" + run2);
+				Producer.sendResourceMap();
+				example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+				Producer.sendMeasurements();
+				example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+				Producer.sendBootsAlert();
+				example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 			
+				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
 			
-			//Producer.sendResourceMap();
-			//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
-			//Producer.sendResourceMap();
-			//Producer.sendMeasurements();
-			//Producer.sendBootsAlert();
+				Thread.sleep(50000);
+
+				run2=run2+1;
+			}*/
 			
-			//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
-			//con.commit();
 			
 			//If we want to run locally, we load the resources like below, once and from file. If we want to run using Kafka, we load the resource
 			//map from stream, like above. Then, we proceed to the while loop, which loads the measurements and boots alerts multiple times.
@@ -1805,15 +1817,18 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 			
 			//}
 			
-			//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
+				//Savvas has told us that this oxygen had been created just for testing purposes
+				//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
 			
-			//example.calculateRollingAverage("BloodOxygen", durationOfFiveMinutes);
-			//example.getAndInsertOxygen(95, durationOfFiveMinutes);
-			long t= System.currentTimeMillis();
-			long end = t+600000;
-			int run=0;
+				//example.calculateRollingAverage("BloodOxygen", durationOfFiveMinutes);
+				//example.getAndInsertOxygen(95, durationOfFiveMinutes);
+				long t= System.currentTimeMillis();
+				long end = t+600000;
+				int run=0;
 			
-			/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
+				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+				
+				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
 			produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
 			rolling averages and check if any rule we would like to check is realized.*/
 			
