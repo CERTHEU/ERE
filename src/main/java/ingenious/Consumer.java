@@ -22,7 +22,7 @@ public class Consumer {
 				Logger logger = LoggerFactory.getLogger(Consumer.class.getName());
 				String bootstrapServers = "192.168.30.202:14200";
 				String grp_id = "resource_map";
-				String topic = "ingenious-resources-test";
+				String topic = "resource_map";
 				String group_instance ="01";
 				//properties
 				Properties properties = new Properties();
@@ -61,7 +61,7 @@ public class Consumer {
 		// TODO Auto-generated method stub
 				Logger logger = LoggerFactory.getLogger(Consumer.class.getName());
 				String bootstrapServers = "192.168.30.202:14200";
-				String grp_id = "ingenious-test-measurements";
+				String grp_id = "ingenious-obsers-test";
 				String topic = "ingenious-observations-test";
 				String group_instance ="02";
 				//properties

@@ -772,7 +772,8 @@ public class SemanticIntegration {
 			builder.subject(measurementIRI).add(Input.TIMESTAMP, factory.createLiteral(object2.get("time").getAsString(), XSD.DATETIME));
 			
 			builder.subject(measurementIRI).add(Input.RESULT, factory.createLiteral(object2.get("result").getAsString(), XSD.FLOAT));
-			builder.subject(measurementIRI).add(Input.LOCATION, factory.createLiteral(object2.get("location").getAsString()));
+			//During EXUS test about SST 7 , the json sent had not location
+			//builder.subject(measurementIRI).add(Input.LOCATION, factory.createLiteral(object2.get("location").getAsString()));
 			//location won't remain a String, testing.
 		}
 		
@@ -1055,76 +1056,74 @@ public class SemanticIntegration {
 	
 	//Calculate Rolling Average for a certain property type and average period
 	public void calculateRollingAverage(String propertyType, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
-        System.out.println("calculateRollingAverage");
-        TupleQueryResult result = getValues(propertyType, periodOfAverage);
-        int add=0;
-        float what=0;
-        String str, str2, measuredProperty = null;
+		System.out.println("calculateRollingAverage");
+		TupleQueryResult result = getValues(propertyType, periodOfAverage);
+		int add=0;
+		float what=0;
+		String str, str2, measuredProperty = null;
         
-        List<Long> dateTimesInEpochSeconds= new ArrayList<>();
+		List<Long> dateTimesInEpochSeconds= new ArrayList<>();
         
-        long currentDateTime;
-        long minDateTime=0;
-        long maxDateTime=1;
-        IRI property=null;
-        //System.out.println(result.hasNext());
-        //We make the TupleQueryResult mutable, so that it can be processed again.
-        ((MutableTupleQueryResult) result).beforeFirst();
-        System.out.println(result.hasNext());
-        OffsetDateTime minDate = null;
-        OffsetDateTime maxDate = null;
-        Long min=(long) 0;
-        while (result.hasNext()) {
-        	
-            add=add+1;
-            BindingSet bindingSet = result.next();
-            //IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
-            Value measurement = bindingSet.getBinding("value").getValue();
-            str=measurement.stringValue();
-            what = what + Float.parseFloat(str);
+		long currentDateTime;
+		long minDateTime=0;
+		long maxDateTime=1;
+		IRI property=null;
+		//System.out.println(result.hasNext());
+		//We make the TupleQueryResult mutable, so that it can be processed again.
+		((MutableTupleQueryResult) result).beforeFirst();
+		System.out.println(result.hasNext());
+		OffsetDateTime minDate = null;
+		OffsetDateTime maxDate = null;
+		Long min=(long) 0;
+		while (result.hasNext()) {
+			add=add+1;
+			BindingSet bindingSet = result.next();
+			//IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
+			Value measurement = bindingSet.getBinding("value").getValue();
+			str=measurement.stringValue();
+			what = what + Float.parseFloat(str);
             
-            //System.out.println(add + " check " + what);
-            Value dateTime = bindingSet.getBinding("time").getValue();
-            str2=dateTime.stringValue();
+			//System.out.println(add + " check " + what);
+			Value dateTime = bindingSet.getBinding("time").getValue();
+			str2=dateTime.stringValue();
           
-            dateTimesInEpochSeconds.add(getDateTimeToEpochSecondsFromString(str2));
+			dateTimesInEpochSeconds.add(getDateTimeToEpochSecondsFromString(str2));
             
-            property = (IRI) bindingSet.getBinding("property").getValue();
-            measuredProperty=property.stringValue();
-            //Value p1 = bindingSet.getBinding("property").getValue();
+			property = (IRI) bindingSet.getBinding("property").getValue();
+			measuredProperty=property.stringValue();
+			//Value p1 = bindingSet.getBinding("property").getValue();
 
-            System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
-            System.out.println(dateTimesInEpochSeconds);
-            Long max = dateTimesInEpochSeconds.stream().mapToLong(v -> v).max().orElseThrow(NoSuchElementException::new);
-            System.out.println(max);
-            maxDateTime = max;
-            min = dateTimesInEpochSeconds.stream().mapToLong(v -> v).min().orElseThrow(NoSuchElementException::new);
-            System.out.println(min);
-            minDateTime = min;
-            minDate = getDateTimeFromEpochSeconds(min);
-            System.out.println(minDate);
-            maxDate = getDateTimeFromEpochSeconds(max);
-            System.out.println(maxDate);
-        }
-        float mean;
-        mean = what / add;
-        if (minDate !=null) {
-        	System.out.println("Mean: " + (what/add));
-        }
-        //Gia na treksoume locally, PREPEI na afairoume tis grammes 1085 kai 1092 kai 1093
-        //To +60 mpainei gia na yparxei kapoio normalization stous xronous tou Rolling Average. Poly pithanon na thelei allagh. To periodOfAverage genika thelei optimization.
-      //  if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
-        	System.out.println(min);
-        	if (minDate != null)
-        		updateRollingAverage(property, mean, minDate.toString(), maxDate.toString(), periodOfAverage);
-        	else
-        		System.out.println("No rolling average was produced, therefore reasoning cannot proceed.");
-           
-      //  }
-      //  else 
-       // 	System.out.println("Waiting for more data.");
-        result.close();
-    }
+			System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
+			System.out.println(dateTimesInEpochSeconds);
+			Long max = dateTimesInEpochSeconds.stream().mapToLong(v -> v).max().orElseThrow(NoSuchElementException::new);
+			System.out.println(max);
+			maxDateTime = max;
+			min = dateTimesInEpochSeconds.stream().mapToLong(v -> v).min().orElseThrow(NoSuchElementException::new);
+			System.out.println(min);
+			minDateTime = min;
+			minDate = getDateTimeFromEpochSeconds(min);
+			System.out.println(minDate);
+			maxDate = getDateTimeFromEpochSeconds(max);
+			System.out.println(maxDate);
+		}
+		float mean;
+		mean = what / add;
+		if (minDate !=null) {
+			System.out.println("Mean: " + (what/add));
+		}
+		//Gia na treksoume locally, PREPEI na afairoume tis grammes 1085 kai 1092 kai 1093
+		//To +60 mpainei gia na yparxei kapoio normalization stous xronous tou Rolling Average. Poly pithanon na thelei allagh. To periodOfAverage genika thelei optimization.
+		if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
+			System.out.println(min);
+			if (minDate != null)
+				updateRollingAverage(property, mean, minDate.toString(), maxDate.toString(), periodOfAverage);
+			else
+				System.out.println("No rolling average was produced, therefore reasoning cannot proceed."); 
+        } else
+        	//Only for KAFKA since KAFKA is reading periodically and not once like in the local implementation
+        	System.out.println("Waiting for more data.");
+		result.close();
+	}
 	
 	//Update Rolling Average
 	public void updateRollingAverage(IRI property, float RollingAverage, String startDateTime, String endDateTime, int periodOfAverage)
@@ -1166,138 +1165,123 @@ public class SemanticIntegration {
 		executeUpdate(kb.getConnection(), modification, new SimpleBinding("period", period), new SimpleBinding("avg_iri", avg_iri), new SimpleBinding("new_val", RA),  new SimpleBinding("start_time", start), new SimpleBinding("end_time", end), new SimpleBinding("measured_property", property));
 	}
 	
-//Dummy Reasoning Rule, not used in any demonstration whatsoever	
-public void getAndInsertOxygen(float oxygenLimit, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+	//Dummy Reasoning Rule, not used in any demonstration whatsoever	
+	public void getAndInsertOxygen(float oxygenLimit, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
         
-        ValueFactory factory = SimpleValueFactory.getInstance();
+		ValueFactory factory = SimpleValueFactory.getInstance();
         
-        
-       
 
-        Literal period = factory.createLiteral(periodOfAverage);
-        Literal oxyLimit = factory.createLiteral(oxygenLimit);
+		Literal period = factory.createLiteral(periodOfAverage);
+		Literal oxyLimit = factory.createLiteral(oxygenLimit);
       
+		TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
+				"PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+						+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+						+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
+						//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+						+ "SELECT DISTINCT ?value ?frid ?fr ?device_id ?device ?time ?analysis_time\r\n"
+						+ "where { \r\n"
+						+ "    ?avg a ing:RollingAverage.\r\n"
+						+ "    ?avg ing:hasWindowEnd ?time.\r\n"
+						+ "    ?avg ing:hasWindowDuration ?time_limit.\r\n"
+						+ "    ?property ing:hasRollingAverage ?avg.  \r\n"
+						+ "    ?property a ing:BloodOxygen. \r\n"
+						+ "    \r\n"
+						+ "    ?device ing:makesMeasurement ?m.\r\n"
+						+ "    ?m ing:isMeasurementOf ?property.\r\n"
+						+ "    ?device ing:hasEquipmentId ?device_id. \r\n"
+						+ "    \r\n"
+						+ "    ?fr ing:hasVitalSign ?property.\r\n"
+						+ "    ?fr ing:hasFrId ?frid. \r\n"
+						+ "    ?avg ing:hasValue ?value.\r\n"
+						+ "    \r\n"
+						+ "    \r\n"
+						+ "    OPTIONAL{\r\n"
+						+ "        ?analysis a ing:Analysis. \r\n"
+						+ "        ?analysis ing:detects ?heatstroke.\r\n"
+						+ "        ?heatstroke a ing:Heatstroke. \r\n"
+						+ "        ?fr ing:hasPhysiologicalCondition ?heatstroke.\r\n"
+						+ "        ?analysis ing:hasTimeStamp ?analysis_time. \r\n"
+						+ "    }\r\n"
+						+ "    FILTER (?value>?oxyLimit)\r\n"
+						+ "}"
+						, new SimpleBinding("oxyLimit", oxyLimit), new SimpleBinding("time_limit", period)
+						);
+		//System.out.println(result.hasNext());
         
-        TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
-        		
-        		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-        			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
-        			+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
-        			//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-        			+ "SELECT DISTINCT ?value ?frid ?fr ?device_id ?device ?time ?analysis_time\r\n"
-        			+ "where { \r\n"
-        			+ "    ?avg a ing:RollingAverage.\r\n"
-        			+ "    ?avg ing:hasWindowEnd ?time.\r\n"
-        			+ "    ?avg ing:hasWindowDuration ?time_limit.\r\n"
-        			+ "    ?property ing:hasRollingAverage ?avg.  \r\n"
-        			+ "    ?property a ing:BloodOxygen. \r\n"
-        			+ "    \r\n"
-        			+ "    ?device ing:makesMeasurement ?m.\r\n"
-        			+ "    ?m ing:isMeasurementOf ?property.\r\n"
-        			+ "    ?device ing:hasEquipmentId ?device_id. \r\n"
-        			+ "    \r\n"
-        			+ "    ?fr ing:hasVitalSign ?property.\r\n"
-        			+ "    ?fr ing:hasFrId ?frid. \r\n"
-        			+ "    ?avg ing:hasValue ?value.\r\n"
-        			+ "    \r\n"
-        			+ "    \r\n"
-        			+ "    OPTIONAL{\r\n"
-        			+ "        ?analysis a ing:Analysis. \r\n"
-        			+ "        ?analysis ing:detects ?heatstroke.\r\n"
-        			+ "        ?heatstroke a ing:Heatstroke. \r\n"
-        			+ "        ?fr ing:hasPhysiologicalCondition ?heatstroke.\r\n"
-        			+ "        ?analysis ing:hasTimeStamp ?analysis_time. \r\n"
-        			+ "    }\r\n"
-        			+ "    FILTER (?value>?oxyLimit)\r\n"
-        			+ "}"
-        			    , new SimpleBinding("oxyLimit", oxyLimit), new SimpleBinding("time_limit", period)
-        			    );
-        //System.out.println(result.hasNext());
-        
-        while (result.hasNext()) {
-        	
-            
-            BindingSet bindingSet = result.next();
-            //IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
-            Value measurement = bindingSet.getBinding("value").getValue();
-            Value frId = bindingSet.getBinding("frid").getValue();
-            IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
-            Value deviceId = bindingSet.getBinding("device_id").getValue();
-            IRI device = (IRI) bindingSet.getBinding("device").getValue();
-            Value dateTime = bindingSet.getBinding("time").getValue();
-            if (bindingSet.getBinding("analysis_time")!=null) {
-            	Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
-                System.out.println("Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
-            }
-            else {
-                System.out.println("Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE: " + device.stringValue() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue());
-            }
-            IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Heatstroke_" + fr.getLocalName());
-            IRI heatstrokeIRI = factory.createIRI(Input.NAMESPACE, "Heatstroke_" + fr.getLocalName());
-            //IRI property = (IRI) bindingSet.getBinding("property").getValue();
-            //Value p1 = bindingSet.getBinding("property").getValue();
+		while (result.hasNext()) {
+			BindingSet bindingSet = result.next();
+			//IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
+			Value measurement = bindingSet.getBinding("value").getValue();
+			Value frId = bindingSet.getBinding("frid").getValue();
+			IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
+			Value deviceId = bindingSet.getBinding("device_id").getValue();
+			IRI device = (IRI) bindingSet.getBinding("device").getValue();
+			Value dateTime = bindingSet.getBinding("time").getValue();
+			if (bindingSet.getBinding("analysis_time") != null) {
+				Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
+				System.out.println("Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
+			} else {
+				System.out.println("Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE: " + device.stringValue() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue());
+			}
+			IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Heatstroke_" + fr.getLocalName());
+			IRI heatstrokeIRI = factory.createIRI(Input.NAMESPACE, "Heatstroke_" + fr.getLocalName());
+			//IRI property = (IRI) bindingSet.getBinding("property").getValue();
+			//Value p1 = bindingSet.getBinding("property").getValue();
          
-            //System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
-            String modification=(
-
-     		     	  "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-     		        + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
-     			    + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
-          		+ "DELETE{\r\n"
-          		+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-          		+ "    }\r\n"
-          		+ "    INSERT {\r\n"
-          		+ "        $analysis_iri a ing:Analysis.\r\n"
-          		
-          		+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-          		+ "        $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
-          		+ "        $analysis_iri ing:detects $heatstroke_iri. \r\n"
-          		+ "        $analysis_iri ing:hasDataSource $device_iri.\r\n"
+			//System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
+			String modification=(
+					"PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+							+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+							+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
+							+ "DELETE{\r\n"
+							+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "    }\r\n"
+							+ "    INSERT {\r\n"
+							+ "        $analysis_iri a ing:Analysis.\r\n"
+							+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "        $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
+							+ "        $analysis_iri ing:detects $heatstroke_iri. \r\n"
+							+ "        $analysis_iri ing:hasDataSource $device_iri.\r\n"
           	
-          		+ "        $heatstroke_iri a ing:Heatstroke.\r\n"
-          		+ "        $heatstroke_iri a ing:PhysiologicalCondition.\r\n"
+							+ "        $heatstroke_iri a ing:Heatstroke.\r\n"
+							+ "        $heatstroke_iri a ing:PhysiologicalCondition.\r\n"
           		
-          		+ "        $fr_iri ing:hasPhysiologicalCondition $heatstroke_iri.\r\n"
-          		+ "    }\r\n"
-          		+ "    WHERE{\r\n"
-          		+ "    OPTIONAL{\r\n"
-          		+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-          		+ "        }\r\n"
-          		+ "    }"
-  				);
-            long timestamp = getCurrentDateTimeToEpochSeconds();
-            String str = getDateTimeFromEpochSeconds(timestamp).toString();
-            System.out.println(str);
+							+ "        $fr_iri ing:hasPhysiologicalCondition $heatstroke_iri.\r\n"
+							+ "    }\r\n"
+							+ "    WHERE{\r\n"
+							+ "    OPTIONAL{\r\n"
+							+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "        }\r\n"
+							+ "    }"
+					);
+			long timestamp = getCurrentDateTimeToEpochSeconds();
+			String str = getDateTimeFromEpochSeconds(timestamp).toString();
+			System.out.println(str);
 
-            Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-  		executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
+			Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
+			executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
           
-        }
+		}
         
-        // Once we are done with a particular result we need to close it
-        result.close();
+		// Once we are done with a particular result we need to close it
+		result.close();
         
-    }
+	}
 
-//Get and Insert Dehydration Rule results
-public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAverageBT, int periodOfAverageHR) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
+	//Get and Insert Dehydration Rule results
+	public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAverageBT, int periodOfAverageHR) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
     
-    ValueFactory factory = SimpleValueFactory.getInstance();
-    
-    
-   
-
-    Literal periodBT = factory.createLiteral(periodOfAverageBT);
-    Literal periodHR = factory.createLiteral(periodOfAverageHR);
-    Literal btempLimit = factory.createLiteral(btLimit);
-    Literal hrateLimit = factory.createLiteral(htlimit);
+		ValueFactory factory = SimpleValueFactory.getInstance();
+		Literal periodBT = factory.createLiteral(periodOfAverageBT);
+		Literal periodHR = factory.createLiteral(periodOfAverageHR);
+		Literal btempLimit = factory.createLiteral(btLimit);
+		Literal hrateLimit = factory.createLiteral(htlimit);
     
   
-    
-    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
-    		
-    		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-    			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+		TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
+    			"PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+    		    +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
     			+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
     			//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
     			+ "select distinct ?fr ?device_bt ?device_hr ?frid ?hr_val ?bt_val ?hr_time ?bt_time ?device_hr_id ?device_bt_id ?analysis_time \r\n"
@@ -1337,395 +1321,370 @@ public void getAndInsertDehydration(float btLimit, float htlimit, int periodOfAv
     			+ "    \r\n"
     			+ "    FILTER(?bt_val>$bt_limit && ?hr_val>$hr_limit)\r\n"
     			+ "}"
-    			    , new SimpleBinding("bt_limit", btempLimit), new SimpleBinding("hr_limit", hrateLimit), new SimpleBinding("bt_duration", periodBT), new SimpleBinding("hr_duration", periodHR)
-    			    );
-    //System.out.println(result.hasNext());
+    			, new SimpleBinding("bt_limit", btempLimit), new SimpleBinding("hr_limit", hrateLimit), new SimpleBinding("bt_duration", periodBT), new SimpleBinding("hr_duration", periodHR)
+    		);
+		//System.out.println(result.hasNext());
     
-    while (result.hasNext()) {
-    	
-    	
-        BindingSet bindingSet = result.next();
-        //IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
-        Value bt_measurement = bindingSet.getBinding("bt_val").getValue();
-        Value hr_measurement = bindingSet.getBinding("hr_val").getValue();
-        Value frId = bindingSet.getBinding("frid").getValue();
-        IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
-        Value deviceHRId = bindingSet.getBinding("device_hr_id").getValue();
-        Value deviceBTId = bindingSet.getBinding("device_bt_id").getValue();
-        IRI deviceBT = (IRI) bindingSet.getBinding("device_bt").getValue();
-        IRI deviceHR = (IRI) bindingSet.getBinding("device_hr").getValue();
-        Value dateTimeBT = bindingSet.getBinding("bt_time").getValue();
-        Value dateTimeHR = bindingSet.getBinding("hr_time").getValue();
-        if (bindingSet.getBinding("analysis_time")!=null) {
-        	Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
-            System.out.println("DEHYDRATION || Body temperature value: " + bt_measurement.stringValue() + " || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_BT: " + deviceBT.stringValue() + " || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_BT_ID: " +deviceBTId.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME BT: " + dateTimeBT.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
-        }
-        else {
-            System.out.println("DEHYDRATION || Body temperature value: " + bt_measurement.stringValue() + " || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_BT: " + deviceBT.stringValue() + " || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_BT_ID: " +deviceBTId.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME BT: " + dateTimeBT.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue());	
-        }
-        IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Dehydration_" + fr.getLocalName());
-        IRI dehydrationIRI = factory.createIRI(Input.NAMESPACE, "Dehydration_" + fr.getLocalName());
-        //IRI property = (IRI) bindingSet.getBinding("property").getValue();
-        //Value p1 = bindingSet.getBinding("property").getValue();
-     
-        //System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
-        String modification=(
-
- 		     	  "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
- 		        + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
- 			    + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
-      		+ "DELETE{\r\n"
-      		+ "            $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-      		+ "        }\r\n"
-      		+ "        INSERT {\r\n"
-      		+ "            $analysis_iri a ing:Analysis.\r\n"
-      		+ "            $analysis_iri ing:hasTimeStamp $timestamp.\r\n"
-      		+ "            $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
-      		+ "            $analysis_iri ing:detects $dehydration_iri. \r\n"
-      		+ "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
-      		+ "            $analysis_iri ing:hasDataSource $device_iri_bt. \r\n"
-      		+ "        \r\n"
-      		+ "            $dehydration_iri a ing:Dehydration.\r\n"
-      		+ "            $dehydration_iri a ing:PhysiologicalCondition.\r\n"
-      		+ "            $fr_iri ing:hasPhysiologicalCondition $dehydration_iri. \r\n"
-      		+ "        }\r\n"
-      		+ "        WHERE{\r\n"
-      		+ "        OPTIONAL{\r\n"
-      		+ "                $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-      		+ "            }\r\n"
-      		+ "        }"
-				);
-        long timestamp = getCurrentDateTimeToEpochSeconds();
-        String str = getZonedDateTimeFromEpochSeconds(timestamp).toString();
-        System.out.println("Time of Analysis: " + str);
-
-        Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-        AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", fr.getLocalName());
-		executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
-		
-      
-    }
-    
-    // Once we are done with a particular result we need to close it
-    result.close();
-    
-}
-
-//Get and Insert Heastroke Rule results
-public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
-    
-    ValueFactory factory = SimpleValueFactory.getInstance();
-    
-    
-   
-
-    Literal period = factory.createLiteral(periodOfAverage);
-    Literal heatstrokeLimit = factory.createLiteral(tempLimit);
-  
-    
-    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
-    		
-    		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-    			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
-    			+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
-    			//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-    			+ "SELECT DISTINCT ?value ?frid ?fr ?device_id ?device ?time ?analysis_time\r\n"
-    			+ "where { \r\n"
-    			+ "    ?avg a ing:RollingAverage.\r\n"
-    			+ "    ?avg ing:hasWindowEnd ?time.\r\n"
-    			+ "    ?avg ing:hasWindowDuration ?time_limit.\r\n"
-    			+ "    ?property ing:hasRollingAverage ?avg.  \r\n"
-    			+ "    ?property a ing:BodyTemperature. \r\n"
-    			+ "    \r\n"
-    			+ "    ?device ing:makesMeasurement ?m.\r\n"
-    			+ "    ?m ing:isMeasurementOf ?property.\r\n"
-    			+ "    ?device ing:hasEquipmentId ?device_id. \r\n"
-    			+ "    \r\n"
-    			+ "    ?fr ing:hasVitalSign ?property.\r\n"
-    			+ "    ?fr ing:hasFrId ?frid. \r\n"
-    			+ "    ?avg ing:hasValue ?value.\r\n"
-    			+ "    \r\n"
-    			+ "    \r\n"
-    			+ "    OPTIONAL{\r\n"
-    			+ "        ?analysis a ing:Analysis. \r\n"
-    			+ "        ?analysis ing:detects ?heatstroke.\r\n"
-    			+ "        ?heatstroke a ing:Heatstroke. \r\n"
-    			+ "        ?fr ing:hasPhysiologicalCondition ?heatstroke.\r\n"
-    			+ "        ?analysis ing:hasTimeStamp ?analysis_time. \r\n"
-    			+ "    }\r\n"
-    			+ "    FILTER (?value>?heatstrokeLimit)\r\n"
-    			+ "}"
-    			    , new SimpleBinding("heatstrokeLimit", heatstrokeLimit), new SimpleBinding("time_limit", period)
-    			    );
-    //System.out.println(result.hasNext());
-    
-    while (result.hasNext()) {
-    	
-        
-        BindingSet bindingSet = result.next();
-        //IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
-        Value measurement = bindingSet.getBinding("value").getValue();
-        Value frId = bindingSet.getBinding("frid").getValue();
-        IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
-        Value deviceId = bindingSet.getBinding("device_id").getValue();
-        IRI device = (IRI) bindingSet.getBinding("device").getValue();
-        Value dateTime = bindingSet.getBinding("time").getValue();
-        if (bindingSet.getBinding("analysis_time")!=null) {
-        	Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
-            System.out.println("HEATSTROKE || Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
-        }
-        else {
-            System.out.println("HEATSTROKE || Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE: " + device.stringValue() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue());
-        }
-        IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Heatstroke_" + fr.getLocalName());
-        IRI heatstrokeIRI = factory.createIRI(Input.NAMESPACE, "Heatstroke_" + fr.getLocalName());
-        //IRI property = (IRI) bindingSet.getBinding("property").getValue();
-        //Value p1 = bindingSet.getBinding("property").getValue();
-     
-        //System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
-        String modification=(
-
- 		     	  "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
- 		        + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
- 			    + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
-      		+ "DELETE{\r\n"
-      		+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-      		+ "    }\r\n"
-      		+ "    INSERT {\r\n"
-      		+ "        $analysis_iri a ing:Analysis.\r\n"
-      		
-      		+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-      		+ "        $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
-      		+ "        $analysis_iri ing:detects $heatstroke_iri. \r\n"
-      		+ "        $analysis_iri ing:hasDataSource $device_iri.\r\n"
-      	
-      		+ "        $heatstroke_iri a ing:Heatstroke.\r\n"
-      		+ "        $heatstroke_iri a ing:PhysiologicalCondition.\r\n"
-      		
-      		+ "        $fr_iri ing:hasPhysiologicalCondition $heatstroke_iri. \r\n"
-      		+ "    }\r\n"
-      		+ "    WHERE{\r\n"
-      		+ "    OPTIONAL{\r\n"
-      		+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-      		+ "        }\r\n"
-      		+ "    }"
-				);
-        long timestamp = getCurrentDateTimeToEpochSeconds();
-        String str = getDateTimeFromEpochSeconds(timestamp).toString();
-        System.out.println("Timestamp of Analysis: " + str);
-
-        Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-        
-        
-        if (tempLimit>=41) {
-        	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", fr.getLocalName());
-        }
-        else {
-        	AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
-        }
-        
-		executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
-		
-      
-    }
-    
-    // Once we are done with a particular result we need to close it
-    result.close();
-    
-}
-
-//Get and Insert Complex Rule results
-public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
-    
-    ValueFactory factory = SimpleValueFactory.getInstance();
-    
-    
-   
-
-    
-    Literal periodHR = factory.createLiteral(periodOfAverageHR);
-  
-    Literal hrateLimit = factory.createLiteral(htlimit);
-    
-  
-    
-    TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
-    		
-    		     "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-    			+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
-    			+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
-    			//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-    			+ "select distinct ?alert ?fr  ?device_hr ?frid ?hr_val  ?hr_time  ?device_hr_id  ?analysis_time \r\n"
-    			+ "where { \r\n"
-    			+ "	   ?fr a ing:FR.\r\n"
-    			+ "    ?fr ing:hasFrId ?frid.\r\n"
-    			+ "    \r\n"
-    			+ "    ?fr ing:hasVitalSign ?hr.\r\n"
-    			+ "    ?fr ing:isTargetOfAlert ?alert.\r\n"
-    			+ "    ?alert ing:showsEvent \"FR immobilized\".\r\n"	
-    			+ "    ?hr a ing:HeartRate. \r\n"
-    			+ "    ?hr ing:hasRollingAverage ?hr_avg.\r\n"
-    			+ "    ?hr_avg ing:hasWindowEnd ?hr_time. \r\n"
-    			+ "    ?hr_avg ing:hasWindowDuration ?hr_duration.\r\n"
-    			+ "    ?hr_avg ing:hasValue ?hr_val.\r\n"
-    			+ "    \r\n"
-    			+ "    ?device_hr ing:makesMeasurement ?m_hr.\r\n"
-    			+ "    ?m_hr ing:isMeasurementOf ?hr.\r\n"
-    			+ "    ?device_hr ing:hasEquipmentId ?device_hr_id. \r\n"
-    			+ "    \r\n"
-    			+ "    OPTIONAL{\r\n"
-    			+ "        ?analysis a ing:Analysis. \r\n"
-    			+ "        ?analysis ing:detects ?complex.\r\n"
-    			+ "        ?complex a ing:Complex. \r\n"
-    			+ "        ?fr ing:hasPhysiologicalCondition ?complex.\r\n"
-    			+ "        ?analysis ing:hasTimeStamp ?analysis_time. \r\n"
-    			+ "    }\r\n"
-    			+ "    \r\n"
-    			+ "    FILTER(?hr_val<$hr_limit)\r\n"
-    			+ "}"
-    			    ,  new SimpleBinding("hr_limit", hrateLimit),  new SimpleBinding("hr_duration", periodHR)
-    			    );
-    //System.out.println(result.hasNext());
-    
-    while (result.hasNext()) {
-        BindingSet bindingSet = result.next();
-        Value hr_measurement = bindingSet.getBinding("hr_val").getValue();
-        Value frId = bindingSet.getBinding("frid").getValue();
-        IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
-        IRI alert = (IRI) bindingSet.getBinding("alert").getValue();
-        Value deviceHRId = bindingSet.getBinding("device_hr_id").getValue();
-        IRI deviceHR = (IRI) bindingSet.getBinding("device_hr").getValue();
-        Value dateTimeHR = bindingSet.getBinding("hr_time").getValue();
-        if (bindingSet.getBinding("analysis_time")!=null) {
-        	Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
-            System.out.println("COMPLEX || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString() +" || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue() + " || Analysis Time: " + analysisTime.stringValue() + "\n Boots Alert ID: " + alert.stringValue());	
-        }
-        else {
-            System.out.println("COMPLEX || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString() +" || DEVICE_HR: " + deviceHR.stringValue() +" || DEVICE_HR_ID: " +deviceHRId.stringValue() +" || DATETIME HR: " + dateTimeHR.stringValue() + "\n Boots Alert ID: " + alert.stringValue());	
-        }
-        IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Complex_" + fr.getLocalName());
-        IRI complexIRI = factory.createIRI(Input.NAMESPACE, "Complex_" + fr.getLocalName());
-        //IRI property = (IRI) bindingSet.getBinding("property").getValue();
-        //Value p1 = bindingSet.getBinding("property").getValue();
-     
-        //System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
-        String modification=(
-
- 		     	  "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
- 		        + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
- 			    + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
-      		+ "DELETE{\r\n"
-      		+ "            $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-      		+ "        }\r\n"
-      		+ "        INSERT {\r\n"
-      		+ "            $analysis_iri a ing:Analysis.\r\n"
-      		+ "            $analysis_iri ing:hasTimeStamp $timestamp.\r\n"
-      		+ "            $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
-      		+ "            $analysis_iri ing:detects $complex_iri. \r\n"
-      		+ "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
-      		+ "			   $analysis_iri ing:hasDataSource ?alert.\r\n"
-      		+ "            $analysis_iri ing:triggers $alert_iri. \r\n"
-      		+ "        \r\n"
-      		+ "            $complex_iri a ing:Complex.\r\n"
-      		+ "            $complex_iri a ing:PhysiologicalCondition.\r\n"
-      		+ "            $fr_iri ing:hasPhysiologicalCondition $complex_iri. \r\n"
-      		+ "        }\r\n"
-      		+ "        WHERE{\r\n"
-      		+ "        OPTIONAL{\r\n"
-      		+ "                $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
-      		+ "            }\r\n"
-      		+ "        }"
-				);
-        long timestamp = getCurrentDateTimeToEpochSeconds();
-        String str = getZonedDateTimeFromEpochSeconds(timestamp).toString();
-        System.out.println("Time of Analysis: " + str);
-
-        Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-        String frName = fr.getLocalName(); 
-        String[] split = frName.split("_");
-        UUID uuid = UUID.randomUUID();
-        String uuidAsString = uuid.toString();
-        //float bodytemp = Float.parseFloat(hr_measurement.stringValue());
-        IRI alert_iri = factory.createIRI(Input.NAMESPACE, uuidAsString);
-
-        AlertGenerator("Alert", alert_iri.getLocalName(),"FR is in serious danger, his situation is extreme and he needs immediate attention","description","areaDesc","Immediate", "Extreme", split[1]);
-       
-        
-        
-		executeUpdate(kb.getConnection(), modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit),  new SimpleBinding("alert_iri", factory.createLiteral(uuidAsString)));
-      
-    }
-    
-    // Once we are done with a particular result we need to close it
-    result.close();
-    
-}
-	
-	
-	
-	
-	
-	
-	
-
-	 
-	 public void AlertGenerator(String msgType, String identifier, String event, String description, String areaDesc, String urgency, String severity, String source) throws IOException {
-		    FileWriter writer = null;
-			JSONParser parser = new JSONParser();
-			Object simpleObj = null;
-	 
-			try {
-				writer = new FileWriter(configInstance.getFilepath() + "AlertOutput.json"); // Modify path as per your need
-			} catch (IOException e) {
-				e.printStackTrace();
+		while (result.hasNext()) {
+			BindingSet bindingSet = result.next();
+			//IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
+			Value bt_measurement = bindingSet.getBinding("bt_val").getValue();
+			Value hr_measurement = bindingSet.getBinding("hr_val").getValue();
+			Value frId = bindingSet.getBinding("frid").getValue();
+			IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
+			Value deviceHRId = bindingSet.getBinding("device_hr_id").getValue();
+			Value deviceBTId = bindingSet.getBinding("device_bt_id").getValue();
+			IRI deviceBT = (IRI) bindingSet.getBinding("device_bt").getValue();
+			IRI deviceHR = (IRI) bindingSet.getBinding("device_hr").getValue();
+			Value dateTimeBT = bindingSet.getBinding("bt_time").getValue();
+			Value dateTimeHR = bindingSet.getBinding("hr_time").getValue();
+			if (bindingSet.getBinding("analysis_time")!=null) {
+				Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
+				System.out.println("DEHYDRATION || Body temperature value: " + bt_measurement.stringValue() + " || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_BT: " + deviceBT.stringValue() + " || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_BT_ID: " +deviceBTId.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME BT: " + dateTimeBT.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
+			} else {
+				System.out.println("DEHYDRATION || Body temperature value: " + bt_measurement.stringValue() + " || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_BT: " + deviceBT.stringValue() + " || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_BT_ID: " +deviceBTId.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME BT: " + dateTimeBT.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue());	
 			}
-			Map<String, Object> properties = new HashMap<String, Object>(1);
-			properties.put(JsonGenerator.PRETTY_PRINTING, true);
-			JsonGeneratorFactory jgf = Json.createGeneratorFactory(properties);
-			JsonGenerator generator = jgf.createGenerator(writer);
-			
+			IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Dehydration_" + fr.getLocalName());
+        	IRI dehydrationIRI = factory.createIRI(Input.NAMESPACE, "Dehydration_" + fr.getLocalName());
+        	//IRI property = (IRI) bindingSet.getBinding("property").getValue();
+        	//Value p1 = bindingSet.getBinding("property").getValue();
+     
+        	//System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
+        	String modification=(
+ 		     	  "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+ 		        + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+ 			    + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
+ 			    + "DELETE{\r\n"
+ 			    + "            $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+ 			    + "        }\r\n"
+ 			    + "        INSERT {\r\n"
+ 			    + "            $analysis_iri a ing:Analysis.\r\n"
+ 			    + "            $analysis_iri ing:hasTimeStamp $timestamp.\r\n"
+ 			    + "            $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
+ 			    + "            $analysis_iri ing:detects $dehydration_iri. \r\n"
+ 			    + "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
+ 			    + "            $analysis_iri ing:hasDataSource $device_iri_bt. \r\n"
+ 			    + "        \r\n"
+ 			    + "            $dehydration_iri a ing:Dehydration.\r\n"
+ 			    + "            $dehydration_iri a ing:PhysiologicalCondition.\r\n"
+ 			    + "            $fr_iri ing:hasPhysiologicalCondition $dehydration_iri. \r\n"
+ 			    + "        }\r\n"
+ 			    + "        WHERE{\r\n"
+ 			    + "        OPTIONAL{\r\n"
+ 			    + "                $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+ 			    + "            }\r\n"
+ 			    + "        }"
+        		);
+        	long timestamp = getCurrentDateTimeToEpochSeconds();
+        	String str = getZonedDateTimeFromEpochSeconds(timestamp).toString();
+        	System.out.println("Time of Analysis: " + str);
+
+        	Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
+        	AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", fr.getLocalName());
+        	executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
+		
+      
+		}
+    
+		// Once we are done with a particular result we need to close it
+		result.close();
+    
+	}
+
+	//Get and Insert Heastroke Rule results
+	public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
+    
+		ValueFactory factory = SimpleValueFactory.getInstance();
+    
+		Literal period = factory.createLiteral(periodOfAverage);
+		Literal heatstrokeLimit = factory.createLiteral(tempLimit);
+  
+    
+		TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
+    		
+				"PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+						+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+						+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
+						//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+						+ "SELECT DISTINCT ?value ?frid ?fr ?device_id ?device ?time ?analysis_time\r\n"
+						+ "where { \r\n"
+						+ "    ?avg a ing:RollingAverage.\r\n"
+						+ "    ?avg ing:hasWindowEnd ?time.\r\n"
+						+ "    ?avg ing:hasWindowDuration ?time_limit.\r\n"
+						+ "    ?property ing:hasRollingAverage ?avg.  \r\n"
+						+ "    ?property a ing:BodyTemperature. \r\n"
+						+ "    \r\n"
+						+ "    ?device ing:makesMeasurement ?m.\r\n"
+						+ "    ?m ing:isMeasurementOf ?property.\r\n"
+						+ "    ?device ing:hasEquipmentId ?device_id. \r\n"
+						+ "    \r\n"
+						+ "    ?fr ing:hasVitalSign ?property.\r\n"
+						+ "    ?fr ing:hasFrId ?frid. \r\n"
+						+ "    ?avg ing:hasValue ?value.\r\n"
+						+ "    \r\n"
+						+ "    \r\n"
+						+ "    OPTIONAL{\r\n"
+						+ "        ?analysis a ing:Analysis. \r\n"
+						+ "        ?analysis ing:detects ?heatstroke.\r\n"
+						+ "        ?heatstroke a ing:Heatstroke. \r\n"
+						+ "        ?fr ing:hasPhysiologicalCondition ?heatstroke.\r\n"
+						+ "        ?analysis ing:hasTimeStamp ?analysis_time. \r\n"
+						+ "    }\r\n"
+						+ "    FILTER (?value>?heatstrokeLimit)\r\n"
+						+ "}"
+						, new SimpleBinding("heatstrokeLimit", heatstrokeLimit), new SimpleBinding("time_limit", period)
+				);
+		//System.out.println(result.hasNext());
+    
+		while (result.hasNext()) {
+			BindingSet bindingSet = result.next();
+			//IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
+			Value measurement = bindingSet.getBinding("value").getValue();
+			Value frId = bindingSet.getBinding("frid").getValue();
+			IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
+			Value deviceId = bindingSet.getBinding("device_id").getValue();
+			IRI device = (IRI) bindingSet.getBinding("device").getValue();
+			Value dateTime = bindingSet.getBinding("time").getValue();
+			if (bindingSet.getBinding("analysis_time")!=null) {
+				Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
+				System.out.println("HEATSTROKE || Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
+			} else {
+				System.out.println("HEATSTROKE || Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE: " + device.stringValue() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue());
+			}
+			IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Heatstroke_" + fr.getLocalName());
+			IRI heatstrokeIRI = factory.createIRI(Input.NAMESPACE, "Heatstroke_" + fr.getLocalName());
+			//IRI property = (IRI) bindingSet.getBinding("property").getValue();
+			//Value p1 = bindingSet.getBinding("property").getValue();
+     
+			//System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
+			String modification=(
+
+					"PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+							+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+							+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
+							+ "DELETE{\r\n"
+							+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "    }\r\n"
+							+ "    INSERT {\r\n"
+							+ "        $analysis_iri a ing:Analysis.\r\n"
+							+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "        $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
+							+ "        $analysis_iri ing:detects $heatstroke_iri. \r\n"
+							+ "        $analysis_iri ing:hasDataSource $device_iri.\r\n"
+      	
+							+ "        $heatstroke_iri a ing:Heatstroke.\r\n"
+							+ "        $heatstroke_iri a ing:PhysiologicalCondition.\r\n"
+      		
+							+ "        $fr_iri ing:hasPhysiologicalCondition $heatstroke_iri. \r\n"
+							+ "    }\r\n"
+							+ "    WHERE{\r\n"
+							+ "    OPTIONAL{\r\n"
+							+ "        $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "        }\r\n"
+							+ "    }"
+					);
 			long timestamp = getCurrentDateTimeToEpochSeconds();
-		      String str = getDateTimeFromEpochSeconds(timestamp).toString();
-		      UUID uuid = UUID.randomUUID();
-		      String uuidAsString = uuid.toString();
+			String str = getDateTimeFromEpochSeconds(timestamp).toString();
+			System.out.println("Timestamp of Analysis: " + str);
+
+			Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
+        
+			//THIS IS HARDCODED, SHOULD BE CHANGED - ZOE
+			if (tempLimit >= 41) {
+				AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", fr.getLocalName());
+			} else {
+				AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
+			}
+        
+			executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
+		}
+    
+		// Once we are done with a particular result we need to close it
+		result.close();
+    
+	}
+
+	//Get and Insert Complex Rule results
+	public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
+    
+		ValueFactory factory = SimpleValueFactory.getInstance();
+		Literal periodHR = factory.createLiteral(periodOfAverageHR);
+  
+		Literal hrateLimit = factory.createLiteral(htlimit);
+    
+  
+    
+		TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
+    		"PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+    				+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+    				+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
+    				//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+    				+ "select distinct ?alert ?fr  ?device_hr ?frid ?hr_val  ?hr_time  ?device_hr_id  ?analysis_time \r\n"
+    				+ "where { \r\n"
+    				+ "	   ?fr a ing:FR.\r\n"
+    				+ "    ?fr ing:hasFrId ?frid.\r\n"
+    				+ "    \r\n"
+    				+ "    ?fr ing:hasVitalSign ?hr.\r\n"
+    				+ "    ?fr ing:isTargetOfAlert ?alert.\r\n"
+    				+ "    ?alert ing:showsEvent \"FR immobilized\".\r\n"	
+    				+ "    ?hr a ing:HeartRate. \r\n"
+    				+ "    ?hr ing:hasRollingAverage ?hr_avg.\r\n"
+    				+ "    ?hr_avg ing:hasWindowEnd ?hr_time. \r\n"
+    				+ "    ?hr_avg ing:hasWindowDuration ?hr_duration.\r\n"
+    				+ "    ?hr_avg ing:hasValue ?hr_val.\r\n"
+    				+ "    \r\n"
+    				+ "    ?device_hr ing:makesMeasurement ?m_hr.\r\n"
+    				+ "    ?m_hr ing:isMeasurementOf ?hr.\r\n"
+    				+ "    ?device_hr ing:hasEquipmentId ?device_hr_id. \r\n"
+    				+ "    \r\n"
+    				+ "    OPTIONAL{\r\n"
+    				+ "        ?analysis a ing:Analysis. \r\n"
+    				+ "        ?analysis ing:detects ?complex.\r\n"
+    				+ "        ?complex a ing:Complex. \r\n"
+    				+ "        ?fr ing:hasPhysiologicalCondition ?complex.\r\n"
+    				+ "        ?analysis ing:hasTimeStamp ?analysis_time. \r\n"
+    				+ "    }\r\n"
+    				+ "    \r\n"
+    				+ "    FILTER(?hr_val<$hr_limit)\r\n"
+    				+ "}"
+    				,  new SimpleBinding("hr_limit", hrateLimit),  new SimpleBinding("hr_duration", periodHR)
+				);
+		//System.out.println(result.hasNext());
+    
+		while (result.hasNext()) {
+			BindingSet bindingSet = result.next();
+			Value hr_measurement = bindingSet.getBinding("hr_val").getValue();
+			Value frId = bindingSet.getBinding("frid").getValue();
+			IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
+			IRI alert = (IRI) bindingSet.getBinding("alert").getValue();
+			Value deviceHRId = bindingSet.getBinding("device_hr_id").getValue();
+			IRI deviceHR = (IRI) bindingSet.getBinding("device_hr").getValue();
+			Value dateTimeHR = bindingSet.getBinding("hr_time").getValue();
+			if (bindingSet.getBinding("analysis_time")!=null) {
+				Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
+				System.out.println("COMPLEX || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString() +" || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue() + " || Analysis Time: " + analysisTime.stringValue() + "\n Boots Alert ID: " + alert.stringValue());	
+			} else {
+				System.out.println("COMPLEX || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString() +" || DEVICE_HR: " + deviceHR.stringValue() +" || DEVICE_HR_ID: " +deviceHRId.stringValue() +" || DATETIME HR: " + dateTimeHR.stringValue() + "\n Boots Alert ID: " + alert.stringValue());	
+			}
+			IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Complex_" + fr.getLocalName());
+			IRI complexIRI = factory.createIRI(Input.NAMESPACE, "Complex_" + fr.getLocalName());
+			//IRI property = (IRI) bindingSet.getBinding("property").getValue();
+			//Value p1 = bindingSet.getBinding("property").getValue();
+     
+			//System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
+			String modification=(
+					"PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+							+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+							+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
+							+ "DELETE{\r\n"
+							+ "            $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "        }\r\n"
+							+ "        INSERT {\r\n"
+							+ "            $analysis_iri a ing:Analysis.\r\n"
+							+ "            $analysis_iri ing:hasTimeStamp $timestamp.\r\n"
+							+ "            $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
+							+ "            $analysis_iri ing:detects $complex_iri. \r\n"
+							+ "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
+							+ "			   $analysis_iri ing:hasDataSource ?alert.\r\n"
+							+ "            $analysis_iri ing:triggers $alert_iri. \r\n"
+							+ "        \r\n"
+							+ "            $complex_iri a ing:Complex.\r\n"
+							+ "            $complex_iri a ing:PhysiologicalCondition.\r\n"
+							+ "            $fr_iri ing:hasPhysiologicalCondition $complex_iri. \r\n"
+							+ "        }\r\n"
+							+ "        WHERE{\r\n"
+							+ "        OPTIONAL{\r\n"
+							+ "                $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
+							+ "            }\r\n"
+							+ "        }"
+					);
+			long timestamp = getCurrentDateTimeToEpochSeconds();
+			String str = getZonedDateTimeFromEpochSeconds(timestamp).toString();
+			System.out.println("Time of Analysis: " + str);
+
+			Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
+			String frName = fr.getLocalName(); 
+			String[] split = frName.split("_");
+			UUID uuid = UUID.randomUUID();
+			String uuidAsString = uuid.toString();
+			//float bodytemp = Float.parseFloat(hr_measurement.stringValue());
+			IRI alert_iri = factory.createIRI(Input.NAMESPACE, uuidAsString);
+
+			AlertGenerator("Alert", alert_iri.getLocalName(),"FR is in serious danger, his situation is extreme and he needs immediate attention","description","areaDesc","Immediate", "Extreme", split[1]);
+        
+			executeUpdate(kb.getConnection(), modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit),  new SimpleBinding("alert_iri", factory.createLiteral(uuidAsString)));
+		}
+    
+		// Once we are done with a particular result we need to close it
+		result.close();  
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	 
+	public void AlertGenerator(String msgType, String identifier, String event, String description, String areaDesc, String urgency, String severity, String source) throws IOException {
+		FileWriter writer = null;
+		JSONParser parser = new JSONParser();
+		Object simpleObj = null;
+	 
+		try {
+			writer = new FileWriter(configInstance.getFilepath() + "AlertOutput.json"); // Modify path as per your need
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Map<String, Object> properties = new HashMap<String, Object>(1);
+		properties.put(JsonGenerator.PRETTY_PRINTING, true);
+		JsonGeneratorFactory jgf = Json.createGeneratorFactory(properties);
+		JsonGenerator generator = jgf.createGenerator(writer);
+			
+		long timestamp = getCurrentDateTimeToEpochSeconds();
+		String str = getDateTimeFromEpochSeconds(timestamp).toString();
+		UUID uuid = UUID.randomUUID();
+		String uuidAsString = uuid.toString();
 		      
-			 generator
-	         .writeStartObject()
-	         .write("identifier", identifier)
-	         .write("sender", "ERE")
-	         .write("sent", str)
-	         .write("status", "Actual")
-	         .write("msgType", msgType)
-	         .write("source", source)
-	         .write("scope", "Public")
-	         .writeStartArray("code")
-	         	//.write("to be designed")
-	         	//.write("to be designed")
-	         	//.write("to be designed")
-	         .writeEnd()
-	         .writeStartArray("info").writeStartObject()
-	         	.write("category", "FR Health Status")
-	         	.write("event", event)
-	         	.write("urgency", urgency)
-	         	.write("severity", severity)
-	         	.write("certainty", "Likely")
-	         	.write("description", description)
-	         	.writeStartArray("area").writeStartObject()
-	         		.write("areaDesc", areaDesc)
-	         	.writeEnd()
-	         	.writeEnd()
-	         .writeEnd()
-	         .writeEnd()
-	         .writeEnd();
+		generator
+			.writeStartObject()
+			.write("identifier", identifier)
+			.write("sender", "ERE")
+			.write("sent", str)
+			.write("status", "Actual")
+			.write("msgType", msgType)
+			.write("source", source)
+			.write("scope", "Public")
+			.writeStartArray("code")
+			//.write("to be designed")
+			//.write("to be designed")
+			//.write("to be designed")
+			.writeEnd()
+			.writeStartArray("info").writeStartObject()
+			.write("category", "FR Health Status")
+			.write("event", event)
+			.write("urgency", urgency)
+			.write("severity", severity)
+			.write("certainty", "Likely")
+			.write("description", description)
+			.writeStartArray("area").writeStartObject()
+			.write("areaDesc", areaDesc)
+			.writeEnd()
+			.writeEnd()
+			.writeEnd()
+			.writeEnd()
+			.writeEnd();
 			generator.close();
 			
 			JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath()+ "AlertOutput.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
-			System.out.println(element.toString());
+			System.out.println("Alert:\n" + element.toString());
 			
-			//Producer.sendOutputAlert();
-		
+			//only when kafka live test is done
+			Producer.sendOutputAlert();
 	 }
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
@@ -1742,6 +1701,8 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 			Consumer consumerMeas = new Consumer();
 			Consumer consumerRM = new Consumer();
 			Consumer consumerBA = new Consumer();
+			
+			//Sometime, in the future, we should develop our ontology, it has been started by Alex
 			//example.loadOntology();
 			example.clearKBAndLoadOntology();
 			
@@ -1767,8 +1728,12 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 			
 				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+				
+				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFourMinutes);
+				ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+				exhaustionRule.checkRule();
 			
-				Thread.sleep(50000);
+				Thread.sleep(90000);
 
 				run2=run2+1;
 			}*/
@@ -1777,21 +1742,21 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 			//If we want to run locally, we load the resources like below, once and from file. If we want to run using Kafka, we load the resource
 			//map from stream, like above. Then, we proceed to the while loop, which loads the measurements and boots alerts multiple times.
 			
-			long t1= System.currentTimeMillis();
-			long end1 = t1+600000;
-			int run1 = 0;
+		//	long t1= System.currentTimeMillis();
+		//	long end1 = t1+600000;
+		//	int run1 = 0;
 		//	while (System.currentTimeMillis() < end1) {
-				System.out.println("run no" + run1);
+			//	System.out.println("run no" + run1);
 				example.loadResourceMapFromFile();
-				example.loadMeasurementsFromFile();
-				example.loadBootsAlertFromFile();
+			//	example.loadMeasurementsFromFile();
+			//	example.loadBootsAlertFromFile();
 				//kb.connection.commit();
 				//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 				//con.commit();
-				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				//Enable Complex Rule and read Measurements from Measurements.json file
-				example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
-				example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+			//	example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+			//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
 				//Enable Heatstroke Rule and read Measurements from MeasurementsDehydration.json file
 				//example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);
 				//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
@@ -1799,19 +1764,19 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 				//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 				//con.commit();
 				
-				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFourMinutes);
+			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFourMinutes);
 			//	Enable Exhaustion Rule and read Measurements from MeasurementsExhaustion.json file
-				ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
-				exhaustionRule.checkRule();
-				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFiveMinutes);
-				example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfFiveMinutes);
+			//	ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+			//	exhaustionRule.checkRule();
+			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFiveMinutes);
+			//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfFiveMinutes);
 				//Enable Dehydration Rule and read Measurements from MeasurementsDehydration.json file
 				//example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfFiveMinutes, IngeniousConsts.durationOfFiveMinutes); 
 				
-				Thread.sleep(50000);
-				example.loadMeasurementsFromFile();
+		//		Thread.sleep(50000);
+			//	example.loadMeasurementsFromFile();
 				//con.commit();
-				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				
 		   // 	run1=run1+1;
 			
@@ -1822,48 +1787,55 @@ public void getandInsertComplexRule(float htlimit, int periodOfAverageHR) throws
 			
 				//example.calculateRollingAverage("BloodOxygen", durationOfFiveMinutes);
 				//example.getAndInsertOxygen(95, durationOfFiveMinutes);
+				
+				
+				//KAFKA LIVE IMPLEMENTATION BEGINS
 				long t= System.currentTimeMillis();
 				long end = t+600000;
 				int run=0;
 			
+				//We should uncomment it during SST7, temporarily resources are loaded locally
 				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
 				
 				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
-			produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
-			rolling averages and check if any rule we would like to check is realized.*/
+				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
+				rolling averages and check if any rule we would like to check is realized.*/
+				while(System.currentTimeMillis() < end) {
+					System.out.println("run no" + run);
+				
+					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+					example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 			
-//			while(System.currentTimeMillis() < end) {
-//				System.out.println("run no" + run);
-//				//example.loadResourceMapFromFile();
-//				//example.loadMeasurementsFromFile();
-//				
-//				example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-//				example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-//				
-//				//KB Population ends, Reasoning Rules begin
-//				
-//				//con.commit();
-//				
-//				//example.calculateRollingAverage("BodyTemperature", durationOfOneMinute);
-//				//example.getAndInsertHeatstroke(heatStrokeLimitBT, durationOfOneMinute);
-//				//example.calculateRollingAverage("BodyTemperature", durationOfFiveMinutes);
-//				//example.calculateRollingAverage("HeartRate", durationOfFiveMinutes);
-//				//example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfFiveMinutes, IngeniousConsts.durationOfFiveMinutes);
-//				example.calculateRollingAverage("HeartRate", durationOfOneMinute);
-//				example.getandInsertComplexRule(20, durationOfOneMinute);
-//				Thread.sleep(18000);
-//				run=run+1;
-//			}
+					//KB Population ends, Reasoning Rules begin
+					//	//con.commit();
+				
+					//HEATSTROKE - It was 1 min and remained for the SST7
+					/*example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);*/
+				
+					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
+					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+					example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
+
+
+					//EXHAUSTION - It was four minutes. We changed it to one min for the SST7
+					/*example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+					ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+					exhaustionRule.checkRule();
+				
+					//COMPLEX - It was one min and remained for the SST7
+					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+					example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);*/
+				
+					//We should check how much the while should sleep - EXUS consulted for no sleep
+					//Thread.sleep(10000);
+					run=run+1;
+				}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			example.getKB().shutDown();
 		}
 	}
-		
-	
-		
-			
-
-
 }

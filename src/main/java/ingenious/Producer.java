@@ -154,7 +154,7 @@ static void sendOutputAlert() {
 	
 	
 	KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
-	ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-alerts", getOutputAlert());
+	ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-alerts-test", getOutputAlert());
 	//COPResourcesTopic
 	//SOCIAL_MEDIA_APP_TOPIC
 	producer.send(record, new Callback() {
@@ -204,7 +204,7 @@ static void sendOutputAlert() {
 		
 		JsonReader reader;
 		try {
-			reader = new JsonReader(new FileReader(configInstance.getFilepath() + "Measurements.json"));
+			reader = new JsonReader(new FileReader(configInstance.getFilepath() + "MeasurementsExhaustion.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
 			return element.toString();
