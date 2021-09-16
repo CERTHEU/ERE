@@ -48,6 +48,7 @@ public class Consumer {
 		                logger.info("Key: "+ record.key() + ", Value:" +record.value());  
 		                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset()); 
 		                System.out.println(record.value());
+		                consumer.close();
 		                return record.value();
 		               
 		            }  
@@ -86,6 +87,7 @@ public class Consumer {
 		                logger.info("Key: "+ record.key() + ", Value:" +record.value());  
 		                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset()); 
 		                System.out.println(record.value());
+		                consumer.close();
 		                return record.value();
 		                
 		            }  
@@ -103,7 +105,7 @@ public class Consumer {
 				String bootstrapServers = "192.168.30.202:14200";
 				String grp_id = "test_certh_BA";
 				String topic = "ingenious-events-test";
-				String group_instance ="03";
+				String group_instance ="04";
 				//properties
 				Properties properties = new Properties();
 				properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -126,6 +128,7 @@ public class Consumer {
 		                logger.info("Key: "+ record.key() + ", Value:" +record.value());  
 		                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset()); 
 		                System.out.println(record.value());
+		                consumer.close();
 		                return record.value();
 		                
 		            }  
@@ -156,7 +159,8 @@ public class Consumer {
             ConsumerRecords<String,String> records = consumer.poll(Duration.ofMillis(1000));  
             for(ConsumerRecord<String,String> record: records){  
                 logger.info("Key: "+ record.key() + ", Value:" +record.value());  
-                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset()); 
+                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset());
+                consumer.close();
                 System.out.println(record.value());
             }  
         }  

@@ -64,6 +64,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import ingenious.rules.ExhaustionRule;
+import ingenious.rules.ImmobilizedBootsRule;
 import ingenious.utils.ConfigsLoader;
 import ingenious.utils.QueryUtils;
 import kb.KB;
@@ -1684,7 +1685,7 @@ public class SemanticIntegration {
 			System.out.println("Alert:\n" + element.toString());
 			
 			//only when kafka live test is done
-			Producer.sendOutputAlert();
+			//Producer.sendOutputAlert();
 	 }
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
@@ -1698,10 +1699,10 @@ public class SemanticIntegration {
 			example.getKB().connection.clear();
 			
 			
-			Consumer consumerMeas = new Consumer();
-			Consumer consumerRM = new Consumer();
-			Consumer consumerBA = new Consumer();
-			
+//			Consumer consumerMeas = new Consumer();
+//			Consumer consumerRM = new Consumer();
+//			Consumer consumerBA = new Consumer();
+//			
 			//Sometime, in the future, we should develop our ontology, it has been started by Alex
 			//example.loadOntology();
 			example.clearKBAndLoadOntology();
@@ -1742,20 +1743,24 @@ public class SemanticIntegration {
 			//If we want to run locally, we load the resources like below, once and from file. If we want to run using Kafka, we load the resource
 			//map from stream, like above. Then, we proceed to the while loop, which loads the measurements and boots alerts multiple times.
 			
-		//	long t1= System.currentTimeMillis();
-		//	long end1 = t1+600000;
-		//	int run1 = 0;
-		//	while (System.currentTimeMillis() < end1) {
+			long t1= System.currentTimeMillis();
+			long end1 = t1+600000;
+			int run1 = 0;
+			while (System.currentTimeMillis() < end1) {
 			//	System.out.println("run no" + run1);
 				example.loadResourceMapFromFile();
-			//	example.loadMeasurementsFromFile();
-			//	example.loadBootsAlertFromFile();
+				example.loadMeasurementsFromFile();
+				example.loadBootsAlertFromFile();
 				//kb.connection.commit();
 				//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 				//con.commit();
-			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				//example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				//Enable Complex Rule and read Measurements from Measurements.json file
 			//	example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+				//Enable Immobilized Boots Rule and read Measurements from Measurements.json file
+				ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
+				immobilizedRule.checkRule();
+				
 			//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
 				//Enable Heatstroke Rule and read Measurements from MeasurementsDehydration.json file
 				//example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);
@@ -1773,14 +1778,14 @@ public class SemanticIntegration {
 				//Enable Dehydration Rule and read Measurements from MeasurementsDehydration.json file
 				//example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfFiveMinutes, IngeniousConsts.durationOfFiveMinutes); 
 				
-		//		Thread.sleep(50000);
-			//	example.loadMeasurementsFromFile();
+				Thread.sleep(50000);
+				example.loadMeasurementsFromFile();
 				//con.commit();
 			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				
-		   // 	run1=run1+1;
+		    	run1=run1+1;
 			
-			//}
+			}
 			
 				//Savvas has told us that this oxygen had been created just for testing purposes
 				//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
@@ -1789,49 +1794,53 @@ public class SemanticIntegration {
 				//example.getAndInsertOxygen(95, durationOfFiveMinutes);
 				
 				
-				//KAFKA LIVE IMPLEMENTATION BEGINS
-				long t= System.currentTimeMillis();
-				long end = t+600000;
-				int run=0;
-			
-				//We should uncomment it during SST7, temporarily resources are loaded locally
-				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
-				
-				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
-				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
-				rolling averages and check if any rule we would like to check is realized.*/
-				while(System.currentTimeMillis() < end) {
-					System.out.println("run no" + run);
-				
-					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-					example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-			
-					//KB Population ends, Reasoning Rules begin
-					//	//con.commit();
-				
-					//HEATSTROKE - It was 1 min and remained for the SST7
-					/*example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
-					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);*/
-				
-					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
-					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-					example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
-
-
-					//EXHAUSTION - It was four minutes. We changed it to one min for the SST7
-					/*example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-					ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
-					exhaustionRule.checkRule();
-				
-					//COMPLEX - It was one min and remained for the SST7
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-					example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);*/
-				
-					//We should check how much the while should sleep - EXUS consulted for no sleep
-					//Thread.sleep(10000);
-					run=run+1;
-				}
+//				//KAFKA LIVE IMPLEMENTATION BEGINS
+//				long t= System.currentTimeMillis();
+//				long end = t+600000;
+//				int run=0;
+//			
+//				//We should uncomment it during SST7, temporarily resources are loaded locally
+//				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+//				
+//				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
+//				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
+//				rolling averages and check if any rule we would like to check is realized.*/
+//				while(System.currentTimeMillis() < end) {
+//					System.out.println("run no" + run);
+//				
+//					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+//					example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+//			
+//					//KB Population ends, Reasoning Rules begin
+//					//	//con.commit();
+//				
+//					//HEATSTROKE - It was 1 min and remained for the SST7
+//					/*example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+//					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);*/
+//				
+//					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
+//					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+//					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+//					example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
+//
+//
+//					//EXHAUSTION - It was four minutes. We changed it to one min for the SST7
+//					/*example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+//					ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+//					exhaustionRule.checkRule();
+//				
+//					//COMPLEX - It was one min and remained for the SST7
+//					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+//					example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);*/
+//			
+//					//IMMOBILIZED BOOTS
+//					ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
+//					immobilizedRule.checkRule();
+//				
+//					//We should check how much the while should sleep - EXUS consulted for no sleep
+//					//Thread.sleep(10000);
+//					run=run+1;
+//				}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

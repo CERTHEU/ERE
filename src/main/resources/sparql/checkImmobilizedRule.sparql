@@ -1,0 +1,8 @@
+SELECT DISTINCT ?alert ?fr  ?frid 
+WHERE {
+	?fr a ing:FR.
+	?fr ing:hasFrId ?frid. 
+    ?fr ing:hasVitalSign ?hr.
+    ?fr ing:isTargetOfAlert ?alert.
+    ?alert ing:showsEvent "FR immobilized".	
+}
