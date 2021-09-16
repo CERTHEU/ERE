@@ -33,20 +33,40 @@ public class ImmobilizedBootsRule {
 		
 		while (result.hasNext()) {
 			BindingSet bindingSet = result.next();
-			System.err.println("FR is immobilized");
+			
 		 	Value frId = bindingSet.getBinding("frid").getValue();
 		 	IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
 		 	IRI alert = (IRI) bindingSet.getBinding("alert").getValue();
+		 	
+		 	boolean isImmobilized = Boolean.parseBoolean(bindingSet.getBinding("immobilized").getValue().stringValue());
+		 	boolean hasHeavyLoad = Boolean.parseBoolean(bindingSet.getBinding("heavyload").getValue().stringValue());
+		 	
+		 	
+		 	String state = "";
+		 	
+		 	String alertMsg = null;
+		 	if (isImmobilized) {
+		 		state = state.concat("Immobilized ");
+		 		System.err.println("FR is immobilized");
+		 		alertMsg = "FR is immobilized";
+			}
+		 	if (hasHeavyLoad) {
+		 		state = state.concat("Has heavy load ");
+		 		System.err.println("FR has heavy load");
+		 		alertMsg = "FR has heavy load";
+		 	}
+		 	
+		 	
 			if (bindingSet.getBinding("analysis_time") != null) {
 				Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
-				System.out.println("IMMOBILIZED  " + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString() + " || Analysis Time: " + analysisTime.stringValue() + "\n Boots Alert ID: " + alert.stringValue());		
+				System.out.println(state + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString() + " || Analysis Time: " + analysisTime.stringValue() + "\n Boots Alert ID: " + alert.stringValue());		
 			 } else {
-				 System.out.println("IMMOBILIZED  " + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString()  + "\n Boots Alert ID: " + alert.stringValue());
+				 System.out.println(state + " || FR: " + fr.getLocalName() + " || FR_ID: " + frId.toString()  + "\n Boots Alert ID: " + alert.stringValue());
 			 }
 			IRI analysisIRI = kb.factory.createIRI(Input.NAMESPACE, "Analysis_Immobilized_" + fr.getLocalName());
 			IRI immobilizedIRI = kb.factory.createIRI(Input.NAMESPACE, "Immobilized_" + fr.getLocalName());
 	        
-			String modification=("PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
+			String modification="PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
 								+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
 								+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
 								+ "DELETE{\r\n"
@@ -59,17 +79,19 @@ public class ImmobilizedBootsRule {
 								+ "            $analysis_iri ing:detects $immobilized_iri. \r\n"
 								+ "			   $analysis_iri ing:hasDataSource ?alert.\r\n"
 								+ "            $analysis_iri ing:triggers $alert_iri. \r\n"
-								+ "        \r\n"
-								+ "            $immobilized_iri a ing:Immobilized.\r\n"
-								+ "            $immobilized_iri a ing:PhysiologicalCondition.\r\n"
+								+ "        \r\n";
+								if (isImmobilized)
+									modification += "            $immobilized_iri a ing:Immobilized.\r\n";
+								if (hasHeavyLoad)
+									modification += "            $immobilized_iri a ing:HeavyLoad.\r\n";
+								modification += "            $immobilized_iri a ing:PhysiologicalCondition.\r\n"
 								+ "            $fr_iri ing:hasPhysiologicalCondition $immobilized_iri. \r\n"
 								+ "        }\r\n"
 								+ "        WHERE{\r\n"
 								+ "        OPTIONAL{\r\n"
 								+ "                $analysis_iri ing:hasTimeStamp ?timestamp.\r\n"
 								+ "            }\r\n"
-								+ "        }"
-					);
+								+ "        }";
 			
 				SemanticIntegration sem = new SemanticIntegration();
 		        long timestamp;
@@ -85,7 +107,7 @@ public class ImmobilizedBootsRule {
 			        String uuidAsString = uuid.toString();
 			        IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
-			        sem.AlertGenerator("Alert", alert_iri.getLocalName(),"FR is immobilized","description","areaDesc","Immediate", "Extreme", split[1]);
+			        sem.AlertGenerator("Alert", alert_iri.getLocalName(),alertMsg,"description","areaDesc","Immediate", "Extreme", split[1]);
 			       
 			        
 			        

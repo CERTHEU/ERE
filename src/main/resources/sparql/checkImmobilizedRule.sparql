@@ -1,8 +1,10 @@
-SELECT DISTINCT ?alert ?fr  ?frid 
+SELECT DISTINCT ?alert ?fr  ?frid ?immobilized ?heavyload
 WHERE {
 	?fr a ing:FR.
 	?fr ing:hasFrId ?frid. 
     ?fr ing:hasVitalSign ?hr.
     ?fr ing:isTargetOfAlert ?alert.
-    ?alert ing:showsEvent "FR immobilized".	
+    
+    BIND (xsd:boolean(exists{ ?alert ing:showsEvent "FR immobilized".}) AS ?immobilized)
+    BIND (xsd:boolean(exists{ ?alert ing:showsEvent "FR heavy load".}) AS ?heavyload)
 }
