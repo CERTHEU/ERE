@@ -5,10 +5,10 @@ public final class IngeniousConsts {
 	public static final int durationOfFourMinutes = 4;
 	public static final int durationOfOneMinute = 1;
 	
-	public static final float heatStrokeLimitBT = 40;
+	public static final float heatStrokeLimitBT = 41;
 	
-	public static final float dehydrationLimitHR = 140;
-	public static final float dehydrationLimitBT = 38;
+	public static final float dehydrationLimitHR = 170;
+	public static final float dehydrationLimitBT = 40;
 	
 	public static final float exhaustionYoungerLimitHR = 170;
 	public static final float exhaustionOlderLimitHR = 150;
