@@ -9,12 +9,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -975,11 +977,29 @@ public class SemanticIntegration {
 	//Get a DateTime in String format, and convert it to Epoch Seconds (long)
 	public long getDateTimeToEpochSecondsFromString (String dateTime)
 	{
+		System.out.println("getDateTimeToEpochSecondsFromString dateTime = " + dateTime);
 		OffsetDateTime odt = OffsetDateTime.parse(dateTime);
 		System.out.println(odt);
 		long timestamp = odt.toEpochSecond();
 		System.out.println(timestamp);
+		System.out.println("getDateTimeToEpochSecondsFromString  timestamp " + timestamp);
 		return timestamp;
+		
+		
+	/*	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+		
+		Date dt;
+	    long epoch = 0;
+		try {
+			dt = sdf.parse(dateTime);
+			epoch = dt.getTime();
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+		System.out.println("getDateTimeToEpochSecondsFromString = epoch " + (int)(epoch/1000));
+	    return (int)(epoch/1000);*/
 	}
 	
 	//Get Epoch Seconds (long) and convert to OffsetDateTime format
@@ -1097,25 +1117,30 @@ public class SemanticIntegration {
 			System.out.println(" || Value: " + measurement.stringValue() + " || Time: " + dateTime.stringValue() + " || Property: " + property.getLocalName());
 			System.out.println(dateTimesInEpochSeconds);
 			Long max = dateTimesInEpochSeconds.stream().mapToLong(v -> v).max().orElseThrow(NoSuchElementException::new);
-			System.out.println(max);
+			System.out.println("max = " + max);
 			maxDateTime = max;
 			min = dateTimesInEpochSeconds.stream().mapToLong(v -> v).min().orElseThrow(NoSuchElementException::new);
-			System.out.println(min);
+			System.out.println("min = " + min);
 			minDateTime = min;
 			minDate = getDateTimeFromEpochSeconds(min);
-			System.out.println(minDate);
+			System.out.println("minDate = " + minDate);
 			maxDate = getDateTimeFromEpochSeconds(max);
-			System.out.println(maxDate);
+			System.out.println("maxDate = " + maxDate);
 		}
 		float mean;
 		mean = what / add;
 		if (minDate !=null) {
 			System.out.println("Mean: " + (what/add));
 		}
+		
+		System.out.println("min: " + min);
+		System.out.println("getZonedDateTimeFromEpochSeconds min to Date = " + getZonedDateTimeFromEpochSeconds(min));
+		System.out.println("getCurrentDateTimeToEpochSeconds = " + getCurrentDateTimeToEpochSeconds());
+		
 		//Gia na treksoume locally, PREPEI na afairoume tis grammes 1085 kai 1092 kai 1093
 		//To +60 mpainei gia na yparxei kapoio normalization stous xronous tou Rolling Average. Poly pithanon na thelei allagh. To periodOfAverage genika thelei optimization.
 		if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
-			System.out.println(min);
+			
 			if (minDate != null)
 				updateRollingAverage(property, mean, minDate.toString(), maxDate.toString(), periodOfAverage);
 			else
@@ -1129,6 +1154,7 @@ public class SemanticIntegration {
 	//Update Rolling Average
 	public void updateRollingAverage(IRI property, float RollingAverage, String startDateTime, String endDateTime, int periodOfAverage)
 	{
+		System.out.println("updateRollingAverage");
 		ValueFactory factory = SimpleValueFactory.getInstance();
         //IRI prop_class = factory.createIRI(Input.NAMESPACE,propertyType);
         Literal start = factory.createLiteral(startDateTime, XSD.DATETIME);
@@ -1685,7 +1711,7 @@ public class SemanticIntegration {
 			System.out.println("Alert:\n" + element.toString());
 			
 			//only when kafka live test is done
-			//Producer.sendOutputAlert();
+			Producer.sendOutputAlert();
 	 }
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
@@ -1748,7 +1774,7 @@ public class SemanticIntegration {
 			int run1 = 0;
 		//	while (System.currentTimeMillis() < end1) {
 			//	System.out.println("run no" + run1);
-				example.loadResourceMapFromFile();
+			//	example.loadResourceMapFromFile();
 			//	example.loadMeasurementsFromFile();
 				//example.loadBootsAlertFromFile();
 				//kb.connection.commit();
@@ -1796,11 +1822,11 @@ public class SemanticIntegration {
 				
 				//KAFKA LIVE IMPLEMENTATION BEGINS
 				long t= System.currentTimeMillis();
-				long end = t+600000;
+				long end = t+1200000;
 				int run=0;
 //			
 //				//We should uncomment it during SST7, temporarily resources are loaded locally
-//				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+				example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
 //				
 //				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
 //				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
@@ -1809,7 +1835,7 @@ public class SemanticIntegration {
 					System.out.println("run no" + run);
 //				
 					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-					example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+					//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 //			
 //					//KB Population ends, Reasoning Rules begin
 //					//	//con.commit();
@@ -1819,13 +1845,13 @@ public class SemanticIntegration {
 					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);
 //				
 //					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
-					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+					/*example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
 					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 					example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
-//
+*/
 //
 //					//EXHAUSTION - It was four minutes. We changed it to one min for the SST7
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfTwoMinutes);
 					ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
 					exhaustionRule.checkRule();
 //				
@@ -1838,7 +1864,7 @@ public class SemanticIntegration {
 					immobilizedRule.checkRule();
 //				
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
-					Thread.sleep(2000);
+					//Thread.sleep(2000);
 					run=run+1;
 				}
 		} catch (Exception e) {

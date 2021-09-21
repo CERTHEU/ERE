@@ -35,7 +35,7 @@ public class ExhaustionRule {
 									new SimpleBinding("youngerAgeLimit", kb.factory.createLiteral(IngeniousConsts.exhaustionYoungerLimitAge)),
 									new SimpleBinding("olderHRLimit", kb.factory.createLiteral(IngeniousConsts.exhaustionOlderLimitHR)),
 									new SimpleBinding("olderAgeLimit", kb.factory.createLiteral(IngeniousConsts.exhaustionOlderLimitAge)),
-									new SimpleBinding("time_limit", kb.factory.createLiteral(IngeniousConsts.durationOfOneMinute))});
+									new SimpleBinding("time_limit", kb.factory.createLiteral(IngeniousConsts.durationOfTwoMinutes))});
 		
 		while (result.hasNext()) {
 			BindingSet bindingSet = result.next();
