@@ -221,7 +221,9 @@ public class SemanticIntegration {
 			}
 			
 			
-			else if (object.get("TYPE").getAsString().equals("K9 VEST") || object.get("TYPE").getAsString().equals("BOOTS") || object.get("TYPE").getAsString().equals("UNIFORM") || object.get("TYPE").getAsString().equals("HELMET"))
+			else if (object.get("TYPE").getAsString().equals("K9 VEST") || object.get("TYPE").getAsString().equals("BOOTS") 
+					|| object.get("TYPE").getAsString().equals("UNIFORM") || object.get("TYPE").getAsString().equals("HELMET") 
+					|| object.get("TYPE").getAsString().equals("BRACELET"))
 			{
 				IRI equipmentIRI = factory.createIRI(Input.NAMESPACE, "Equipment_" + object.get("ID").getAsString());
 				builder.subject(equipmentIRI).add(RDF.TYPE, "ing:PersonalEquipment");
@@ -243,7 +245,9 @@ public class SemanticIntegration {
 				
 				if (object.get("TYPE").getAsString().equals("FR"))
 				{
-					if ((object2.get("ATTACHED_TO")!=null) && (object2.get("TYPE").getAsString().equals("BOOTS") || object2.get("TYPE").getAsString().equals("UNIFORM") || object2.get("TYPE").getAsString().equals("HELMET")))
+					if ((object2.get("ATTACHED_TO")!=null) && (object2.get("TYPE").getAsString().equals("BOOTS") 
+							|| object2.get("TYPE").getAsString().equals("UNIFORM") || object2.get("TYPE").getAsString().equals("HELMET") 
+							|| object2.get("TYPE").getAsString().equals("BRACELET")))
 					{
 						if (object.get("ID").getAsString().equals(object2.get("ATTACHED_TO").getAsString()))
 						{
@@ -406,7 +410,9 @@ public class SemanticIntegration {
 			}
 			
 			
-			else if (object.get("TYPE").getAsString().equals("K9 VEST") || object.get("TYPE").getAsString().equals("BOOTS") || object.get("TYPE").getAsString().equals("UNIFORM") || object.get("TYPE").getAsString().equals("HELMET"))
+			else if (object.get("TYPE").getAsString().equals("K9 VEST") || object.get("TYPE").getAsString().equals("BOOTS") 
+					|| object.get("TYPE").getAsString().equals("UNIFORM") || object.get("TYPE").getAsString().equals("HELMET") 
+					|| object.get("TYPE").getAsString().equals("BRACELET"))
 			{
 				IRI equipmentIRI = factory.createIRI(Input.NAMESPACE, "Equipment_" + object.get("ID").getAsString());
 				builder.subject(equipmentIRI).add(RDF.TYPE, "ing:PersonalEquipment");
@@ -429,7 +435,9 @@ public class SemanticIntegration {
 				
 				if (object.get("TYPE").getAsString().equals("FR"))
 				{
-					if ((object2.get("ATTACHED_TO")!=null) && (object2.get("TYPE").getAsString().equals("BOOTS") || object2.get("TYPE").getAsString().equals("UNIFORM") || object2.get("TYPE").getAsString().equals("HELMET")))
+					if ((object2.get("ATTACHED_TO")!=null) && (object2.get("TYPE").getAsString().equals("BOOTS") 
+							|| object2.get("TYPE").getAsString().equals("UNIFORM") || object2.get("TYPE").getAsString().equals("HELMET") 
+							|| object2.get("TYPE").getAsString().equals("BRACELET")))
 					{
 						if (object.get("ID").getAsString().equals(object2.get("ATTACHED_TO").getAsString()))
 						{
