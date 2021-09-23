@@ -1255,8 +1255,10 @@ public class SemanticIntegration {
 			Value dateTime = bindingSet.getBinding("time").getValue();
 			if (bindingSet.getBinding("analysis_time") != null) {
 				Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
+				System.err.println("HEATSTROKE: ");
 				System.out.println("Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
 			} else {
+				System.err.println("HEATSTROKE: ");
 				System.out.println("Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE: " + device.stringValue() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue());
 			}
 			IRI analysisIRI = factory.createIRI(Input.NAMESPACE, "Analysis_Heatstroke_" + fr.getLocalName());
@@ -1415,7 +1417,7 @@ public class SemanticIntegration {
         	System.out.println("Time of Analysis: " + str);
 
         	Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-        	  if (bindingSet.getBinding("analysis_time") == null)
+        	if (bindingSet.getBinding("analysis_time") == null)
         		AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", fr.getLocalName());
         	
         	executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
@@ -1429,13 +1431,13 @@ public class SemanticIntegration {
 	}
 
 	//Get and Insert Heastroke Rule results
-	public void getAndInsertHeatstroke(float tempLimit, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
+	public void getAndInsertHeatstroke(float tempLimit, float htlimit, int periodOfAverage) throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException {
     
 		ValueFactory factory = SimpleValueFactory.getInstance();
     
 		Literal period = factory.createLiteral(periodOfAverage);
 		Literal heatstrokeLimit = factory.createLiteral(tempLimit);
-  
+		Literal heartRateLimit = factory.createLiteral(htlimit);
     
 		TupleQueryResult result = QueryUtils.evaluateSelectQuery2(kb.getConnection(),
     		
@@ -1459,6 +1461,17 @@ public class SemanticIntegration {
 						+ "    ?fr ing:hasFrId ?frid. \r\n"
 						+ "    ?avg ing:hasValue ?value.\r\n"
 						+ "    \r\n"
+						+ "    ?fr ing:hasVitalSign ?hr.\r\n"
+		    			+ "    ?hr a ing:HeartRate. \r\n"
+		    			+ "    ?hr ing:hasRollingAverage ?hr_avg.\r\n"
+		    			+ "    ?hr_avg ing:hasWindowEnd ?hr_time. \r\n"
+		    			+ "    ?hr_avg ing:hasWindowDuration ?hr_duration.\r\n"
+		    			+ "    ?hr_avg ing:hasValue ?hr_val.\r\n"
+		    			+ "    \r\n"
+		    			+ "    ?device_hr ing:makesMeasurement ?m_hr.\r\n"
+		    			+ "    ?m_hr ing:isMeasurementOf ?hr.\r\n"
+		    			+ "    ?device_hr ing:hasEquipmentId ?device_hr_id. \r\n"
+		    			+ "    \r\n"
 						+ "    \r\n"
 						+ "    OPTIONAL{\r\n"
 						+ "        ?analysis a ing:Analysis. \r\n"
@@ -1467,9 +1480,12 @@ public class SemanticIntegration {
 						+ "        ?fr ing:hasPhysiologicalCondition ?heatstroke.\r\n"
 						+ "        ?analysis ing:hasTimeStamp ?analysis_time. \r\n"
 						+ "    }\r\n"
-						+ "    FILTER (?value>?heatstrokeLimit)\r\n"
+						+ "    FILTER (?value>?heatstrokeLimit && ?hr_val<$hr_limit)\r\n"
 						+ "}"
-						, new SimpleBinding("heatstrokeLimit", heatstrokeLimit), new SimpleBinding("time_limit", period)
+						, new SimpleBinding("heatstrokeLimit", heatstrokeLimit), 
+						new SimpleBinding("time_limit", period),
+						new SimpleBinding("hr_limit", heartRateLimit),
+						new SimpleBinding("hr_duration", period)
 				);
 		//System.out.println(result.hasNext());
     
@@ -1847,14 +1863,15 @@ public class SemanticIntegration {
 					System.out.println("run no" + run);
 //				
 					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-					//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+				//	example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 //			
 //					//KB Population ends, Reasoning Rules begin
 //					//	//con.commit();
 //				
 //					//HEATSTROKE - It was 1 min and remained for the SST7
 					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
-					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);
+					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.heatStrokeLimitHR, IngeniousConsts.durationOfOneMinute);
 //				
 //					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
 					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
@@ -1868,12 +1885,12 @@ public class SemanticIntegration {
 					exhaustionRule.checkRule();
 //				
 //					//COMPLEX - It was one min and remained for the SST7
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-					example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+			//		example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
 //			
 //					//IMMOBILIZED BOOTS
-					ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
-					immobilizedRule.checkRule();
+				//	ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
+					//immobilizedRule.checkRule();
 //				
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
 					Thread.sleep(2000);

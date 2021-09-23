@@ -7,6 +7,8 @@ public final class IngeniousConsts {
 	public static final int durationOfTwoMinutes = 2;
 	
 	public static final float heatStrokeLimitBT = 41;
+	public static final float heatStrokeLimitHR = 170;
+
 	
 	public static final float dehydrationLimitHR = 170;
 	public static final float dehydrationLimitBT = 40;
