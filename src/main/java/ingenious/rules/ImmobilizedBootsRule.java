@@ -107,7 +107,8 @@ public class ImmobilizedBootsRule {
 			        String uuidAsString = uuid.toString();
 			        IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
-			        sem.AlertGenerator("Alert", alert_iri.getLocalName(),alertMsg,"description","areaDesc","Immediate", "Extreme", split[1]);
+			        if (bindingSet.getBinding("analysis_time") == null)
+			        	sem.AlertGenerator("Alert", alert_iri.getLocalName(),alertMsg,"description","areaDesc","Immediate", "Extreme", split[1]);
 			       
 			        
 			        

@@ -1415,7 +1415,9 @@ public class SemanticIntegration {
         	System.out.println("Time of Analysis: " + str);
 
         	Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
-        	AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", fr.getLocalName());
+        	  if (bindingSet.getBinding("analysis_time") == null)
+        		AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", fr.getLocalName());
+        	
         	executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
 		
       
@@ -1525,11 +1527,13 @@ public class SemanticIntegration {
 			Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
         
 			//THIS IS HARDCODED, SHOULD BE CHANGED - ZOE
-			if (tempLimit >= 41) {
-				AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", fr.getLocalName());
-			} else {
-				AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
-			}
+			  if (bindingSet.getBinding("analysis_time") == null) {
+				if (tempLimit >= 41) {
+					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", fr.getLocalName());
+				} else {
+					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
+				}
+			  }
         
 			executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri", device),  new SimpleBinding("heatstroke_iri", heatstrokeIRI), new SimpleBinding("timestamp", timeLimit));
 		}
@@ -1644,8 +1648,8 @@ public class SemanticIntegration {
 			String uuidAsString = uuid.toString();
 			//float bodytemp = Float.parseFloat(hr_measurement.stringValue());
 			IRI alert_iri = factory.createIRI(Input.NAMESPACE, uuidAsString);
-
-			AlertGenerator("Alert", alert_iri.getLocalName(),"FR is in serious danger, his situation is extreme and he needs immediate attention","description","areaDesc","Immediate", "Extreme", split[1]);
+			if (bindingSet.getBinding("analysis_time") == null)
+				AlertGenerator("Alert", alert_iri.getLocalName(),"FR is in serious danger, his situation is extreme and he needs immediate attention","description","areaDesc","Immediate", "Extreme", split[1]);
         
 			executeUpdate(kb.getConnection(), modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit),  new SimpleBinding("alert_iri", factory.createLiteral(uuidAsString)));
 		}
@@ -1853,10 +1857,10 @@ public class SemanticIntegration {
 					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);
 //				
 //					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
-					/*example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
 					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 					example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
-*/
+
 //
 //					//EXHAUSTION - It was four minutes. We changed it to one min for the SST7
 					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfTwoMinutes);
@@ -1872,7 +1876,7 @@ public class SemanticIntegration {
 					immobilizedRule.checkRule();
 //				
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
-					//Thread.sleep(2000);
+					Thread.sleep(2000);
 					run=run+1;
 				}
 		} catch (Exception e) {

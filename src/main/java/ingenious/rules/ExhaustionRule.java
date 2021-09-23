@@ -97,7 +97,8 @@ public class ExhaustionRule {
 			        //float bodytemp = Float.parseFloat(hr_measurement.stringValue());
 			        IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
-			        sem.AlertGenerator("Alert", alert_iri.getLocalName(),"FR suffering from exhaustion","description","areaDesc","Immediate", "Extreme", split[1]);
+			        if (bindingSet.getBinding("analysis_time") == null)
+			        	sem.AlertGenerator("Alert", alert_iri.getLocalName(),"FR suffering from exhaustion","description","areaDesc","Immediate", "Extreme", split[1]);
 			       
 			        
 			        
