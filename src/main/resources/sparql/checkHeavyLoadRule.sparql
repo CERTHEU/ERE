@@ -1,10 +1,10 @@
-SELECT DISTINCT ?alert ?fr  ?frid  ?analysis_time
+SELECT DISTINCT ?alert ?fr  ?frid ?analysis_time
 WHERE {
 	?fr a ing:FR.
 	?fr ing:hasFrId ?frid. 
     ?fr ing:hasVitalSign ?hr.
     ?fr ing:isTargetOfAlert ?alert.
-    ?alert ing:showsEvent "FR immobilized".
+    ?alert ing:showsEvent "FR heavy load".
     OPTIONAL{
 			?analysis a ing:Analysis.
 			?analysis ing:hasTimeStamp ?analysis_time.

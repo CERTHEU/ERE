@@ -66,6 +66,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import ingenious.rules.ExhaustionRule;
+import ingenious.rules.HeavyLoadBootsRule;
 import ingenious.rules.ImmobilizedBootsRule;
 import ingenious.utils.ConfigsLoader;
 import ingenious.utils.QueryUtils;
@@ -1800,20 +1801,23 @@ public class SemanticIntegration {
 			long t1= System.currentTimeMillis();
 			long end1 = t1+600000;
 			int run1 = 0;
-		//	while (System.currentTimeMillis() < end1) {
-			//	System.out.println("run no" + run1);
-			//	example.loadResourceMapFromFile();
-			//	example.loadMeasurementsFromFile();
+			//while (System.currentTimeMillis() < end1) {
+				//System.out.println("run no" + run1);
+				//example.loadResourceMapFromFile();
+				//example.loadMeasurementsFromFile();
 				//example.loadBootsAlertFromFile();
 				//kb.connection.commit();
 				//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 				//con.commit();
 				//example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				//Enable Complex Rule and read Measurements from Measurements.json file
-			//	example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+				//example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
 				//Enable Immobilized Boots Rule and read Measurements from Measurements.json file
-			//	ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
-			//	immobilizedRule.checkRule();
+				//ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
+				//immobilizedRule.checkRule();
+				//HEAVY LOAD BOOTS
+				//HeavyLoadBootsRule heavyLoadBootsRule = new HeavyLoadBootsRule(kb);
+				//heavyLoadBootsRule.checkRule();
 				
 			//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
 				//Enable Heatstroke Rule and read Measurements from MeasurementsDehydration.json file
@@ -1839,7 +1843,7 @@ public class SemanticIntegration {
 				
 		    	//run1=run1+1;
 			
-		//	}
+			//}
 			
 				//Savvas has told us that this oxygen had been created just for testing purposes
 				//example.getDateTimeToEpochSecondsFromString("2020-12-21T11:29:47+00:00");
@@ -1854,11 +1858,13 @@ public class SemanticIntegration {
 				int run=0;
 //			
 //				//We should uncomment it during SST7, temporarily resources are loaded locally
+				
+				
 				example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
-//				
-//				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
-//				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
-//				rolling averages and check if any rule we would like to check is realized.*/
+				
+				/*This while loop is needed to run the application using Kafka, so that we get multiple measurements, boots alerts etc. Then the reasoning rules are applied multiple times and alerts are
+				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
+				rolling averages and check if any rule we would like to check is realized.*/
 				while(System.currentTimeMillis() < end) {
 					System.out.println("run no" + run);
 //				
@@ -1885,12 +1891,16 @@ public class SemanticIntegration {
 					exhaustionRule.checkRule();
 //				
 //					//COMPLEX - It was one min and remained for the SST7
-				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-			//		example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+					example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
 //			
 //					//IMMOBILIZED BOOTS
-				//	ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
-					//immobilizedRule.checkRule();
+					ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
+					immobilizedRule.checkRule();
+					
+					//HEAVY LOAD BOOTS
+					HeavyLoadBootsRule heavyLoadBootsRule = new HeavyLoadBootsRule(kb);
+					heavyLoadBootsRule.checkRule();
 //				
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
 					Thread.sleep(2000);
