@@ -1148,15 +1148,15 @@ public class SemanticIntegration {
 		
 		//Gia na treksoume locally, PREPEI na afairoume tis grammes 1085 kai 1092 kai 1093
 		//To +60 mpainei gia na yparxei kapoio normalization stous xronous tou Rolling Average. Poly pithanon na thelei allagh. To periodOfAverage genika thelei optimization.
-	//	if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
+		if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
 			
 			if (minDate != null)
 				updateRollingAverage(property, mean, minDate.toString(), maxDate.toString(), periodOfAverage);
 			else
 				System.out.println("No rolling average was produced, therefore reasoning cannot proceed."); 
-     //   } else
+        } else
         	//Only for KAFKA since KAFKA is reading periodically and not once like in the local implementation
-      //  	System.out.println("Waiting for more data.");
+        	System.out.println("Waiting for more data.");
 		result.close();
 	}
 	
