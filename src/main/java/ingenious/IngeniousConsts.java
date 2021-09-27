@@ -18,5 +18,6 @@ public final class IngeniousConsts {
 	
 	public static final int exhaustionYoungerLimitAge = 39;
 	public static final int exhaustionOlderLimitAge = 40;
+	public static final int exhaustionTempLimit = 40;
 	
 }

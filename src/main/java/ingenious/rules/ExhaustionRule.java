@@ -35,23 +35,31 @@ public class ExhaustionRule {
 									new SimpleBinding("youngerAgeLimit", kb.factory.createLiteral(IngeniousConsts.exhaustionYoungerLimitAge)),
 									new SimpleBinding("olderHRLimit", kb.factory.createLiteral(IngeniousConsts.exhaustionOlderLimitHR)),
 									new SimpleBinding("olderAgeLimit", kb.factory.createLiteral(IngeniousConsts.exhaustionOlderLimitAge)),
-									new SimpleBinding("time_limit", kb.factory.createLiteral(IngeniousConsts.durationOfTwoMinutes))});
+									new SimpleBinding("hr_duration", kb.factory.createLiteral(IngeniousConsts.durationOfTwoMinutes)),
+									new SimpleBinding("bt_duration", kb.factory.createLiteral(IngeniousConsts.durationOfTwoMinutes)),
+									new SimpleBinding("bt_limit", kb.factory.createLiteral(IngeniousConsts.exhaustionTempLimit))});
 		
 		while (result.hasNext()) {
 			BindingSet bindingSet = result.next();
 			System.err.println("EXHAUSTION enabled");
-			//IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();
-			Value measurement = bindingSet.getBinding("value").getValue();
-		 	Value frId = bindingSet.getBinding("frid").getValue();
-		 	IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
-			Value deviceId = bindingSet.getBinding("device_id").getValue();
-			IRI device = (IRI) bindingSet.getBinding("device").getValue();
-			Value dateTime = bindingSet.getBinding("time").getValue();
+			//IRI p1 = (IRI) bindingSet.getBinding("Activity").getValue();			
+			
+			Value bt_measurement = bindingSet.getBinding("bt_val").getValue();
+			Value hr_measurement = bindingSet.getBinding("hr_val").getValue();
+			Value frId = bindingSet.getBinding("frid").getValue();
+			IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
+			Value deviceHRId = bindingSet.getBinding("device_hr_id").getValue();
+			Value deviceBTId = bindingSet.getBinding("device_bt_id").getValue();
+			IRI deviceBT = (IRI) bindingSet.getBinding("device_bt").getValue();
+			IRI deviceHR = (IRI) bindingSet.getBinding("device_hr").getValue();
+			Value dateTimeBT = bindingSet.getBinding("bt_time").getValue();
+			Value dateTimeHR = bindingSet.getBinding("hr_time").getValue();
+			
 			if (bindingSet.getBinding("analysis_time") != null) {
 				Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
-				System.out.println("Exhaustion || Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_ID: " +deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
+				System.err.println("EXHAUSTION || Body temperature value: " + bt_measurement.stringValue() + " || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_BT: " + deviceBT.stringValue() + " || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_BT_ID: " +deviceBTId.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME BT: " + dateTimeBT.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue() + " || Analysis Time: " + analysisTime.stringValue());	
 			 } else {
-				 System.out.println("Exhaustion || Value: " + measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE: " + device.stringValue() + " || DEVICE_ID: " + deviceId.stringValue() + " || DATETIME: " + dateTime.stringValue());
+				System.err.println("EXHAUSTION || Body temperature value: " + bt_measurement.stringValue() + " || Heart rate value: " + hr_measurement.stringValue() + " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_BT: " + deviceBT.stringValue() + " || DEVICE_HR: " + deviceHR.stringValue() + " || DEVICE_BT_ID: " +deviceBTId.stringValue() + " || DEVICE_HR_ID: " +deviceHRId.stringValue() + " || DATETIME BT: " + dateTimeBT.stringValue() + " || DATETIME HR: " + dateTimeHR.stringValue());	
 			 }
 			IRI analysisIRI = kb.factory.createIRI(Input.NAMESPACE, "Analysis_Exhaustion_" + fr.getLocalName());
 			IRI exhaustionIRI = kb.factory.createIRI(Input.NAMESPACE, "Exhaustion_" + fr.getLocalName());
@@ -67,8 +75,9 @@ public class ExhaustionRule {
 								+ "            $analysis_iri ing:hasTimeStamp $timestamp.\r\n"
 								+ "            $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
 								+ "            $analysis_iri ing:detects $exhaustion_iri. \r\n"
-								+ "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
 								+ "			   $analysis_iri ing:hasDataSource ?alert.\r\n"
+							    + "            $analysis_iri ing:hasDataSource $device_iri_hr. \r\n"
+				 			    + "            $analysis_iri ing:hasDataSource $device_iri_bt. \r\n"
 								+ "            $analysis_iri  ing:triggers $alert_iri. \r\n"
 								+ "        \r\n"
 								+ "            $exhaustion_iri a ing:Exhaustion.\r\n"
@@ -104,7 +113,8 @@ public class ExhaustionRule {
 			        
 			        sem.executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), 
 			        					new SimpleBinding("fr_iri", fr),
-			        					new SimpleBinding("device_iri_hr", device),
+			        					new SimpleBinding("device_iri_hr", deviceHR),
+			        					new SimpleBinding("device_iri_bt", deviceBT),
 			        					new SimpleBinding("exhaustion_iri", exhaustionIRI),
 			        					new SimpleBinding("timestamp", timeLimit),
 			        					new SimpleBinding("alert_iri", kb.factory.createLiteral(uuidAsString)));

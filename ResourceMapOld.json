@@ -1,0 +1,302 @@
+{
+   "ID":"8543db3c-ee03-4798-95b0-a39f2dfc54b3",
+   "TIMESTAMP":"2021-03-12T14:54:21+02:00",
+   "RESOURCE":[
+      {
+         "ID":"PL-1882",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"AM-2911",
+         "ORGANIZATION":"EMS",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"FB-2219",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"FB-1228",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"PL-1332",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"AM-2981",
+         "ORGANIZATION":"EMS",
+         "TYPE":"VEHICLE",
+         "STATUS":"UNAV"
+      },
+      {
+         "ID":"FB-2315",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"FB-3287",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"VEHICLE",
+         "STATUS":"UNAV"
+      },
+      {
+         "ID":"PL-2217",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"PL-128",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"VEHICLE",
+         "STATUS":"UNAV"
+      },
+      {
+         "ID":"AM-3271",
+         "ORGANIZATION":"EMS",
+         "TYPE":"VEHICLE",
+         "STATUS":"AVAILB"
+      },
+      {
+         "ID":"ER94872",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Selena Roberson",
+         "AGE":22,
+         "GENDER":"Female"
+      },
+      {
+         "ID":"EF32985",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Tina Reding",
+         "AGE":38,
+         "GENDER":"Female",
+         "TEAM ID":"PT-1A2",
+         "ROLE_IN_TEAM":"MEMBER"
+      },
+      {
+         "ID":"UN-99",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"UNIFORM",
+         "ATTACHED_TO":"EF32985"
+      },
+      {
+         "ID":"BT-189",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"BOOTS",
+         "ATTACHED_TO":"EF32985"
+      },
+      {
+         "ID":"DX94857",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Jack Nikolson",
+         "AGE":33,
+         "GENDER":"Male",
+         "TEAM ID":"PT-1A2",
+         "ROLE_IN_TEAM":"LEADER"
+      },
+      {
+         "ID":"BT-271",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"BOOTS",
+         "ATTACHED_TO":"DX94857"
+      },
+      {
+         "ID":"SS84756",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Nick Edwards",
+         "AGE":29,
+         "GENDER":"Male"
+      },
+      {
+         "ID":"UN-123",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"UNIFORM",
+         "ATTACHED_TO":"SS84756"
+      },
+      {
+         "ID":"HM-163",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"HELMET",
+         "ATTACHED_TO":"SS84756"
+      },
+      {
+         "ID":"K9-322",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"K9",
+         "STATUS":"AVAILB",
+         "WEIGHT":50,
+         "HEIGHT":92
+      },
+      {
+         "ID":"KV-119",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"K9 VEST",
+         "ATTACHED_TO":"K9-322"
+      },
+      {
+         "ID":"CI32918",
+         "ORGANIZATION":"EMS",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Jack Gomez",
+         "AGE":38,
+         "GENDER":"Male",
+         "TEAM ID":"MT-4AB",
+         "ROLE_IN_TEAM":"MEMBER"
+      },
+      {
+         "ID":"AO338221",
+         "ORGANIZATION":"EMS",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Serena Williams",
+         "AGE":45,
+         "GENDER":"Female",
+         "TEAM ID":"MT-4AB",
+         "ROLE_IN_TEAM":"MEMBER"
+      },
+      {
+         "ID":"UN-218",
+         "ORGANIZATION":"EMS",
+         "TYPE":"UNIFORM",
+         "ATTACHED_TO":"TA34763"
+      },
+      {
+         "ID":"IA85764",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Emily Careera",
+         "AGE":41,
+         "GENDER":"Female"
+      },
+      {
+         "ID":"K9-155",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"K9",
+         "STATUS":"AVAILB",
+         "ATTACHED_TO":"EA85746",
+         "WEIGHT":47,
+         "HEIGHT":85
+      },
+      {
+         "ID":"KV-089",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"K9 VEST",
+         "ATTACHED_TO":"K9-155"
+      },
+      {
+         "ID":"EA85746",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Chin Hapton",
+         "AGE":30,
+         "GENDER":"Male",
+         "WEIGHT":80,
+         "HEIGHT":187
+      },
+      {
+         "ID":"BT-215",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"BOOTS",
+         "ATTACHED_TO":"EA85746"
+      },
+      {
+         "ID":"HM-118",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"HELMET",
+         "ATTACHED_TO":"EA85746"
+      },
+      {
+         "ID":"UN-201",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"UNIFORM",
+         "ATTACHED_TO":"EA85746"
+      },
+      {
+         "ID":"GE58732",
+         "ORGANIZATION":"EMS",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"George Robin",
+         "AGE":26,
+         "GENDER":"Male",
+         "WEIGHT":78,
+         "HEIGHT":180
+      },
+      {
+         "ID":"TA34763",
+         "ORGANIZATION":"EMS",
+         "TYPE":"FR",
+         "STATUS":"AVAILB",
+         "NAME":"Scot Jeferson",
+         "AGE":35,
+         "GENDER":"Male",
+         "WEIGHT":86,
+         "HEIGHT":192,
+         "TEAM_ID":"MT-4AB",
+         "ROLE_IN_TEAM":"LEADER"
+      },
+      {
+         "ID":"HM-149",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"HELMET"
+      },
+      {
+         "ID":"HM-131",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"HELMET"
+      },
+      {
+         "ID":"BT-177",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"BOOTS",
+		 "ATTACHED_TO": "TA34763"
+      },
+      {
+         "ID":"UN-120",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"UNIFORM"
+      },
+      {
+         "ID":"HM-129",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"HELMET"
+      },
+      {
+         "ID":"BT-155",
+         "ORGANIZATION":"FIRE BRIGADE",
+         "TYPE":"BOOTS"
+      },
+      {
+         "ID":"UN-147",
+         "ORGANIZATION":"EMS",
+         "TYPE":"UNIFORM"
+      },
+      {
+         "ID":"KV-171",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"K9 VEST"
+      }
+   ]
+}
