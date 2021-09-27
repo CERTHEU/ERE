@@ -1416,10 +1416,13 @@ public class SemanticIntegration {
         	long timestamp = getCurrentDateTimeToEpochSeconds();
         	String str = getZonedDateTimeFromEpochSeconds(timestamp).toString();
         	System.out.println("Time of Analysis: " + str);
+        	
+        	String frName = fr.getLocalName(); 
+			String[] split = frName.split("_");
 
         	Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
         	if (bindingSet.getBinding("analysis_time") == null)
-        		AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", fr.getLocalName());
+        		AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", split[1]);
         	
         	executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
 		
@@ -1542,13 +1545,16 @@ public class SemanticIntegration {
 			System.out.println("Timestamp of Analysis: " + str);
 
 			Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
+			
+			String frName = fr.getLocalName(); 
+			String[] split = frName.split("_");
         
 			//THIS IS HARDCODED, SHOULD BE CHANGED - ZOE
 			  if (bindingSet.getBinding("analysis_time") == null) {
 				if (tempLimit >= 41) {
-					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", fr.getLocalName());
+					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", split[1]);
 				} else {
-					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
+					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", split[1]);
 				}
 			  }
         
