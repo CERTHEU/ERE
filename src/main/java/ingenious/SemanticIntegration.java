@@ -1810,38 +1810,38 @@ public class SemanticIntegration {
 			//while (System.currentTimeMillis() < end1) {
 				//System.out.println("run no" + run1);
 			//	example.loadResourceMapFromFile();
-			//	example.loadMeasurementsFromFile();
-				//example.loadBootsAlertFromFile();
+				//example.loadMeasurementsFromFile();
+			//	example.loadBootsAlertFromFile();
 				//kb.connection.commit();
 				//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 				//con.commit();
-				//example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				
+			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				//Enable Complex Rule and read Measurements from Measurements.json file
-				//example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+			//	example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+				
 				//Enable Immobilized Boots Rule and read Measurements from Measurements.json file
 				//ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
 				//immobilizedRule.checkRule();
 				//HEAVY LOAD BOOTS
-				//HeavyLoadBootsRule heavyLoadBootsRule = new HeavyLoadBootsRule(kb);
-				//heavyLoadBootsRule.checkRule();
+			//	HeavyLoadBootsRule heavyLoadBootsRule = new HeavyLoadBootsRule(kb);
+			//	heavyLoadBootsRule.checkRule();
 				
 			//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				//Enable Heatstroke Rule and read Measurements from MeasurementsDehydration.json file
-				//example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.durationOfOneMinute);
-				//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-				//con.commit();
-				//example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-				//con.commit();
+			//	example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.heatStrokeLimitHR, IngeniousConsts.durationOfOneMinute);
 				
 			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfTwoMinutes);
 			//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfTwoMinutes);
 			//	Enable Exhaustion Rule and read Measurements from MeasurementsExhaustion.json file
 			//	ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
 			//	exhaustionRule.checkRule();
+				
 			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFiveMinutes);
 			//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfFiveMinutes);
 				//Enable Dehydration Rule and read Measurements from MeasurementsDehydration.json file
-				//example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfFiveMinutes, IngeniousConsts.durationOfFiveMinutes); 
+			//	example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfFiveMinutes, IngeniousConsts.durationOfFiveMinutes); 
 				
 				//Thread.sleep(50000);
 				//example.loadMeasurementsFromFile();
@@ -1873,34 +1873,34 @@ public class SemanticIntegration {
 				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
 				rolling averages and check if any rule we would like to check is realized.*/
 	///			while(System.currentTimeMillis() < end) {
+				//we will keep the while true, the detection should be done constantly
 				while(true) {
-					System.out.println("run no" + run);
+				//	System.out.println("run no" + run);
 //				
 					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-				//	example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+					example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
 //			
 //					//KB Population ends, Reasoning Rules begin
-//					//	//con.commit();
 //				
 //					//HEATSTROKE - It was 1 min and remained for the SST7
-					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-					example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.heatStrokeLimitHR, IngeniousConsts.durationOfOneMinute);
+				//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				//	example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.heatStrokeLimitHR, IngeniousConsts.durationOfOneMinute);
 //				
 //					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
-					example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-					example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
+				//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				//	example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
 
 //
 //					//EXHAUSTION - It was four minutes. We changed it to one min for the SST7
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfTwoMinutes);
-					ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
-					exhaustionRule.checkRule();
+				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfTwoMinutes);
+				//	ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+				//	exhaustionRule.checkRule();
 //				
 //					//COMPLEX - It was one min and remained for the SST7
-			//		example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-			//		example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+					example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
 //			
 //					//IMMOBILIZED BOOTS
 			//		ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
@@ -1911,8 +1911,9 @@ public class SemanticIntegration {
 				//	heavyLoadBootsRule.checkRule();
 //				
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
-					Thread.sleep(2000);
-					run=run+1;
+				//	Thread.sleep(2000);
+					
+				//	run=run+1;
 				}
 		} catch (Exception e) {
 			e.printStackTrace();

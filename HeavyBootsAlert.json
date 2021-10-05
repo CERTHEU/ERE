@@ -10,7 +10,7 @@
   "info": [
     {
       "category": "FR Activity",
-      "event": "FR immobilized",
+      "event": "FR heavy load",
       "urgency": "Immediate",
       "severity": "Severe",
       "certainty": "Observed",
