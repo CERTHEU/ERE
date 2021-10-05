@@ -1,0 +1,37 @@
+DELETE {
+        ?fr ing:hasPhysiologicalCondition ?complex. 
+        ?analysis a ing:Analysis. 
+		?analysis ing:detects ?complex.
+        ?analysis ing:hasDataSource ?data_source.
+		?complex a ing:Complex.
+        ?complex a ing:PhysiologicalCondition.
+        ?complex ?p ?o. 
+        ?analysis ?p ?o.
+}
+WHERE  { 
+		?fr a ing:FR.
+		?fr ing:hasFrId ?frid.
+		?fr ing:hasVitalSign ?hr.
+		?fr ing:isTargetOfAlert ?alert.
+		?alert ing:showsEvent "FR immobilized"	.
+		?hr a ing:HeartRate.
+		?hr ing:hasRollingAverage ?hr_avg.
+		?hr_avg ing:hasWindowEnd ?hr_time. 
+		?hr_avg ing:hasWindowDuration ?hr_duration.
+		?hr_avg ing:hasValue ?hr_val.
+		?device_hr ing:makesMeasurement ?m_hr.
+		?m_hr ing:isMeasurementOf ?hr.
+		?device_hr ing:hasEquipmentId ?device_hr_id. 
+       
+		?analysis a ing:Analysis. 
+		?analysis ing:detects ?complex.
+        ?analysis ing:hasDataSource ?data_source.
+		?complex a ing:Complex. 
+ 		?fr ing:hasPhysiologicalCondition ?complex.
+		?analysis ing:hasTimeStamp ?analysis_time. 
+		?analysis ing:triggers ?alert_id
+        
+		FILTER(?hr_val > ?hr_limit)
+            
+} 
+

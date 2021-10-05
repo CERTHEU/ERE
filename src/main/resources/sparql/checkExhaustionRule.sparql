@@ -1,0 +1,43 @@
+SELECT DISTINCT ?fr ?device_bt ?device_hr ?frid ?hr_val ?bt_val ?hr_time ?bt_time ?device_hr_id ?device_bt_id ?analysis_time
+where {
+        ?fr ing:hasVitalSign ?hr.
+		?fr ing:hasFrId ?frid.
+		?fr ing:hasAge ?age.
+        ?hr ing:hasRollingAverage ?hr_avg.
+		?hr a ing:HeartRate.
+		?hr_avg a ing:RollingAverage.
+		?hr_avg ing:hasWindowEnd ?hr_time.
+		?hr_avg ing:hasWindowDuration ?hr_duration.
+		?hr_avg ing:hasValue ?hr_val.
+ 		?device_hr ing:makesMeasurement ?m.
+		?m ing:isMeasurementOf ?hr.
+		?device_hr ing:hasEquipmentId ?device_hr_id.
+		
+  		
+  		
+  		?fr ing:hasVitalSign ?bt.
+		?bt a ing:BodyTemperature.
+		?bt ing:hasRollingAverage ?bt_avg.
+		?bt_avg ing:hasWindowEnd ?bt_time.
+		?bt_avg ing:hasWindowDuration $bt_duration.
+		?bt_avg ing:hasValue ?bt_val.
+		?device_bt ing:makesMeasurement ?m_bt.
+		?m_bt ing:isMeasurementOf ?bt.
+ 		?device_bt ing:hasEquipmentId ?device_bt_id.
+  		
+		OPTIONAL{
+			?analysis a ing:Analysis.
+			?analysis ing:detects ?exhaustion.
+			?exhaustion a ing:Exhaustion.
+			?fr ing:hasPhysiologicalCondition ?exhaustion.
+			?analysis ing:hasTimeStamp ?analysis_time.
+		}
+		
+		{
+			FILTER (?hr_val >= ?youngerHRLimit && ?bt_val<= ?bt_limit)
+			FILTER (?age <= ?youngerAgeLimit)
+		} UNION {
+			FILTER (?hr_val >= ?olderHRLimit && ?bt_val <= ?bt_limit)
+			FILTER (?age >= ?olderAgeLimit)
+		}
+}
