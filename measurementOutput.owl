@@ -1,18 +1,15 @@
 @prefix ing: <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#> .
 
-ing:header a ing:header;
-  ing:hasVersion "1.0.0";
-  ing:sentOn "2020-12-21T11:29:47+00:00";
-  ing:headerCRC "00112233";
-  ing:payloadCRC "AABBCCDD" .
+ing:header ing:hasTimestamp "2022-04-19T11:31:48+00:00";
+  ing:sensorSource ing:Equipment_SS84756 .
 
 ing:Measurement_9bb325ae-b8c3-4dfa-974d-e7ac69096062 a ing:Measurement;
   ing:hasObservationId "9bb325ae-b8c3-4dfa-974d-e7ac69096062";
-  ing:hasTimestamp "2021-05-30T11:29:47+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
-  ing:hasResult "25"^^<http://www.w3.org/2001/XMLSchema#float>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasResult "40"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
-ing:Equipment_UN-128 ing:makesMeasurement ing:Measurement_9bb325ae-b8c3-4dfa-974d-e7ac69096062,
+ing:Equipment_BCL-128 ing:makesMeasurement ing:Measurement_9bb325ae-b8c3-4dfa-974d-e7ac69096062,
     ing:Measurement_31c14e0c-0ef7-4fdb-9166-91ba3e08833a, ing:Measurement_7d0f7740-6461-41cf-8afb-a4f457547125,
     ing:Measurement_9bb325ae-b8c3-4dfa-974d-e7ac69096063, ing:Measurement_31c14e0c-0ef7-4fdb-9166-91ba3e08833b,
     ing:Measurement_7d0f7740-6461-41cf-8afb-a4f457547126, ing:Measurement_9bb325ae-b8c3-4dfa-974d-e7ac69096064,
@@ -20,50 +17,49 @@ ing:Equipment_UN-128 ing:makesMeasurement ing:Measurement_9bb325ae-b8c3-4dfa-974
 
 ing:Measurement_31c14e0c-0ef7-4fdb-9166-91ba3e08833a a ing:Measurement;
   ing:hasObservationId "31c14e0c-0ef7-4fdb-9166-91ba3e08833a";
-  ing:hasTimestamp "2021-05-30T12:40:57+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
   ing:hasResult "96.87667249104322"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
 ing:Measurement_7d0f7740-6461-41cf-8afb-a4f457547125 a ing:Measurement;
   ing:hasObservationId "7d0f7740-6461-41cf-8afb-a4f457547125";
-  ing:hasTimestamp "2021-05-30T11:25:47+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
   ing:hasResult "41"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
 ing:Measurement_9bb325ae-b8c3-4dfa-974d-e7ac69096063 a ing:Measurement;
   ing:hasObservationId "9bb325ae-b8c3-4dfa-974d-e7ac69096063";
-  ing:hasTimestamp "2021-05-30T11:29:49+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
-  ing:hasResult "14"^^<http://www.w3.org/2001/XMLSchema#float>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasResult "50"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
 ing:Measurement_31c14e0c-0ef7-4fdb-9166-91ba3e08833b a ing:Measurement;
   ing:hasObservationId "31c14e0c-0ef7-4fdb-9166-91ba3e08833b";
-  ing:hasTimestamp "2021-05-30T12:42:57+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
   ing:hasResult "97.87667249104322"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
 ing:Measurement_7d0f7740-6461-41cf-8afb-a4f457547126 a ing:Measurement;
   ing:hasObservationId "7d0f7740-6461-41cf-8afb-a4f457547126";
-  ing:hasTimestamp "2021-05-30T11:25:49+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
   ing:hasResult "41.2"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
 ing:Measurement_9bb325ae-b8c3-4dfa-974d-e7ac69096064 a ing:Measurement;
   ing:hasObservationId "9bb325ae-b8c3-4dfa-974d-e7ac69096064";
-  ing:hasTimestamp "2021-05-30T11:29:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
-  ing:hasResult "17"^^<http://www.w3.org/2001/XMLSchema#float>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasResult "50"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
 ing:Measurement_31c14e0c-0ef7-4fdb-9166-91ba3e08833c a ing:Measurement;
   ing:hasObservationId "31c14e0c-0ef7-4fdb-9166-91ba3e08833c";
-  ing:hasTimestamp "2021-05-30T12:44:57+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
   ing:hasResult "98.87667249104322"^^<http://www.w3.org/2001/XMLSchema#float>;
   ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
 
 ing:Measurement_7d0f7740-6461-41cf-8afb-a4f457547127 a ing:Measurement;
   ing:hasObservationId "7d0f7740-6461-41cf-8afb-a4f457547127";
-  ing:hasTimestamp "2021-05-30T11:25:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>,
-    "2021-05-30T12:25:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>, "2021-05-30T12:30:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>,
-    "2021-05-30T12:35:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
-  ing:hasResult "43"^^<http://www.w3.org/2001/XMLSchema#float>, "36.6"^^<http://www.w3.org/2001/XMLSchema#float>;
-  ing:hasLocation "POINT (9.558408266609923 8.321844244298909)" .
+  ing:hasTimestamp "2022-05-17T13:23:18+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  ing:hasResult "43"^^<http://www.w3.org/2001/XMLSchema#float>, "36.6"^^<http://www.w3.org/2001/XMLSchema#float>,
+    "50"^^<http://www.w3.org/2001/XMLSchema#float>;
+  ing:hasLocation "POINT (9.558408266609923 8.321844244298909)", "POINT (9.558407266609923 8.321844244298909)" .

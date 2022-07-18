@@ -1,18 +1,18 @@
 
 {
-    "identifier":"cb563b98-eb36-46c0-b7db-9a8ffb4cb908",
+    "identifier":"64e589b9-fbe1-4823-b182-4c8e9e1ab9de",
     "sender":"ERE",
-    "sent":"2021-05-27T16:16:31+03:00",
+    "sent":"2022-05-25T12:26:37+03:00",
     "status":"Actual",
     "msgType":"Alert",
-    "source":"TA34763",
+    "source":"TM_001",
     "scope":"Public",
     "code":[
     ],
     "info":[
         {
             "category":"FR Health Status",
-            "event":"FR Health Status",
+            "event":"FR is in serious danger, his situation is extreme and he needs immediate attention",
             "urgency":"Immediate",
             "severity":"Extreme",
             "certainty":"Likely",

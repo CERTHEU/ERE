@@ -13,7 +13,7 @@ import ingenious.utils.ConfigsLoader;
 
 public class KB {
 	
-	public static final String REPOSITORY = "2";
+	public static final String REPOSITORY = "3";
 	 
 	public RepositoryConnection connection;
 	public ValueFactory factory;

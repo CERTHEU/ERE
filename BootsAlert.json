@@ -1,12 +1,12 @@
 {
   "identifier": "88d58a78-95d3-4b9c-b0a4-aab2e2ed73d5",
   "sender": "BOOTS",
-  "sent": "2020-09-28T15:22:18+02:00",
+  "sent": "2022-04-04T10:02:12+00:00",
   "status": "Actual",
   "msgType": "Alert",
   "source": "SS84756",
   "scope": "Public",
-  "code": ["BT-177"],
+  "code": ["BT-112"],
   "info": [
     {
       "category": "FR Activity",

@@ -61,7 +61,7 @@ public class Producer {
 		
 		
 		KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
-		ProducerRecord<String, String> record = new ProducerRecord<String, String>("resource_map", getResourceMap());
+		ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-resources", getResourceMap());
 		//COPResourcesTopic
 		//SOCIAL_MEDIA_APP_TOPIC
 		producer.send(record, new Callback() {
@@ -92,7 +92,7 @@ static void sendMeasurements() {
 		
 		
 		KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
-		ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-observations-test", getMeasurements());
+		ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-observations", getMeasurements());
 		//COPResourcesTopic
 		//SOCIAL_MEDIA_APP_TOPIC
 		producer.send(record, new Callback() {
@@ -123,7 +123,7 @@ static void sendBootsAlert() {
 	
 	
 	KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
-	ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-events-test", getBootsAlert());
+	ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-events", getBootsAlert());
 	//COPResourcesTopic
 	//SOCIAL_MEDIA_APP_TOPIC
 	producer.send(record, new Callback() {
@@ -154,7 +154,7 @@ static void sendOutputAlert() {
 	
 	
 	KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
-	ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-alerts-test", getOutputAlert());
+	ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-alerts-cop", getOutputAlert());
 	//COPResourcesTopic
 	//SOCIAL_MEDIA_APP_TOPIC
 	producer.send(record, new Callback() {
@@ -179,12 +179,13 @@ static void sendOutputAlert() {
 		//MongoClient mongoClient = new MongoClient();
 		//MongoDatabase db = mongoClient.getDatabase("ingenious_events");
 		//MongoCollection<Document> collection = db.getCollection("events");
-		
+		Logger logger = LoggerFactory.getLogger(Producer.class.getName());
 		JsonReader reader;
 		try {
 			reader = new JsonReader(new FileReader(configInstance.getFilepath() +  "ResourceMap.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
+			logger.info("map produced" + element.toString());
 			return element.toString();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -223,12 +224,13 @@ static void sendOutputAlert() {
 		//MongoClient mongoClient = new MongoClient();
 		//MongoDatabase db = mongoClient.getDatabase("ingenious_events");
 		//MongoCollection<Document> collection = db.getCollection("events");
-		
+		Logger logger = LoggerFactory.getLogger(Producer.class.getName());
 		JsonReader reader;
 		try {
 			reader = new JsonReader(new FileReader(configInstance.getFilepath() + "BootsAlert.json"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
+			logger.info("boot JSON sent" + element.toString());
 			return element.toString();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

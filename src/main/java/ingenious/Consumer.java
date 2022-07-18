@@ -21,8 +21,8 @@ public class Consumer {
 		// TODO Auto-generated method stub
 				Logger logger = LoggerFactory.getLogger(Consumer.class.getName());
 				String bootstrapServers = "192.168.30.202:14200";
-				String grp_id = "resource_map";
-				String topic = "ingenious-resources-test";
+				String grp_id = "ingenious-resources-test";
+				String topic = "ingenious-resources";
 				String group_instance ="02";
 				//properties
 				Properties properties = new Properties();
@@ -32,7 +32,7 @@ public class Consumer {
 				properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, grp_id);
 				properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, group_instance);
 				
-				properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+				properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 				//properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
 				
 				//String str = String.valueOf(Integer.MAX_VALUE);
@@ -41,12 +41,12 @@ public class Consumer {
 				KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
 		
 				consumer.subscribe(Arrays.asList(topic));
-				
+
 				while(true){  
 		            ConsumerRecords<String,String> records = consumer.poll(Duration.ofMillis(100));  
 		            for(ConsumerRecord<String,String> record: records){  
 		                logger.info("Key: "+ record.key() + ", Value:" +record.value());  
-		                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset()); 
+		                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset());
 		                System.out.println(record.value());
 		                consumer.close();
 		                return record.value();
@@ -63,7 +63,7 @@ public class Consumer {
 				Logger logger = LoggerFactory.getLogger(Consumer.class.getName());
 				String bootstrapServers = "192.168.30.202:14200";
 				String grp_id = "ingenious-obserso-test";
-				String topic = "ingenious-observations-test";
+				String topic = "ingenious-observations";
 				String group_instance ="07";
 				//properties
 				Properties properties = new Properties();
@@ -82,7 +82,7 @@ public class Consumer {
 				consumer.subscribe(Arrays.asList(topic));
 				
 				while(true){  
-		            ConsumerRecords<String,String> records = consumer.poll(Duration.ofMillis(100));  
+		            ConsumerRecords<String,String> records = consumer.poll(Duration.ofMillis(100));
 		            for(ConsumerRecord<String,String> record: records){  
 		                logger.info("Key: "+ record.key() + ", Value:" +record.value());  
 		                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset()); 
@@ -104,8 +104,8 @@ public class Consumer {
 				Logger logger = LoggerFactory.getLogger(Consumer.class.getName());
 				String bootstrapServers = "192.168.30.202:14200";
 				String grp_id = "test_certh_BA";
-				String topic = "ingenious-events-test";
-				String group_instance ="04";
+				String topic = "ingenious-events";
+				String group_instance ="11";
 				//properties
 				Properties properties = new Properties();
 				properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -122,17 +122,21 @@ public class Consumer {
 				KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
 				consumer.subscribe(Arrays.asList(topic));
 				
-				while(true){  
-		            ConsumerRecords<String,String> records = consumer.poll(Duration.ofMillis(100));  
-		            for(ConsumerRecord<String,String> record: records){  
-		                logger.info("Key: "+ record.key() + ", Value:" +record.value());  
-		                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset()); 
-		                System.out.println(record.value());
-		                consumer.close();
-		                return record.value();
-		                
-		            }  
-		        }
+				while(true){
+		            ConsumerRecords<String,String> records = consumer.poll(Duration.ofMillis(100));
+		           // if (!records.isEmpty()) {
+						for (ConsumerRecord<String, String> record : records) {
+							logger.info("Key: " + record.key() + ", Value:" + record.value());
+							logger.info("Partition:" + record.partition() + ",Offset:" + record.offset());
+							System.out.println(record.value());
+							consumer.close();
+							return record.value();
+						}
+					//}
+					//else
+					//	consumer.close();
+					//	return null;
+		       }
 		
 		
 	}

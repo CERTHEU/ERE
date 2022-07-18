@@ -72,6 +72,9 @@ import ingenious.utils.ConfigsLoader;
 import ingenious.utils.QueryUtils;
 import kb.KB;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 public class SemanticIntegration {
@@ -84,6 +87,7 @@ public class SemanticIntegration {
 	}
 	
 	JsonArray storage;
+	boolean complexAlert = false;
 	//private RepositoryConnection connection;
 	KB kb;
 	
@@ -310,15 +314,16 @@ public class SemanticIntegration {
 	{
 		//JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\ResourceMap.json"));
 		//reader.setLenient(true);
-		
+		Logger logger = LoggerFactory.getLogger(SemanticIntegration.class.getName());
 		JsonElement element = new JsonParser().parse(stream);
+		logger.info("parse Resource from stream");
 		System.out.println(element.toString());
 		
 		ModelBuilder builder = new ModelBuilder();
 		builder.setNamespace("ing", Input.NAMESPACE);
 		
 		ValueFactory factory = SimpleValueFactory.getInstance();
-		
+		logger.info("object with error" + element.toString());
 		JsonObject object = element.getAsJsonObject();
 		JsonObject object2 = element.getAsJsonObject();
 		//JsonObject object3 = element.getAsJsonObject();
@@ -495,7 +500,7 @@ public class SemanticIntegration {
 	//Method to load Measurements from File, locally
 	public void loadMeasurementsFromFile() throws IOException, URISyntaxException 
 		{
-			JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath() + "Measurements.json"));
+			JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath() + "MeasurementsExhaustion.json"));
 			//System.out.println(reader.toString());
 			
 			reader.setLenient(true);
@@ -651,11 +656,13 @@ public class SemanticIntegration {
 	//Method to load Measurements from Kafka stream (String)
 	public void loadMeasurementsFromStream(String stream) throws IOException, URISyntaxException 
 	{
+		Logger logger = LoggerFactory.getLogger(SemanticIntegration.class.getName());
 		//JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Savvas\\Documents\\GitHub\\Ingenious\\ING_ER\\Measurements.json"));
 		//System.out.println(reader.toString());
-		
+		logger.info("parse measurements from string");
 		//reader.setLenient(true);
 		JsonElement element = new JsonParser().parse(stream);
+
 		//System.out.println(element.getAsString());
 		ModelBuilder builder = new ModelBuilder();
 		builder.setNamespace("ing", Input.NAMESPACE);
@@ -890,6 +897,7 @@ public class SemanticIntegration {
 	{
 		JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath() + "BootsAlert.json"));
 		reader.setLenient(true);
+		System.out.println("stream check " + stream);
 		JsonElement element = new JsonParser().parse(stream);
 		//System.out.println(element.toString());
 		ModelBuilder builder = new ModelBuilder();
@@ -1145,11 +1153,11 @@ public class SemanticIntegration {
 		System.out.println("min: " + min);
 		System.out.println("getZonedDateTimeFromEpochSeconds min to Date = " + getZonedDateTimeFromEpochSeconds(min));
 		System.out.println("getCurrentDateTimeToEpochSeconds = " + getCurrentDateTimeToEpochSeconds());
-		
+		System.out.println("get th difference = " +  (getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60));
 		//Gia na treksoume locally, PREPEI na afairoume tis grammes 1085 kai 1092 kai 1093
 		//To +60 mpainei gia na yparxei kapoio normalization stous xronous tou Rolling Average. Poly pithanon na thelei allagh. To periodOfAverage genika thelei optimization.
-		if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60)) {
-			
+		if ((min !=0) && (min < getCurrentDateTimeToEpochSeconds() - periodOfAverage*60 + 60 )) {
+			System.out.println("min checked");
 			if (minDate != null)
 				updateRollingAverage(property, mean, minDate.toString(), maxDate.toString(), periodOfAverage);
 			else
@@ -1581,7 +1589,7 @@ public class SemanticIntegration {
     				+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
     				+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n"
     				//+"PREFIX : <http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-    				+ "select distinct ?alert ?fr  ?device_hr ?frid ?hr_val  ?hr_time  ?device_hr_id  ?analysis_time \r\n"
+    				+ "select distinct ?alert ?fr  ?device_hr ?frid ?hr_val  ?hr_time  ?device_hr_id  ?analysis_time ?analysis \r\n"
     				+ "where { \r\n"
     				+ "	   ?fr a ing:FR.\r\n"
     				+ "    ?fr ing:hasFrId ?frid.\r\n"
@@ -1611,7 +1619,7 @@ public class SemanticIntegration {
     				+ "}"
     				,  new SimpleBinding("hr_limit", hrateLimit),  new SimpleBinding("hr_duration", periodHR)
 				);
-		//System.out.println(result.hasNext());
+		System.out.println(result.hasNext());
     
 		while (result.hasNext()) {
 			BindingSet bindingSet = result.next();
@@ -1671,9 +1679,17 @@ public class SemanticIntegration {
 			String uuidAsString = uuid.toString();
 			//float bodytemp = Float.parseFloat(hr_measurement.stringValue());
 			IRI alert_iri = factory.createIRI(Input.NAMESPACE, uuidAsString);
-			if (bindingSet.getBinding("analysis_time") == null)
-				AlertGenerator("Alert", alert_iri.getLocalName(),"FR is in serious danger, his situation is extreme and he needs immediate attention","description","areaDesc","Immediate", "Extreme", split[1]);
-        
+			/*if (bindingSet.getBinding("analysis") == null) {
+				AlertGenerator("Alert", alert_iri.getLocalName(), "FR is in serious danger, his situation is extreme and he needs immediate attention", "description", "areaDesc", "Immediate", "Extreme", split[1]);
+				System.out.println("The First Alert has been sent");
+			}*/
+
+			if(!complexAlert){
+						AlertGenerator("Alert", alert_iri.getLocalName(), "FR is in serious danger, his situation is extreme and he needs immediate attention", "description", "areaDesc", "Immediate", "Extreme", split[1]+"_"+split[2]);
+						System.out.println("The First Alert has been sent");
+						complexAlert=true;
+			}
+
 			executeUpdate(kb.getConnection(), modification, new SimpleBinding("alert", alert),new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceHR), new SimpleBinding("complex_iri", complexIRI), new SimpleBinding("timestamp", timeLimit),  new SimpleBinding("alert_iri", factory.createLiteral(uuidAsString)));
 		}
     
@@ -1760,9 +1776,9 @@ public class SemanticIntegration {
 			example.getKB().connection.clear();
 			
 			
-			Consumer consumerMeas = new Consumer();
-			Consumer consumerRM = new Consumer();
-			Consumer consumerBA = new Consumer();
+			//Consumer consumerMeas = new Consumer();
+			//Consumer consumerRM = new Consumer();
+			//Consumer consumerBA = new Consumer();
 			
 			//Sometime, in the future, we should develop our ontology, it has been started by Alex
 			//example.loadOntology();
@@ -1773,52 +1789,56 @@ public class SemanticIntegration {
 			//An theloume na treksoume mesw kafka monoi mas, xwris synennohsh me EXUS klp, mporoume na kanoume produce monoi mas (px Producer.sendResourceMap())
 			//kai meta antistoixa loadResourceMapFromStream klp. Gia na to kanoume auto, prepei na eimaste syndedemenoi sto VPN. Akoma ki etsi, mporei na exei thema o Server
 			//h/kai o Kafka opote mporei na mhn treksei. Kalo einai na mhn asxoloumaste poly me auto to run, mia sto toso mono.
-			
+			//Producer.sendResourceMap();
 			//KAFKA SIMULATION
 			/*long t2= System.currentTimeMillis();
 			long end2 = t2+600000;
 			int run2 = 0;
 			while (System.currentTimeMillis() < end2) {
 				
-				System.out.println("run no" + run2);
-				Producer.sendResourceMap();
-				example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
-				Producer.sendMeasurements();
-				example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-				Producer.sendBootsAlert();
-				example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-			
-				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-				example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
-				
-				example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFourMinutes);
-				ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
-				exhaustionRule.checkRule();
-			
-				Thread.sleep(90000);
+				System.out.println("run no " + run2);*/
+				//Producer.sendResourceMap();
+				//Thread.sleep(10000);
+				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
+				//Producer.sendMeasurements();
+				//example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+				//Producer.sendBootsAlert();
+				//String ba=consumerBA.returnConsumptionOfBootsAlert();
+				//if (ba!=null) {
+				//	example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+				//}
+				//example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 
-				run2=run2+1;
-			}*/
+				//example.getandInsertComplexRule(60, IngeniousConsts.durationOfOneMinute);
+				
+				//example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFiveMinutes);
+				//ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+				//exhaustionRule.checkRule();
 			
+				//Thread.sleep(200);
+
+				//run2=run2+1;
+			//}
+
 			
 			//If we want to run locally, we load the resources like below, once and from file. If we want to run using Kafka, we load the resource
 			//map from stream, like above. Then, we proceed to the while loop, which loads the measurements and boots alerts multiple times.
 			
-			long t1= System.currentTimeMillis();
+			/*long t1= System.currentTimeMillis();
 			long end1 = t1+600000;
 			int run1 = 0;
-			//while (System.currentTimeMillis() < end1) {
-				//System.out.println("run no" + run1);
-			//	example.loadResourceMapFromFile();
-				//example.loadMeasurementsFromFile();
-			//	example.loadBootsAlertFromFile();
+			while (System.currentTimeMillis() < end1) {
+				System.out.println("run no" + run1);
+				example.loadResourceMapFromFile();
+				example.loadMeasurementsFromFile();
+				example.loadBootsAlertFromFile();*/
 				//kb.connection.commit();
 				//ZOE: AUTO TO COMMIT nomizw DEN EXEI NOHMA, GIATI OI LOAD FUNCTIONS APO PANW KANOUN connection.add. An to ksesxoliasoume outwsiallws skaei
 				//con.commit();
 				
-			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+				//example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				//Enable Complex Rule and read Measurements from Measurements.json file
-			//	example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
+				//example.getandInsertComplexRule(60, IngeniousConsts.durationOfOneMinute);
 				
 				//Enable Immobilized Boots Rule and read Measurements from Measurements.json file
 				//ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
@@ -1848,7 +1868,7 @@ public class SemanticIntegration {
 				//con.commit();
 			//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
 				
-		    	//run1=run1+1;
+		    //	run1=run1+1;
 			
 			//}
 			
@@ -1873,48 +1893,52 @@ public class SemanticIntegration {
 				produced, if the rules checked are realized. If we want to test locally, we don't use the while loop and only load the needed resources once. Then, we calculate
 				rolling averages and check if any rule we would like to check is realized.*/
 	///			while(System.currentTimeMillis() < end) {
-				//we will keep the while true, the detection should be done constantly
-				while(true) {
-				//	System.out.println("run no" + run);
+					//we will keep the while true, the detection should be done constantly
+					while (true) {
+						System.out.println("run no" + run);
 //				
-					example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
-					example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-//			
+					//	example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
+
+					//	String ba = consumerBA.returnConsumptionOfBootsAlert();
+						//if (ba != null) {
+					//	example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
+					//	}
 //					//KB Population ends, Reasoning Rules begin
 //				
 //					//HEATSTROKE - It was 1 min and remained for the SST7
-				//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
-				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-				//	example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.heatStrokeLimitHR, IngeniousConsts.durationOfOneMinute);
+						//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+						//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+						//	example.getAndInsertHeatstroke(IngeniousConsts.heatStrokeLimitBT, IngeniousConsts.heatStrokeLimitHR, IngeniousConsts.durationOfOneMinute);
 //				
 //					//DEHYDRATION - It was five minutes. We changed it to one min for the SST7
-				//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
-				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-				//	example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
+						//	example.calculateRollingAverage("BodyTemperature", IngeniousConsts.durationOfOneMinute);
+						//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+						//	example.getAndInsertDehydration(IngeniousConsts.dehydrationLimitBT, IngeniousConsts.dehydrationLimitHR, IngeniousConsts.durationOfOneMinute, IngeniousConsts.durationOfOneMinute);
 
 //
 //					//EXHAUSTION - It was four minutes. We changed it to one min for the SST7
-				//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfTwoMinutes);
-				//	ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
-				//	exhaustionRule.checkRule();
+						//	example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfTwoMinutes);
+						//	ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
+						//	exhaustionRule.checkRule();
 //				
 //					//COMPLEX - It was one min and remained for the SST7
-					example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-					example.getandInsertComplexRule(20, IngeniousConsts.durationOfOneMinute);
-//			
+						 example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+						 example.getandInsertComplexRule(60, IngeniousConsts.durationOfOneMinute);
+//
 //					//IMMOBILIZED BOOTS
-			//		ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
-			//		immobilizedRule.checkRule();
-					
-					//HEAVY LOAD BOOTS
-				//	HeavyLoadBootsRule heavyLoadBootsRule = new HeavyLoadBootsRule(kb);
-				//	heavyLoadBootsRule.checkRule();
+						//		ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
+						//		immobilizedRule.checkRule();
+
+						//HEAVY LOAD BOOTS
+						//	HeavyLoadBootsRule heavyLoadBootsRule = new HeavyLoadBootsRule(kb);
+						//	heavyLoadBootsRule.checkRule();
 //				
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
-				//	Thread.sleep(2000);
-					
-				//	run=run+1;
-				}
+							Thread.sleep(1000);
+
+							run=run+1;
+					}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
