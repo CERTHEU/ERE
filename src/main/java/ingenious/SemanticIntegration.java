@@ -28,6 +28,7 @@ import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
 
 
+import ingenious.rules.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
@@ -65,9 +66,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
-import ingenious.rules.ExhaustionRule;
-import ingenious.rules.HeavyLoadBootsRule;
-import ingenious.rules.ImmobilizedBootsRule;
 import ingenious.utils.ConfigsLoader;
 import ingenious.utils.QueryUtils;
 import kb.KB;
@@ -986,7 +984,7 @@ public class SemanticIntegration {
 	//Get current DateTime in Epoch Seconds (long)
 	public long getCurrentDateTimeToEpochSeconds ()
 	{
-		OffsetDateTime odt = OffsetDateTime.now();
+		OffsetDateTime odt = OffsetDateTime.now(ZoneOffset.UTC);
 		long timestamp = odt.toEpochSecond();
 		return timestamp;
 	}
@@ -1022,16 +1020,17 @@ public class SemanticIntegration {
 	//Get Epoch Seconds (long) and convert to OffsetDateTime format
 	public OffsetDateTime getDateTimeFromEpochSeconds(long epochSeconds)
 	{
-		//OffsetDateTime odt = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneOffset.UTC);
-		OffsetDateTime odt2 = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneId.systemDefault());
-		return odt2;
+		OffsetDateTime odt = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneOffset.UTC);
+		//OffsetDateTime odt2 = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneId.systemDefault());
+		return odt;
 		
 	}
 	
 	//Get Epoch Seconds (long) and convert to ZonedDateTime format
 	public ZonedDateTime getZonedDateTimeFromEpochSeconds(long epochSeconds)
 	{
-		ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneId.systemDefault());
+		//ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneId.systemDefault());
+		ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneOffset.UTC);
 		OffsetDateTime odt = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneOffset.UTC);
 		return zdt;
 		
@@ -1068,7 +1067,10 @@ public class SemanticIntegration {
         			   + "?measurement ing:hasResult ?value.\r\n"
         			    +"?measurement ing:isMeasurementOf ?property.\r\n"
         			    +"?property a ?propClass.\r\n"
-        			    +"?fr ing:hasVitalSign ?property.\r\n"
+							 + "OPTIONAL{\r\n"
+        			   		 +"?fr ing:hasVitalSign ?property.\r\n"
+							 +"?fr ing:hasGasType ?property.\r\n"
+							 +"}\r\n"
         			    +"FILTER(?time >= ?time_limit)\r\n"
         			+"}", new SimpleBinding("propClass", prop_class), new SimpleBinding("time_limit", timeLimit)
         			    );
@@ -1791,12 +1793,12 @@ public class SemanticIntegration {
 			//h/kai o Kafka opote mporei na mhn treksei. Kalo einai na mhn asxoloumaste poly me auto to run, mia sto toso mono.
 			//Producer.sendResourceMap();
 			//KAFKA SIMULATION
-			/*long t2= System.currentTimeMillis();
-			long end2 = t2+600000;
-			int run2 = 0;
-			while (System.currentTimeMillis() < end2) {
+			//long t2= System.currentTimeMillis();
+			//long end2 = t2+600000;
+			//int run2 = 0;
+			//while (System.currentTimeMillis() < end2) {
 				
-				System.out.println("run no " + run2);*/
+				//System.out.println("run no " + run2);
 				//Producer.sendResourceMap();
 				//Thread.sleep(10000);
 				//example.loadResourceMapFromStream(consumerRM.returnConsumptionOfResourceMap());
@@ -1814,7 +1816,9 @@ public class SemanticIntegration {
 				//example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfFiveMinutes);
 				//ExhaustionRule exhaustionRule = new ExhaustionRule(kb);
 				//exhaustionRule.checkRule();
-			
+
+				//example.calculateRollingAverage("CarbonMonoxide", IngeniousConsts.durationOfOneMinute);
+
 				//Thread.sleep(200);
 
 				//run2=run2+1;
@@ -1896,13 +1900,9 @@ public class SemanticIntegration {
 					//we will keep the while true, the detection should be done constantly
 					while (true) {
 						System.out.println("run no" + run);
-//				
 					//	example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
 
-					//	String ba = consumerBA.returnConsumptionOfBootsAlert();
-						//if (ba != null) {
-					//	example.loadBootsAlertFromStream(consumerBA.returnConsumptionOfBootsAlert());
-					//	}
+
 //					//KB Population ends, Reasoning Rules begin
 //				
 //					//HEATSTROKE - It was 1 min and remained for the SST7
@@ -1922,8 +1922,8 @@ public class SemanticIntegration {
 						//	exhaustionRule.checkRule();
 //				
 //					//COMPLEX - It was one min and remained for the SST7
-						 example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
-						 example.getandInsertComplexRule(60, IngeniousConsts.durationOfOneMinute);
+						 //example.calculateRollingAverage("HeartRate", IngeniousConsts.durationOfOneMinute);
+						// example.getandInsertComplexRule(60, IngeniousConsts.durationOfOneMinute);
 //
 //					//IMMOBILIZED BOOTS
 						//		ImmobilizedBootsRule immobilizedRule = new ImmobilizedBootsRule(kb);
@@ -1932,7 +1932,37 @@ public class SemanticIntegration {
 						//HEAVY LOAD BOOTS
 						//	HeavyLoadBootsRule heavyLoadBootsRule = new HeavyLoadBootsRule(kb);
 						//	heavyLoadBootsRule.checkRule();
-//				
+
+					//CRAWLING BOOTS
+						//CrawlingBootsRule crawlingBootsRule= new CrawlingBootsRule(kb);
+						//crawlingBootsRule.checkRule();
+
+					//	LIMPING BOOTS
+						//LimpingBootsRule limpingBootsRule= new LimpingBootsRule(kb);
+						//limpingBootsRule.checkRule();
+
+					//CONCENTRATION-CO
+						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfOneMinute);
+						ConcentrationCORule concentrationCORule=new ConcentrationCORule(kb);
+						boolean checkC0 =concentrationCORule.checkRule(0,IngeniousConsts.durationOfOneMinute);
+						if (checkC0){
+							example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfTwoMinutes);
+							checkC0=concentrationCORule.checkRule(100,IngeniousConsts.durationOfTwoMinutes);
+							if (checkC0){
+								example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfFiveMinutes);
+								concentrationCORule.checkRule(50,IngeniousConsts.durationOfFiveMinutes);
+							}
+						}
+
+					//CONCENTRATION - AMMONIA
+//
+//						example.calculateRollingAverage("AmmoniaGas",IngeniousConsts.durationOfOneMinute);
+//						ConcentrationAMRule concentrationAMRule=new ConcentrationAMRule(kb);
+//						boolean checkAm=concentrationAMRule.checkRule(300,IngeniousConsts.durationOfOneMinute);
+//						if (checkAm){
+//							example.calculateRollingAverage("AmmoniaGas",IngeniousConsts.durationOfTwoMinutes);
+//							concentrationAMRule.checkRule(300,IngeniousConsts.durationOfTwoMinutes);
+//						}
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
 							Thread.sleep(1000);
 

@@ -87,7 +87,7 @@ public class HeavyLoadBootsRule {
 			        IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
 			        if (bindingSet.getBinding("analysis_time") == null)
-			        	sem.AlertGenerator("Alert", alert_iri.getLocalName(),"FR has heavy load","description","areaDesc","Immediate", "Extreme", split[1]);
+			        	sem.AlertGenerator("Alert", alert_iri.getLocalName(),"Boot event","FR has heavy load","areaDesc","Immediate", "Extreme", split[1]);
 			       
 			        
 			        

@@ -1,0 +1,124 @@
+{
+  "timestamp": "2020-09-28T15:22:35+00:00",
+  "source": "SS84756",
+  "observations": [
+    {
+      "observationId": "9bb325ae-b8c3-4dfa-974d-e7ac69096062",
+      "sensorId": "GAS-100",
+      "observedProperty": "CO",
+      "time": "2022-09-21T14:19:27+00:00",
+      "result": 180,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "31c14e0c-0ef7-4fdb-9166-91ba3e08833a",
+      "sensorId": "BCL-128",
+      "observedProperty": "oxygen levels",
+      "time": "2021-10-30T12:40:57+00:00",
+      "result": 96.87667249104322,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "7d0f7740-6461-41cf-8afb-a4f457547125",
+      "sensorId": "BCL-128",
+      "observedProperty": "temperature",
+      "time": "2021-10-30T11:25:47+00:00",
+      "result": 41,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "9bb325ae-b8c3-4dfa-974d-e7ac69096063",
+      "sensorId": "GAS-100",
+      "observedProperty": "CO",
+      "time": "2022-09-21T14:19:27+00:00",
+      "result": 190,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "31c14e0c-0ef7-4fdb-9166-91ba3e08833b",
+      "sensorId": "BCL-128",
+      "observedProperty": "oxygen levels",
+      "time": "2021-11-30T12:42:57+00:00",
+      "result": 97.87667249104322,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "7d0f7740-6461-41cf-8afb-a4f457547126",
+      "sensorId": "BCL-128",
+      "observedProperty": "temperature",
+      "time": "2021-11-30T11:25:49+00:00",
+      "result": 41.2,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+
+    {
+      "observationId": "9bb325ae-b8c3-4dfa-974d-e7ac69096064",
+      "sensorId": "GAS-100",
+      "observedProperty": "CO",
+      "time": "2022-09-21T14:19:27+00:00",
+      "result": 176,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "31c14e0c-0ef7-4fdb-9166-91ba3e08833c",
+      "sensorId": "BCL-128",
+      "observedProperty": "oxygen levels",
+      "time": "2021-11-30T12:44:57+00:00",
+      "result": 98.87667249104322,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "7d0f7740-6461-41cf-8afb-a4f457547127",
+      "sensorId": "BCL-128",
+      "observedProperty": "temperature",
+      "time": "2021-11-30T11:25:51+00:00",
+      "result": 35,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "7d0f7740-6461-41cf-8afb-a4f457547127",
+      "sensorId": "BCL-128",
+      "observedProperty": "temperature",
+      "time": "2021-11-30T11:25:51+00:00",
+      "result": 43,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "7d0f7740-6461-41cf-8afb-a4f457547127",
+      "sensorId": "BCL-128",
+      "observedProperty": "temperature",
+      "time": "2021-11-30T12:25:51+00:00",
+      "result": 41.6,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "7d0f7740-6461-41cf-8afb-a4f457547127",
+      "sensorId": "BCL-128",
+      "observedProperty": "temperature",
+      "time": "2021-11-30T12:30:51+00:00",
+      "result": 40.6,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    },
+    {
+      "observationId": "7d0f7740-6461-41cf-8afb-a4f457547127",
+      "sensorId": "BCL-128",
+      "observedProperty": "temperature",
+      "time": "2021-11-30T12:35:51+00:00",
+      "result": 42.0,
+      "location": "POINT (9.558408266609923 8.321844244298909)",
+      "parameters": []
+    }
+  ]
+}

@@ -87,6 +87,13 @@
          "ATTACHED_TO":"SS84756",
          "MAC_ADDRESS":"72-53-53-DF-6C-99"
       },
+      {
+         "ID":"GAS-100",
+         "ORGANIZATION":"POLICE",
+         "TYPE":"GAS SENSOR",
+         "ATTACHED_TO":"SS84756",
+         "MAC_ADDRESS":"72-53-53-DF-6C-00"
+      },
 	  {
          "ID":"BCL-149",
          "ORGANIZATION":"POLICE",

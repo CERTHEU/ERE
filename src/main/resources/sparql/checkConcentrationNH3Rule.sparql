@@ -1,0 +1,22 @@
+SELECT ?fr ?device_co ?frid ?am_val  ?am_time ?device_co_id  ?analysis_time ?analysis ?alert
+WHERE {
+    ?fr ing:hasGasType ?am.
+    ?fr ing:hasFrId ?frid.
+    ?am a ing:AmmoniaGas.
+    ?am ing:hasRollingAverage ?am_avg.
+    ?am_avg ing:hasWindowEnd ?am_time.
+    ?am_avg ing:hasWindowDuration $am_duration.
+    ?am_avg ing:hasValue ?am_val.
+    ?device_co ing:makesMeasurement ?m_am.
+    ?m_am ing:isMeasurementOf ?am.
+    ?device_am ing:hasEquipmentId ?device_am_id.
+
+    OPTIONAL{
+        ?analysis a ing:Analysis.
+        ?analysis ing:detects ?concentrationAm.
+        ?concentrationAm a ing:ConcentrationAM.
+        ?fr ing:hasPhysiologicalCondition ?concentrationAm.
+        ?analysis ing:hasTimeStamp ?analysis_time.
+    }
+    FILTER (?am_val>=?am_limit)
+}

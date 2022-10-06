@@ -92,7 +92,7 @@ static void sendMeasurements() {
 		
 		
 		KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
-		ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-observations", getMeasurements());
+		ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-test", getMeasurements());
 		//COPResourcesTopic
 		//SOCIAL_MEDIA_APP_TOPIC
 		producer.send(record, new Callback() {
@@ -202,12 +202,14 @@ static void sendOutputAlert() {
 		//MongoClient mongoClient = new MongoClient();
 		//MongoDatabase db = mongoClient.getDatabase("ingenious_events");
 		//MongoCollection<Document> collection = db.getCollection("events");
-		
+		Logger logger = LoggerFactory.getLogger(Producer.class.getName());
 		JsonReader reader;
 		try {
-			reader = new JsonReader(new FileReader(configInstance.getFilepath() + "MeasurementsExhaustion.json"));
+			//reader = new JsonReader(new FileReader(configInstance.getFilepath() + "MeasurementsGas.json"));
+			reader = new JsonReader(new FileReader(configInstance.getFilepath() + "MeasurementsGas"));
 			reader.setLenient(true);
 			JsonElement element = new JsonParser().parse(reader);
+			logger.info("measurements produced" + element.toString());
 			return element.toString();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

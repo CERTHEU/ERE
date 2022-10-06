@@ -1,22 +1,22 @@
 
 {
-    "identifier":"64e589b9-fbe1-4823-b182-4c8e9e1ab9de",
+    "identifier":"AlertFR_FR-3875",
     "sender":"ERE",
-    "sent":"2022-05-25T12:26:37+03:00",
+    "sent":"2022-09-27T13:04:17Z",
     "status":"Actual",
     "msgType":"Alert",
-    "source":"TM_001",
+    "source":"FR-3875",
     "scope":"Public",
     "code":[
     ],
     "info":[
         {
             "category":"FR Health Status",
-            "event":"FR is in serious danger, his situation is extreme and he needs immediate attention",
+            "event":"FR is in High CO leakage area",
             "urgency":"Immediate",
             "severity":"Extreme",
             "certainty":"Likely",
-            "description":"description",
+            "description":"less than 3 min - wear protective equip",
             "area":[
                 {
                     "areaDesc":"areaDesc"
