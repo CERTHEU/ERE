@@ -14,7 +14,7 @@ WHERE {
     OPTIONAL{
         ?analysis a ing:Analysis.
         ?analysis ing:detects ?concentrationCo.
-        ?concentrationCo a ing:ConcentrationCo.
+        ?concentrationCo a ing:ConcentrationCO.
         ?fr ing:hasPhysiologicalCondition ?concentrationCo.
         ?analysis ing:hasTimeStamp ?analysis_time.
         ?analysis ing:triggers ?alert

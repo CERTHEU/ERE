@@ -9,7 +9,7 @@
          "STATUS":"AVAILB"
       },
       {
-         "ID":"SS84756",
+         "ID":"SS_333_333",
          "ORGANIZATION":"POLICE",
          "TYPE":"FR",
          "STATUS":"IN_USE/ON_SCENE",
@@ -46,10 +46,10 @@
          "HEIGHT":92
       },
       {
-         "ID":"UN-99",
+         "ID":"UNI_33",
          "ORGANIZATION":"POLICE",
          "TYPE":"UNIFORM",
-         "ATTACHED_TO":"SS84756",
+         "ATTACHED_TO":"SS_333_333",
 	 "MAC_ADDRESS":"89-81-02-B3-7C-06"
       },
       {
@@ -73,10 +73,10 @@
  	 "MAC_ADDRESS":"E9-46-83-C1-84-2C"
       },
 	  {
-         "ID":"BT-112",
+         "ID":"BT-31",
          "ORGANIZATION":"POLICE",
          "TYPE":"BOOTS",
-         "ATTACHED_TO":"SS84756",
+         "ATTACHED_TO":"SS_333_333",
          "MAC_ADDRESS_R":"39-53-53-DF-6C-99",
          "MAC_ADDRESS_L":"4B-77-11-DF-6C-75"
       },
@@ -84,14 +84,14 @@
          "ID":"BCL-128",
          "ORGANIZATION":"POLICE",
          "TYPE":"BRACELET",
-         "ATTACHED_TO":"SS84756",
+         "ATTACHED_TO":"SS_333_333",
          "MAC_ADDRESS":"72-53-53-DF-6C-99"
       },
       {
          "ID":"GAS-100",
          "ORGANIZATION":"POLICE",
          "TYPE":"GAS SENSOR",
-         "ATTACHED_TO":"SS84756",
+         "ATTACHED_TO":"SS_333_333",
          "MAC_ADDRESS":"72-53-53-DF-6C-00"
       },
 	  {

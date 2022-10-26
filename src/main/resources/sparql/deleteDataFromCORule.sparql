@@ -1,0 +1,35 @@
+DELETE {
+        ?fr ing:hasPhysiologicalCondition ?concentrationCo.
+        ?analysis a ing:Analysis. 
+		?analysis ing:detects ?concentrationCo.
+        ?analysis ing:hasDataSource ?data_source.
+		?concentrationCo a ing:ConcentrationCo.
+        ?concentrationCo a ing:PhysiologicalCondition.
+        ?concentrationCo ?p ?o.
+        ?analysis ?p ?o.
+}
+WHERE  { 
+		?fr a ing:FR.
+		?fr ing:hasFrId ?frid.
+		?fr ing:hasGasType ?co.
+		?co a ing:CarbonMonoxide.
+		?co ing:hasRollingAverage ?co_avg.
+		?co_avg ing:hasWindowEnd ?co_time.
+		?co_avg ing:hasWindowDuration ?co_duration.
+		?co_avg ing:hasValue ?co_val.
+		?device_co ing:makesMeasurement ?m_co.
+		?m_co ing:isMeasurementOf ?co.
+		?device_co ing:hasEquipmentId ?device_co_id.
+       
+		?analysis a ing:Analysis. 
+		?analysis ing:detects ?concentrationCo.
+        ?analysis ing:hasDataSource ?data_source.
+		?concentrationCo a ing:ConcentrationCo.
+ 		?fr ing:hasPhysiologicalCondition ?concentrationCo.
+		?analysis ing:hasTimeStamp ?analysis_time. 
+		?analysis ing:triggers ?alert_id
+        
+		FILTER(?co_val > ?co_limit)
+            
+} 
+

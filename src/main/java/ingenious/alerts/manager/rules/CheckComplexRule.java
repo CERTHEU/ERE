@@ -62,7 +62,8 @@ public class CheckComplexRule {
 			String query2 = Input.PREFIXES + sparql2;
 			System.out.println("Delete data from Complex rule... ");
 			SemanticIntegration.executeUpdate(kb.getConnection(), query2, new SimpleBinding("hr_limit", kb.factory.createLiteral(20)));
-	    	System.out.println("Done!"); 
+	    	System.out.println("Done!");
+
 		}
 		
 

@@ -64,13 +64,13 @@ public class ConcentrationCORule {
                         + "            $analysis_iri a ing:Analysis.\r\n"
                         + "            $analysis_iri ing:hasTimeStamp $timestamp.\r\n"
                         + "            $analysis_iri ing:hasAnalysisType \"Expert Reasoning\".\r\n"
-                        + "            $analysis_iri ing:detects $concentrationCo_iri. \r\n"
+                        + "            $analysis_iri ing:detects $concentrationCO_iri. \r\n"
                         + "			   $analysis_iri ing:hasDataSource ?alert.\r\n"
                         + "            $analysis_iri ing:hasDataSource $device_iri_co. \r\n"
                         + "            $analysis_iri  ing:triggers $alert_iri. \r\n"
                         + "        \r\n"
-                        + "            $concentrationCo_iri a ing:ConcentrationCO.\r\n"
-                        + "            $concentrationCo_iri a ing:PhysiologicalCondition.\r\n"
+                        + "            $concentrationCO_iri a ing:ConcentrationCO.\r\n"
+                        + "            $concentrationCO_iri a ing:PhysiologicalCondition.\r\n"
                         + "            $fr_iri ing:hasPhysiologicalCondition $concentrationCO_iri. \r\n"
                         + "        }\r\n"
                         + "        WHERE{\r\n"
@@ -94,18 +94,19 @@ public class ConcentrationCORule {
                     IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
 
-
+                    System.out.println(bindingSet.toString());
                     if (bindingSet.getBinding("analysis_time") == null) {
-                        check = true;
+
                         if (consentrationLvl == 50) {
-                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "FR is  CO leakage area", "30 min scope of action", "areaDesc", "Immediate", "Low", split[1]);
-
+                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is  CO leakage area (50ppm)  30 min scope of action", "areaDesc", "Immediate", "Low", split[1]);
+                            check = true;
                         } else if (consentrationLvl == 100) {
-                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "FR is in Medium CO leakage area", "20 min scope of action", "areaDesc", "Immediate", "Medium", split[1]);
-
-                        } else if (consentrationLvl == 0)
-                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "FR is in High CO leakage area", "less than 3 min - wear protective equip", "areaDesc", "Immediate", "Extreme", split[1]);
-
+                            System.out.println("consentrationLvl == 100");
+                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in Medium CO leakage area (100) )20 min scope of action", "areaDesc", "Immediate", "Medium", split[1]);
+                            check = true;
+                        } else if (consentrationLvl == 300)
+                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in High CO leakage area (300) less than 3 min - wear protective equip", "areaDesc", "Immediate", "Extreme", split[1]);
+                            check = true;
 
                     }
 
@@ -115,7 +116,8 @@ public class ConcentrationCORule {
                             new SimpleBinding("concentrationCO_iri", concentrationCOIRI),
                             new SimpleBinding("timestamp", timeLimit),
                             new SimpleBinding("alert_iri", kb.factory.createLiteral(uuidAsString)));
-                            //new SimpleBinding("alert_iri", kb.factory.createLiteral("alert_" + fr.getLocalName())));
+                    //new SimpleBinding("alert_iri", kb.factory.createLiteral("alert_" + fr.getLocalName())));
+
 
                 } catch (Exception e) {
                     // TODO Auto-generated catch block

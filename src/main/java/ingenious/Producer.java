@@ -144,7 +144,7 @@ static void sendBootsAlert() {
 	producer.close();
 }
 
-static void sendOutputAlert() {
+static void sendOutputAlert( String topic) {
 	
 	String bootstrapServers = "192.168.30.202:14200";
 	Properties properties = new Properties();
@@ -154,7 +154,7 @@ static void sendOutputAlert() {
 	
 	
 	KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
-	ProducerRecord<String, String> record = new ProducerRecord<String, String>("ingenious-alerts-cop", getOutputAlert());
+	ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, getOutputAlert());
 	//COPResourcesTopic
 	//SOCIAL_MEDIA_APP_TOPIC
 	producer.send(record, new Callback() {

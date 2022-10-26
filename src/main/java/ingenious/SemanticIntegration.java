@@ -28,6 +28,8 @@ import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
 
 
+import ingenious.alerts.manager.rules.CancelCORule;
+import ingenious.alerts.manager.rules.CheckComplexRule;
 import ingenious.rules.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -1021,7 +1023,7 @@ public class SemanticIntegration {
 	public OffsetDateTime getDateTimeFromEpochSeconds(long epochSeconds)
 	{
 		OffsetDateTime odt = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneOffset.UTC);
-		//OffsetDateTime odt2 = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneId.systemDefault());
+		OffsetDateTime odt2 = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochSeconds*1000), ZoneId.systemDefault());
 		return odt;
 		
 	}
@@ -1764,7 +1766,8 @@ public class SemanticIntegration {
 			System.out.println("Alert:\n" + element.toString());
 			
 			//only when kafka live test is done
-			Producer.sendOutputAlert();
+			Producer.sendOutputAlert("ingenious-alerts-cop");
+			if (event=="Gas Alert"){Producer.sendOutputAlert("ingenious-alerts-ar");}
 	 }
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
@@ -1900,6 +1903,7 @@ public class SemanticIntegration {
 					//we will keep the while true, the detection should be done constantly
 					while (true) {
 						System.out.println("run no" + run);
+
 					//	example.loadMeasurementsFromStream(consumerMeas.returnConsumptionOfMeasurements());
 
 
@@ -1944,27 +1948,32 @@ public class SemanticIntegration {
 					//CONCENTRATION-CO
 						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfOneMinute);
 						ConcentrationCORule concentrationCORule=new ConcentrationCORule(kb);
-						boolean checkC0 =concentrationCORule.checkRule(0,IngeniousConsts.durationOfOneMinute);
-						if (checkC0){
-							example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfTwoMinutes);
-							checkC0=concentrationCORule.checkRule(100,IngeniousConsts.durationOfTwoMinutes);
-							if (checkC0){
-								example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfFiveMinutes);
-								concentrationCORule.checkRule(50,IngeniousConsts.durationOfFiveMinutes);
-							}
-						}
+
+						CheckComplexRule checkComplexRule= new CheckComplexRule();
+						concentrationCORule.checkRule(300,IngeniousConsts.durationOfOneMinute);
+
+
+						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfOneMinute);
+						concentrationCORule.checkRule(100,IngeniousConsts.durationOfOneMinute);
+
+						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfFiveMinutes);
+						concentrationCORule.checkRule(50,IngeniousConsts.durationOfFiveMinutes);
+
+						CancelCORule cancelCORule= new CancelCORule();
+						cancelCORule.detectChanges();
+
 
 					//CONCENTRATION - AMMONIA
 //
 //						example.calculateRollingAverage("AmmoniaGas",IngeniousConsts.durationOfOneMinute);
 //						ConcentrationAMRule concentrationAMRule=new ConcentrationAMRule(kb);
 //						boolean checkAm=concentrationAMRule.checkRule(300,IngeniousConsts.durationOfOneMinute);
-//						if (checkAm){
 //							example.calculateRollingAverage("AmmoniaGas",IngeniousConsts.durationOfTwoMinutes);
 //							concentrationAMRule.checkRule(300,IngeniousConsts.durationOfTwoMinutes);
-//						}
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
-							Thread.sleep(1000);
+						//Producer.sendResourceMap();
+						//Producer.sendBootsAlert();
+						Thread.sleep(500);
 
 							run=run+1;
 					}

@@ -1,0 +1,24 @@
+select distinct ?alert ?fr  ?device_co ?frid ?co_val  ?co_time  ?device_co_id  ?analysis_time ?alert_id
+WHERE {
+?fr a ing:FR.
+?fr ing:hasGasType ?co.
+?fr ing:hasFrId ?frid.
+?co a ing:CarbonMonoxide.
+?co ing:hasRollingAverage ?co_avg.
+?co_avg ing:hasWindowEnd ?co_time.
+?co_avg ing:hasWindowDuration $co_duration.
+?co_avg ing:hasValue ?co_val.
+?device_co ing:makesMeasurement ?m_co.
+?m_co ing:isMeasurementOf ?co.
+?device_co ing:hasEquipmentId ?device_co_id.
+
+
+?analysis a ing:Analysis.
+?analysis ing:detects ?concentrationCo.
+?concentrationCo a ing:ConcentrationCo.
+?fr ing:hasPhysiologicalCondition ?concentrationCo.
+?analysis ing:hasTimeStamp ?analysis_time.
+?analysis ing:triggers ?alert
+
+FILTER (?co_val < ?co_limit)
+}

@@ -77,8 +77,8 @@ public class Input
 	
 	
 	 public static final String PREFIXES = "PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
-			 									+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
-			 									+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n";
+		+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
+		+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\r\n";
 	
 
 	private static IRI getIRI(String localName) 

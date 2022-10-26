@@ -1,22 +1,22 @@
 
 {
-    "identifier":"AlertFR_FR-3875",
+    "identifier":"d308194c-b87f-4ad8-b59e-bcd6f0448549",
     "sender":"ERE",
-    "sent":"2022-09-27T13:04:17Z",
+    "sent":"2022-10-25T12:46:11Z",
     "status":"Actual",
     "msgType":"Alert",
-    "source":"FR-3875",
+    "source":"FR-3391",
     "scope":"Public",
     "code":[
     ],
     "info":[
         {
             "category":"FR Health Status",
-            "event":"FR is in High CO leakage area",
+            "event":"Gas Alert",
             "urgency":"Immediate",
             "severity":"Extreme",
             "certainty":"Likely",
-            "description":"less than 3 min - wear protective equip",
+            "description":"FR is in High CO leakage area (300) less than 3 min - wear protective equip",
             "area":[
                 {
                     "areaDesc":"areaDesc"

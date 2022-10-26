@@ -4,9 +4,9 @@
   "sent": "2022-04-04T10:02:12+00:00",
   "status": "Actual",
   "msgType": "Alert",
-  "source": "SS84756",
+  "source": "SS_333_333",
   "scope": "Public",
-  "code": ["BT-112"],
+  "code": ["BT-31"],
   "info": [
     {
       "category": "FR Activity",

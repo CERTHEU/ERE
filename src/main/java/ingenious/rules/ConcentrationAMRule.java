@@ -48,7 +48,7 @@ public class ConcentrationAMRule {
                 System.err.println("CONCENTRATION_AM || Carbon Monoxide value: " + am_measurement.stringValue() +  " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_AM: " + deviceAM.stringValue()  + " || DEVICE_AM_ID: " +deviceAMId.stringValue()+ " || DATETIME AM: " + dateTimeAM.stringValue());
             }
             IRI analysisIRI = kb.factory.createIRI(Input.NAMESPACE, "Analysis_ConcentrationAM_" + fr.getLocalName());
-            IRI ConcentrationAMIRI = kb.factory.createIRI(Input.NAMESPACE, "ConcentrationAM_" + fr.getLocalName());
+            IRI ConcentrationAmIRI = kb.factory.createIRI(Input.NAMESPACE, "ConcentrationAM_" + fr.getLocalName());
 
             String modification=("PREFIX ing:<http://www.semanticweb.org/savvas/ontologies/2020/10/untitled-ontology-10#>\r\n"
                     + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n"
@@ -65,9 +65,9 @@ public class ConcentrationAMRule {
                     + "            $analysis_iri ing:hasDataSource $device_iri_am. \r\n"
                     + "            $analysis_iri  ing:triggers $alert_iri. \r\n"
                     + "        \r\n"
-                    + "            $concentrationAm_iri a ing:ConcentrationAM.\r\n"
+                    + "            $concentrationAm_iri a ing:ConcentrationAm.\r\n"
                     + "            $concentrationAm_iri a ing:PhysiologicalCondition.\r\n"
-                    + "            $fr_iri ing:hasPhysiologicalCondition $concentrationAM_iri. \r\n"
+                    + "            $fr_iri ing:hasPhysiologicalCondition $concentrationAm_iri. \r\n"
                     + "        }\r\n"
                     + "        WHERE{\r\n"
                     + "        OPTIONAL{\r\n"
@@ -94,17 +94,17 @@ public class ConcentrationAMRule {
                 sem.executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI),
                         new SimpleBinding("fr_iri", fr),
                         new SimpleBinding("device_iri_am", deviceAM),
-                        new SimpleBinding("concentrationAM_iri", ConcentrationAMIRI),
+                        new SimpleBinding("concentrationAm_iri", ConcentrationAmIRI),
                         new SimpleBinding("timestamp", timeLimit),
                         new SimpleBinding("alert_iri", kb.factory.createLiteral(uuidAsString)));
 
                 if (bindingSet.getBinding("analysis_time") == null) {
                     check = true;
                     if (consentrationLvl == 35) {
-                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "FR is  Ammonia leakage area", "15 min scope of action", "areaDesc", "Immediate", "Medium", split[1]);
+                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is  Ammonia leakage area (35 ppm) 15 min scope of action", "areaDesc", "Immediate", "Medium", split[1]);
 
                     } else if (consentrationLvl == 300) {
-                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "FR is in High Ammonia leakage area", "less than 3 min - wear protective equip", "areaDesc", "Immediate", "Extreme", split[1]);
+                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in High Ammonia leakage area (300) less than 3 min - wear protective equip", "areaDesc", "Immediate", "Extreme", split[1]);
 
                     }
 
