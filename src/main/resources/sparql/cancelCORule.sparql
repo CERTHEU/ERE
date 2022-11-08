@@ -1,5 +1,6 @@
-select distinct ?alert ?fr  ?device_co ?frid ?co_val  ?co_time  ?device_co_id  ?analysis_time ?alert_id
+select distinct  ?fr  ?device_co ?frid ?co_val  ?co_time  ?device_co_id  ?analysis_time ?alert_id
 WHERE {
+
 ?fr a ing:FR.
 ?fr ing:hasGasType ?co.
 ?fr ing:hasFrId ?frid.
@@ -12,13 +13,12 @@ WHERE {
 ?m_co ing:isMeasurementOf ?co.
 ?device_co ing:hasEquipmentId ?device_co_id.
 
-
 ?analysis a ing:Analysis.
 ?analysis ing:detects ?concentrationCo.
-?concentrationCo a ing:ConcentrationCo.
+?concentrationCo a ing:ConcentrationCO.
 ?fr ing:hasPhysiologicalCondition ?concentrationCo.
 ?analysis ing:hasTimeStamp ?analysis_time.
-?analysis ing:triggers ?alert
+?analysis ing:triggers ?alert_id
 
 FILTER (?co_val < ?co_limit)
 }

@@ -1434,7 +1434,7 @@ public class SemanticIntegration {
 
         	Literal timeLimit = factory.createLiteral(str, XSD.DATETIME);
         	if (bindingSet.getBinding("analysis_time") == null)
-        		AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", split[1]);
+        		AlertGenerator("Alert", dehydrationIRI.getLocalName(),"FR suffering from severe dehydration","description","In the damaged block of buildings","Immediate", "Extreme", split[1], "");
         	
         	executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI), new SimpleBinding("fr_iri", fr), new SimpleBinding("device_iri_hr", deviceBT), new SimpleBinding("device_iri_bt", deviceHR), new SimpleBinding("dehydration_iri", dehydrationIRI), new SimpleBinding("timestamp", timeLimit));
 		
@@ -1564,9 +1564,9 @@ public class SemanticIntegration {
 			//THIS IS HARDCODED, SHOULD BE CHANGED - ZOE
 			  if (bindingSet.getBinding("analysis_time") == null) {
 				if (tempLimit >= 41) {
-					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", split[1]);
+					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"FR suffering from severe heatstroke","description","areaDesc","Immediate", "Severe", split[1],"");
 				} else {
-					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", split[1]);
+					AlertGenerator("Alert", heatstrokeIRI.getLocalName(),"event","description","areaDesc","Expected", "Moderate", split[1],"");
 				}
 			  }
         
@@ -1689,7 +1689,7 @@ public class SemanticIntegration {
 			}*/
 
 			if(!complexAlert){
-						AlertGenerator("Alert", alert_iri.getLocalName(), "FR is in serious danger, his situation is extreme and he needs immediate attention", "description", "areaDesc", "Immediate", "Extreme", split[1]+"_"+split[2]);
+						AlertGenerator("Alert", alert_iri.getLocalName(), "Health Status Alert", "FR is in serious danger, his situation is extreme and he needs immediate attention", "areaDesc", "Immediate", "Extreme", split[1]+"_"+split[2], " ");
 						System.out.println("The First Alert has been sent");
 						complexAlert=true;
 			}
@@ -1709,7 +1709,7 @@ public class SemanticIntegration {
 	
 
 	 
-	public void AlertGenerator(String msgType, String identifier, String event, String description, String areaDesc, String urgency, String severity, String source) throws IOException {
+	public void AlertGenerator(String msgType, String identifier, String event, String description, String areaDesc, String urgency, String severity, String source, String cancel ) throws IOException {
 		FileWriter writer = null;
 		JSONParser parser = new JSONParser();
 		Object simpleObj = null;
@@ -1745,19 +1745,22 @@ public class SemanticIntegration {
 			//.write("to be designed")
 			.writeEnd()
 			.writeStartArray("info").writeStartObject()
-			.write("category", "FR Health Status")
-			.write("event", event)
+			.write("category", event)
+	//		.write("event", "FR Health Status alert")
+			.write("event", areaDesc)
 			.write("urgency", urgency)
 			.write("severity", severity)
 			.write("certainty", "Likely")
 			.write("description", description)
 			.writeStartArray("area").writeStartObject()
-			.write("areaDesc", areaDesc)
-			.writeEnd()
+			.write("areaDesc", " ")
 			.writeEnd()
 			.writeEnd()
 			.writeEnd()
 			.writeEnd();
+			if (msgType=="Cancel"){
+			generator.write("references",cancel);}
+			generator.writeEnd();
 			generator.close();
 			
 			JsonReader reader = new JsonReader(new FileReader(configInstance.getFilepath()+ "AlertOutput.json"));
@@ -1766,8 +1769,9 @@ public class SemanticIntegration {
 			System.out.println("Alert:\n" + element.toString());
 			
 			//only when kafka live test is done
-			Producer.sendOutputAlert("ingenious-alerts-cop");
-			if (event=="Gas Alert"){Producer.sendOutputAlert("ingenious-alerts-ar");}
+			Producer.sendOutputAlert("ingenious-test");
+			//Producer.sendOutputAlert("ingenious-alerts-cop");
+			//if (event=="Gas Alert"){Producer.sendOutputAlert("ingenious-alerts-ar");}
 	 }
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
@@ -1948,32 +1952,31 @@ public class SemanticIntegration {
 					//CONCENTRATION-CO
 						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfOneMinute);
 						ConcentrationCORule concentrationCORule=new ConcentrationCORule(kb);
-
-						CheckComplexRule checkComplexRule= new CheckComplexRule();
 						concentrationCORule.checkRule(300,IngeniousConsts.durationOfOneMinute);
-
-
-						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfOneMinute);
-						concentrationCORule.checkRule(100,IngeniousConsts.durationOfOneMinute);
-
-						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfFiveMinutes);
-						concentrationCORule.checkRule(50,IngeniousConsts.durationOfFiveMinutes);
-
-						CancelCORule cancelCORule= new CancelCORule();
-						cancelCORule.detectChanges();
-
-
-					//CONCENTRATION - AMMONIA
+						Thread.sleep(1000);
 //
-//						example.calculateRollingAverage("AmmoniaGas",IngeniousConsts.durationOfOneMinute);
-//						ConcentrationAMRule concentrationAMRule=new ConcentrationAMRule(kb);
-//						boolean checkAm=concentrationAMRule.checkRule(300,IngeniousConsts.durationOfOneMinute);
-//							example.calculateRollingAverage("AmmoniaGas",IngeniousConsts.durationOfTwoMinutes);
-//							concentrationAMRule.checkRule(300,IngeniousConsts.durationOfTwoMinutes);
+//						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfOneMinute);
+//						concentrationCORule.checkRule(100,IngeniousConsts.durationOfOneMinute);
+//
+//						example.calculateRollingAverage("CarbonMonoxide",IngeniousConsts.durationOfFiveMinutes);
+//						concentrationCORule.checkRule(50,IngeniousConsts.durationOfFiveMinutes);
+
+//						CancelCORule cancelCORule= new CancelCORule();
+//						cancelCORule.detectChanges();
+
+					//BATTERY LEVELS
+//						BatteryLevel batteryLevel= new BatteryLevel(kb);
+//						batteryLevel.checkLevel();
+//						Thread.sleep(1000);
+					//CONCENTRATION - AMMONIA
+
+						example.calculateRollingAverage("Ammonia",IngeniousConsts.durationOfOneMinute);
+						ConcentrationAMRule concentrationAMRule=new ConcentrationAMRule(kb);
+						concentrationAMRule.checkRule(300,IngeniousConsts.durationOfOneMinute);
 //					//We should check how much the while should sleep - EXUS consulted for no sleep
 						//Producer.sendResourceMap();
 						//Producer.sendBootsAlert();
-						Thread.sleep(500);
+						Thread.sleep(1000);
 
 							run=run+1;
 					}

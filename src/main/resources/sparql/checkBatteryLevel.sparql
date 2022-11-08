@@ -1,0 +1,10 @@
+SELECT DISTINCT  ?fr  ?frid ?device ?type ?id
+WHERE {
+    ?fr a ing:FR.
+    ?fr ing:hasFrId ?frid.
+    ?fr ing:wearsEquipment ?device.
+    ?device ing:hasType ?type.
+    ?device ing:hasBatteryLevel "LOW".
+    ?device ing:hasEquipmentId ?id
+
+}

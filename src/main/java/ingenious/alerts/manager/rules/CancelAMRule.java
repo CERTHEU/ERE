@@ -14,7 +14,7 @@ import org.eclipse.rdf4j.query.impl.SimpleBinding;
 
 import java.io.IOException;
 
-public class CancelCORule {
+public class CancelAMRule {
     static ConfigsLoader configInstance;
 
     static {
@@ -26,12 +26,12 @@ public class CancelCORule {
     public void detectChanges() throws IOException {
         KB kb = new KB(configInstance.getGraphdb());
 
-        String sparql = MyUtils.fileToString("sparql/cancelCORule.sparql");
+        String sparql = MyUtils.fileToString("sparql/cancelNH3Rule.sparql");
         String query = Input.PREFIXES + sparql;
         //System.err.println("detectChanges query: " + query);
         //We should change the hr_limit to a constant. Remove the hardcoded 20
         TupleQueryResult result = QueryUtils.evaluateSelectQuery(kb.getConnection(), query,
-                new SimpleBinding("co_limit", kb.factory.createLiteral(50.0)));
+                new SimpleBinding("am_limit", kb.factory.createLiteral(35)));
 
 
 
@@ -39,17 +39,16 @@ public class CancelCORule {
             BindingSet bindingSet = result.next();
             System.err.println("HAS RESULT");
 
-            Value hr_measurement = bindingSet.getBinding("co_val").getValue();
+            Value hr_measurement = bindingSet.getBinding("am_val").getValue();
             Value frId = bindingSet.getBinding("frid").getValue();
             IRI fr = (IRI) bindingSet.getBinding("fr").getValue();
-            //IRI deviceHR = (IRI) bindingSet.getBinding("device_hr").getValue();
-            Value dateTimeHR = bindingSet.getBinding("co_time").getValue();
+            IRI deviceHR = (IRI) bindingSet.getBinding("device_hr").getValue();
+            Value dateTimeHR = bindingSet.getBinding("am_time").getValue();
             Value alert_id = bindingSet.getBinding("alert_id").getValue();
             //Cancel the alert, we should save the alert iri in semantic integration
-            String ref="certh,"+ alert_id +","+dateTimeHR;
-            new SemanticIntegration().AlertGenerator("Cancel", alert_id.stringValue(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName(), ref);
+            new SemanticIntegration().AlertGenerator("Cancel", alert_id.stringValue(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName(),"");
             //Delete data from Cancel Complex Rule in graphdb
-            String sparql2 = MyUtils.fileToString("sparql/deleteDataFromCORule.sparql");
+            String sparql2 = MyUtils.fileToString("sparql/deleteDataFromCancelCompexRule.sparql");
             String query2 = Input.PREFIXES + sparql2;
             System.out.println("Delete data from ConcentrationCO rule... ");
             SemanticIntegration.executeUpdate(kb.getConnection(), query2, new SimpleBinding("co_limit", kb.factory.createLiteral(50)));

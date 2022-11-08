@@ -43,9 +43,9 @@ public class ConcentrationAMRule {
 
             if (bindingSet.getBinding("analysis_time") != null) {
                 Value analysisTime = bindingSet.getBinding("analysis_time").getValue();
-                System.err.println("CONCENTRATION_AM || Carbon Monoxide value: " + am_measurement.stringValue() +  " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_AM: " + deviceAM.stringValue()  + " || DEVICE_AM_ID: " +deviceAMId.stringValue()+ " || DATETIME AM: " + dateTimeAM.stringValue() +" || Analysis Time: " + analysisTime.stringValue());
+                System.err.println("CONCENTRATION_AM || Ammonia value: " + am_measurement.stringValue() +  " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_AM: " + deviceAM.stringValue()  + " || DEVICE_AM_ID: " +deviceAMId.stringValue()+ " || DATETIME AM: " + dateTimeAM.stringValue() +" || Analysis Time: " + analysisTime.stringValue());
             } else {
-                System.err.println("CONCENTRATION_AM || Carbon Monoxide value: " + am_measurement.stringValue() +  " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_AM: " + deviceAM.stringValue()  + " || DEVICE_AM_ID: " +deviceAMId.stringValue()+ " || DATETIME AM: " + dateTimeAM.stringValue());
+                System.err.println("CONCENTRATION_AM || Ammonia value: " + am_measurement.stringValue() +  " || FR: " + fr.stringValue() + " || FR_ID: " + frId.toString() + " || DEVICE_AM: " + deviceAM.stringValue()  + " || DEVICE_AM_ID: " +deviceAMId.stringValue()+ " || DATETIME AM: " + dateTimeAM.stringValue());
             }
             IRI analysisIRI = kb.factory.createIRI(Input.NAMESPACE, "Analysis_ConcentrationAM_" + fr.getLocalName());
             IRI ConcentrationAmIRI = kb.factory.createIRI(Input.NAMESPACE, "ConcentrationAM_" + fr.getLocalName());
@@ -65,7 +65,7 @@ public class ConcentrationAMRule {
                     + "            $analysis_iri ing:hasDataSource $device_iri_am. \r\n"
                     + "            $analysis_iri  ing:triggers $alert_iri. \r\n"
                     + "        \r\n"
-                    + "            $concentrationAm_iri a ing:ConcentrationAm.\r\n"
+                    + "            $concentrationAm_iri a ing:ConcentrationAM.\r\n"
                     + "            $concentrationAm_iri a ing:PhysiologicalCondition.\r\n"
                     + "            $fr_iri ing:hasPhysiologicalCondition $concentrationAm_iri. \r\n"
                     + "        }\r\n"
@@ -91,24 +91,24 @@ public class ConcentrationAMRule {
                 //float bodytemp = Float.parseFloat(hr_measurement.stringValue());
                 IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
+
+                if (bindingSet.getBinding("analysis_time") == null) {
+                    if (consentrationLvl == 35) {
+                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is  Ammonia leakage area (35 ppm) 15 min scope of action", "FR Health Status alert", "Immediate", "Medium", split[1],"");
+
+                    } else if (consentrationLvl == 300) {
+                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in High Ammonia leakage area (300) less than 3 min - wear protective equip", "FR Health Status alert", "Immediate", "Extreme", split[1],"");
+
+                    }
+
+                }
+
                 sem.executeUpdate(kb.getConnection(), modification, new SimpleBinding("analysis_iri", analysisIRI),
                         new SimpleBinding("fr_iri", fr),
                         new SimpleBinding("device_iri_am", deviceAM),
                         new SimpleBinding("concentrationAm_iri", ConcentrationAmIRI),
                         new SimpleBinding("timestamp", timeLimit),
                         new SimpleBinding("alert_iri", kb.factory.createLiteral(uuidAsString)));
-
-                if (bindingSet.getBinding("analysis_time") == null) {
-                    check = true;
-                    if (consentrationLvl == 35) {
-                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is  Ammonia leakage area (35 ppm) 15 min scope of action", "areaDesc", "Immediate", "Medium", split[1]);
-
-                    } else if (consentrationLvl == 300) {
-                        sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in High Ammonia leakage area (300) less than 3 min - wear protective equip", "areaDesc", "Immediate", "Extreme", split[1]);
-
-                    }
-
-                }
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

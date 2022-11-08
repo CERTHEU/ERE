@@ -107,7 +107,7 @@ public class ExhaustionRule {
 			        IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
 			        if (bindingSet.getBinding("analysis_time") == null)
-			        	sem.AlertGenerator("Alert", alert_iri.getLocalName(),"FR suffering from exhaustion","description","areaDesc","Immediate", "Extreme", split[1]);
+			        	sem.AlertGenerator("Alert", alert_iri.getLocalName(),"FR suffering from exhaustion","description","areaDesc","Immediate", "Extreme", split[1],"");
 			       
 			        
 			        

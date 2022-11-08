@@ -1,11 +1,12 @@
 DELETE {
-        ?fr ing:hasPhysiologicalCondition ?concentrationCo.
+        ?fr ing:hasPhysiologicalCondition ?concentrationCO.
         ?analysis a ing:Analysis. 
-		?analysis ing:detects ?concentrationCo.
+		?analysis ing:detects ?concentrationCO.
         ?analysis ing:hasDataSource ?data_source.
-		?concentrationCo a ing:ConcentrationCo.
-        ?concentrationCo a ing:PhysiologicalCondition.
-        ?concentrationCo ?p ?o.
+		?analysis ing:hasTimeStamp ?analysis_time.
+		?concentrationCO a ing:ConcentrationCO.
+        ?concentrationCO a ing:PhysiologicalCondition.
+        ?concentrationCO ?p ?o.
         ?analysis ?p ?o.
 }
 WHERE  { 
@@ -22,14 +23,14 @@ WHERE  {
 		?device_co ing:hasEquipmentId ?device_co_id.
        
 		?analysis a ing:Analysis. 
-		?analysis ing:detects ?concentrationCo.
+		?analysis ing:detects ?concentrationCO.
         ?analysis ing:hasDataSource ?data_source.
-		?concentrationCo a ing:ConcentrationCo.
+		?concentrationCo a ing:ConcentrationCO.
  		?fr ing:hasPhysiologicalCondition ?concentrationCo.
 		?analysis ing:hasTimeStamp ?analysis_time. 
 		?analysis ing:triggers ?alert_id
         
-		FILTER(?co_val > ?co_limit)
+		FILTER(?co_val < ?co_limit)
             
 } 
 

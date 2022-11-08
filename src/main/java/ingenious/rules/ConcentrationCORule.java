@@ -94,19 +94,19 @@ public class ConcentrationCORule {
                     IRI alert_iri = kb.factory.createIRI(Input.NAMESPACE, uuidAsString);
 
 
-                    System.out.println(bindingSet.toString());
+                    //System.out.println(bindingSet.toString());
                     if (bindingSet.getBinding("analysis_time") == null) {
 
                         if (consentrationLvl == 50) {
-                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is  CO leakage area (50ppm)  30 min scope of action", "areaDesc", "Immediate", "Low", split[1]);
-                            check = true;
+                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is  CO leakage area (50ppm)  30 min scope of action", "FR Health Status", "Immediate", "Low", split[1],"");
+
                         } else if (consentrationLvl == 100) {
                             System.out.println("consentrationLvl == 100");
-                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in Medium CO leakage area (100) )20 min scope of action", "areaDesc", "Immediate", "Medium", split[1]);
-                            check = true;
+                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in Medium CO leakage area (100) )20 min scope of action", "FR Health Status alert", "Immediate", "Medium", split[1],"");
+
                         } else if (consentrationLvl == 300)
-                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in High CO leakage area (300) less than 3 min - wear protective equip", "areaDesc", "Immediate", "Extreme", split[1]);
-                            check = true;
+                            sem.AlertGenerator("Alert", alert_iri.getLocalName(), "Gas Alert", "FR is in High CO leakage area (300) less than 3 min - wear protective equip", "FR Health Status alert", "Immediate", "Extreme", split[1],"");
+
 
                     }
 

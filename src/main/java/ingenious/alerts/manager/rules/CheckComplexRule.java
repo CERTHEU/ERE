@@ -56,7 +56,7 @@ public class CheckComplexRule {
 			Value dateTimeHR = bindingSet.getBinding("hr_time").getValue();
 			Value alert_id = bindingSet.getBinding("alert_id").getValue();
 			//Cancel the alert, we should save the alert iri in semantic integration
-			new SemanticIntegration().AlertGenerator("Cancel", alert_id.stringValue(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName());
+			new SemanticIntegration().AlertGenerator("Cancel", alert_id.stringValue(),"event","description","areaDesc","Expected", "Moderate", fr.getLocalName(),"");
 			//Delete data from Cancel Complex Rule in graphdb
 			String sparql2 = MyUtils.fileToString("sparql/deleteDataFromCancelCompexRule.sparql");
 			String query2 = Input.PREFIXES + sparql2;

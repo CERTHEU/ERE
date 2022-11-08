@@ -13,7 +13,7 @@ import ingenious.utils.ConfigsLoader;
 
 public class KB {
 	
-	public static final String REPOSITORY = "Ing-SST3";
+	public static final String REPOSITORY = "Ing-SST4";
 	 
 	public RepositoryConnection connection;
 	public ValueFactory factory;
